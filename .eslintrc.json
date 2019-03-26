@@ -1,13 +1,88 @@
 {
-  "plugins": [
-    "meteor"
-  ],
-  "extends": ["eslint:recommended", "plugin:meteor/recommended"],
   "parserOptions": {
+    "allowImportExportEverywhere": true,
     "ecmaVersion": 6,
     "sourceType": "module",
     "ecmaFeatures": {
         "jsx": true
     }
+  },
+  "parser": "babel-eslint",
+  "env": {
+      "es6":     true,
+      "browser": true,
+      "node":    true
+  },
+  "plugins": [
+      "meteor",
+      "react"
+  ],
+  "extends": ["eslint:recommended", "plugin:meteor/recommended", "plugin:react/recommended", "airbnb"],
+  "settings": {
+      "import/resolver": "meteor"
+  },
+  "rules": {
+      "react/jsx-filename-extension": [1, {
+          "extensions": [".jsx"]
+      }],
+      "react/jsx-no-bind": [2, {
+          "ignoreRefs": false,
+          "allowArrowFunctions": false,
+          "allowFunctions": false,
+          "allowBind": false
+      }],
+      "max-len": [0, {"code": 100}],
+      "import/no-absolute-path": [0],
+      "meteor/audit-argument-checks": [0],
+      "indent": ["error", "tab"],
+      "react/jsx-indent": ["error", "tab"],
+      "react/jsx-one-expression-per-line": "off",
+      "react/no-unescaped-entities": "off",
+      "switch-colon-spacing": [0],
+      "no-invalid-this": [0],
+      "new-cap": [1],
+      "no-tabs": 0,
+      "no-new-object": "error",
+      "object-shorthand": "error",
+      "quote-props": ["error", "as-needed"],
+      "no-array-constructor": "error",
+      "prefer-destructuring": ["error", {
+        "array": true,
+        "object": true
+      }, {
+        "enforceForRenamedProperties": false
+      }],
+      "template-curly-spacing": ["error", "always"],
+      "func-style": ["error", "declaration"],
+      "prefer-template": "error",
+      "no-loop-func": "error",
+      "prefer-rest-params": "error",
+      "space-before-blocks": "error",
+      "no-param-reassign": "error",
+      "no-new-func": "error",
+      "prefer-spread": "error",
+      "arrow-body-style": ["error", "as-needed"],
+      "arrow-parens": ["error", "as-needed"],
+      "brace-style": "error",
+      "arrow-spacing": "error",
+      "implicit-arrow-linebreak": ["error", "beside"],
+      "no-confusing-arrow": "error",
+      "prefer-arrow-callback": "error",
+      "no-useless-constructor": "error",
+      "no-mixed-operators": "error",
+      "no-multi-assign": "error",
+      "nonblock-statement-body-position": ["error", "beside"],
+      "eqeqeq": "error",
+      "no-plusplus": "error",
+      "camelcase": "error",
+      "no-nested-ternary": "error",
+      "keyword-spacing": ["error", { "before": true }],
+      "space-infix-ops": "error",
+      "no-unneeded-ternary": "error",
+      "one-var": ["error", "always"],
+      "quotes": ["error", "double"],
+      "no-trailing-spaces": [2, {
+          "skipBlankLines": true
+      }]
   }
 }
