@@ -78,9 +78,12 @@
       "no-nested-ternary": "error",
       "keyword-spacing": ["error", { "before": true }],
       "space-infix-ops": "error",
+      "no-underscore-dangle": "off",
       "no-unneeded-ternary": "error",
+      "class-methods-use-this": "off",
       "one-var": ["error", "always"],
       "quotes": ["error", "double"],
+      "react/prop-types": "off",
       "no-trailing-spaces": [2, {
           "skipBlankLines": true
       }]
