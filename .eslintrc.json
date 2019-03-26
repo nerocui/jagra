@@ -46,12 +46,7 @@
       "object-shorthand": "error",
       "quote-props": ["error", "as-needed"],
       "no-array-constructor": "error",
-      "prefer-destructuring": ["error", {
-        "array": true,
-        "object": true
-      }, {
-        "enforceForRenamedProperties": false
-      }],
+      "react/destructuring-assignment": "off",
       "template-curly-spacing": ["error", "always"],
       "func-style": ["error", "declaration"],
       "prefer-template": "error",

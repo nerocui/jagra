@@ -1,23 +1,24 @@
 import React, { Component } from "react";
 
 export default class Hello extends Component {
-	state = {
-		counter: 0,
+	constructor(props) {
+		super(props);
+		this.state = {
+			counter: 0,
+		};
+		this.increment = this.increment.bind(this);
 	}
+	
 
 	increment() {
-		const { counter } = this.state + 1;
-		this.setState({
-			counter,
-		});
+		this.setState(previousState => ({ counter: previousState.counter + 1 }));
 	}
 
 	render() {
-		const { counter } = this.state;
 		return (
 			<div>
 				<button type="button" onClick={this.increment}>Click Me</button>
-				<p>You've pressed the button {counter} times.</p>
+				<p>You've pressed the button {this.state.counter} times.</p>
 			</div>
 		);
 	}
