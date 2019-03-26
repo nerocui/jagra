@@ -12,8 +12,8 @@ class Info extends Component {
 	}
   
 	render() {
-		const { links } = this.props;
-		links.map(
+		let { links } = this.props;
+		links = links.map(
 			link => this.makeLink(link),
 		);
 
