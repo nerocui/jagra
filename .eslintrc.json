@@ -48,7 +48,7 @@
       "no-array-constructor": "error",
       "react/destructuring-assignment": "off",
       "template-curly-spacing": ["error", "always"],
-      "func-style": ["error", "declaration"],
+      "func-style": ["error", "declaration", { "allowArrowFunctions": true }],
       "prefer-template": "error",
       "no-loop-func": "error",
       "prefer-rest-params": "error",
