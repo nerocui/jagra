@@ -69,7 +69,7 @@
       "no-multi-assign": "error",
       "nonblock-statement-body-position": ["error", "beside"],
       "eqeqeq": "error",
-      "no-plusplus": "error",
+      "no-plusplus": "off",
       "camelcase": "error",
       "no-nested-ternary": "error",
       "keyword-spacing": ["error", { "before": true }],

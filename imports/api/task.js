@@ -8,6 +8,17 @@ if (Meteor.isServer) {
 	Meteor.publish("tasks-assigned-to-me", () => Tasks.find({ assigneeId: this.userId }));
 }
 
+// private status: String;
+// private creatorId: String;
+// private assigneeId: String;
+// private createdAt: number;
+// private dueDate: Date;
+// private commentsId: Array<String>;
+// private filesId: Array<String>;
+// private watchersId: Array<String>;
+// private relationshipsId: Array<String>;
+// private teamId: String;
+
 Meteor.methods({
 	"tasks.insert"(title, description) {
 		if (!this.userId) {
