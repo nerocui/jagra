@@ -2,6 +2,7 @@ import { Meteor } from "meteor/meteor";
 import moment from "moment";
 import { Tasks, Employees, Teams } from "./db";
 import Status from "../constant/status";
+import Error from "../constant/error";
 import { removeElement, addToList } from "../util/arrayUtil";
 
 if (Meteor.isServer) {
@@ -22,7 +23,7 @@ if (Meteor.isServer) {
 Meteor.methods({
 	"tasks.insert"(title, description) {
 		if (!this.userId) {
-			throw new Meteor.Error("not-authorized");
+			throw new Meteor.Error(Error.NOT_AUTH);
 		}
 		return Tasks.insert({
 			title,
@@ -86,6 +87,11 @@ Meteor.methods({
 			Employees.update({ _id: currentAssigneeId }, { tasksToDo: removeElement(currentAssigneeTodos, _id) });
 			Employees.update({ _id }, { tasksToDo: addToList(assignee.tasksToDo, _id) });
 			Tasks.update({ _id }, { assignee: assigneeId });
+		}
+	},
+	"tasks.changeDueDate"(_id, date) {
+		if (!this.userId) {
+			throw new 
 		}
 	},
 });
