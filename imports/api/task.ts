@@ -1,13 +1,10 @@
 // @ts-ignore
 import { Meteor } from "meteor/meteor";
+import moment from "moment";
 import { Tasks, Employees, Teams } from "./db";
 import Status from "../constant/status";
-import moment from 'moment';
-import { removeElement, addToList } from '../util/arrayUtil';
+import { removeElement, addToList } from "../util/arrayUtil";
 
-	// private _id: String;
-	// private title: String;
-	// private description: String;
 	// private status: String;
 	// private creatorId: String;
 	// private assigneeId: String;
@@ -18,10 +15,17 @@ import { removeElement, addToList } from '../util/arrayUtil';
 	// private watchersId: Array<String>;
 	// private relationshipsId: Array<String>;
 	// private teamId: String;
+
+if (Meteor.isServer) {
+	Meteor.publish("tasks-assigned-to-me", function () {
+		return Tasks.find({ assigneeId: this.userId });
+	});
+}
+
 Meteor.methods({
 	"tasks.insert"(title: String, description: String) {
 		if (!this.userId) {
-			throw new Meteor.Error('not-authorized');
+			throw new Meteor.Error("not-authorized");
 		}
 		return Tasks.insert({
 			title,
@@ -36,9 +40,11 @@ Meteor.methods({
 			watchersId: [this.userId],
 			relationshipsId: [],
 			teamId: [],
-		}, (err, task) => {
+		}, (err: any, task: any) => {
 			if (err) {
-				throw new Meteor.Error('Failed to create task');
+				throw new Meteor.Error("Failed to create task");
+			} else {
+				console.log("Created task: ", task);
 			}
 			// TODO({hiSyl9OaS}): send out email about this update
 			// TODO({U-aaiJmDa}): add this to history log in admin data
@@ -48,7 +54,7 @@ Meteor.methods({
 		if (!this.userId) {
 			throw new Meteor.Error("not-authorized");
 		}
-		let task = Tasks.findOne({_id}).fetch();
+		const task = Tasks.findOne({_id}).fetch();
 		if (!(this.userId === task.creatorId || this.userId === task.assigneeId)) {
 			throw new Meteor.Error("no privilege");
 		}
@@ -60,7 +66,7 @@ Meteor.methods({
 		if (!this.userId) {
 			throw new Meteor.Error("not-authorized");
 		}
-		let task = Tasks.findOne({_id}).fetch();
+		const task = Tasks.findOne({_id}).fetch();
 		if (!(this.userId === task.creatorId || this.userId === task.assigneeId)) {
 			throw new Meteor.Error("no privilege");
 		}
@@ -72,33 +78,30 @@ Meteor.methods({
 		if (!this.userId) {
 			throw new Meteor.Error("not-authorized");
 		}
-		let task = Tasks.findOne({_id}).fetch();
+		const task = Tasks.findOne({_id}).fetch();
+
 		if (!(this.userId === task.creatorId || this.userId === task.assigneeId)) {
 			throw new Meteor.Error("no privilege");
 		}
-		if (this.userId === task.creatorId) {
-			const manager = Employees.findOne({employeeId}).fetch(),
-				employees = [...manager.employeesId],
-				teamId = manager.teamId,
-				team = Teams.findOne({employeeId: teamId}).fetch(),
-				teamMembers = [...team.members];
-			if (employees.includes(assigneeId) || teamMembers.includes(assigneeId)) {
-				const currentAssigneeId = task.assignee,
-					currentAssignee = Employees.findOne({_id: currentAssigneeId}).fetch(),
-					currentAssigneeTodos = currentAssignee.tasksToDo,
-					assignee = Employees.findOne({_id: assigneeId}).fetch();
-				//remove the task from current assignee's todo list
-				Employees.update({_id: currentAssigneeId}, {tasksToDo: removeElement(currentAssigneeTodos, _id)});
-				//add the task to the target todo list
-				Employees.update({_id}, {tasksToDo: addToList(assignee.tasksToDo, _id)});
-				//change the assignee value from task db to the new assignee
-				Tasks.update({_id}, {assignee: assigneeId});
-			} else {
-				
-			}
-		} else {
-
+		const manager = Employees.findOne({employeeId}).fetch(),
+			employees = [...manager.employeesId],
+			teamId = manager.teamId,
+			team = Teams.findOne({employeeId: teamId}).fetch(),
+			teamMembers = [...team.members];
+		if (employees.includes(assigneeId) || teamMembers.includes(assigneeId)) {
+			const currentAssigneeId = task.assignee,
+				currentAssignee = Employees.findOne({_id: currentAssigneeId}).fetch(),
+				currentAssigneeTodos = currentAssignee.tasksToDo,
+				assignee = Employees.findOne({_id: assigneeId}).fetch();
+			//remove the task from current assignee's todo list
+			Employees.update({_id: currentAssigneeId}, {tasksToDo: removeElement(currentAssigneeTodos, _id)});
+			//add the task to the target todo list
+			Employees.update({_id}, {tasksToDo: addToList(assignee.tasksToDo, _id)});
+			//change the assignee value from task db to the new assignee
+			Tasks.update({_id}, {assignee: assigneeId});
 		}
-		//TODO({22u7JpQt2}): Finish implimentation
+		//TODO({de66-eKUK}): send out email about this update
+		//TODO({YR-90HSXl}): add this to history log
 	}
+	//TODO({GBC3t3JIs}): finish implementing task api
 });
