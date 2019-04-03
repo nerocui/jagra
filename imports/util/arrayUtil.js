@@ -4,7 +4,7 @@ export const removeElement = (arr, ele) => {
 	let result = [];
 	arr.forEach(e => {
 		if (!equals(e, ele)) {
-			result = [e, ...result];
+			result = [...result, e];
 		}
 	});
 	return result;
