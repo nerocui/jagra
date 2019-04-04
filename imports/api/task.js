@@ -83,19 +83,19 @@ Meteor.methods({
 				//remove reference from employee(creator, assignee and watchers)
 				//strategy for relationships
 				//remove reference from team
-				relationshipsId.ForEach(r => {
+				relationshipsId.forEach(r => {
 					Meteor.call(RELATIONSHIPSAPI.REMOVE_TASK, r, _id);
 					//TODO({qfWxN0X9U}): add a "valid" field. display grey out link if not valid. If both tasks are invalid, delete the relationship.
 				});
 				Meteor.call(EMPLOYEESAPI.REMOVE_CREATED_TASK, creatorId, _id);
 				Meteor.call(EMPLOYEESAPI.REMOVE_ASSIGNED_TASK, assigneeId, _id);
-				watchersId.ForEach(w => {
+				watchersId.forEach(w => {
 					Meteor.call(EMPLOYEESAPI.REMOVE_WATCHED_TASK, w, _id);
 				});
-				commentsId.ForEach(c => {
+				commentsId.forEach(c => {
 					Meteor.call(COMMENTSAPI.REMOVE, c);
 				});
-				filesId.ForEach(f => {
+				filesId.forEach(f => {
 					Meteor.call(FILESAPI.REMOVE_REFERENCE, f, _id);
 					//TODO({5abJJ8ON4}): do not remove file even the ref is zero, admin need to have a way to recover file.
 				});
@@ -264,7 +264,7 @@ Meteor.methods({
 			if (err) {
 				throw new Meteor.Error(TaskError.TASK_NOT_WATCHABLE);
 			} else {
-				_watchersId.ForEach(w => {
+				_watchersId.forEach(w => {
 					Meteor.call(EMPLOYEESAPI.WATCH_TASK, w, _id);
 					//TODO({_H4-ssWr9}): when implementing employees method, only add to watch list if not watching, ignore if already watch
 				});
@@ -344,7 +344,7 @@ Meteor.methods({
 				if (err) {
 					throw new Meteor.Error(TaskError.TASK_NOT_WATCHABLE);
 				} else {
-					targetRemovalId.ForEach(w => {
+					targetRemovalId.forEach(w => {
 						Meteor.call(EMPLOYEESAPI.UNWATCH_TASK, w, _id);
 					});
 				}
