@@ -54,7 +54,10 @@ Meteor.methods({
 			throw new Meteor.Error(AuthError.NOT_AUTH);
 		}
 		const task = Tasks.findOne({ _id }).fetch();
-		if (!(this.userId === task.creatorId)) {
+		if (!task) {
+			throw new Meteor.Error(TaskError.TASK_DOES_NOT_EXIST);
+		}
+		if (this.userId !== task.creatorId) {
 			throw new Meteor.Error(AuthError.NO_PRIVILEGE);
 		}
 		const {
@@ -99,6 +102,9 @@ Meteor.methods({
 			throw new Meteor.Error(AuthError.NOT_AUTH);
 		}
 		const task = Tasks.findOne({ _id }).fetch();
+		if (!task) {
+			throw new Meteor.Error(TaskError.TASK_DOES_NOT_EXIST);
+		}
 		if (!(this.userId === task.creatorId || this.userId === task.assigneeId)) {
 			throw new Meteor.Error(AuthError.NO_PRIVILEGE);
 		}
@@ -109,6 +115,9 @@ Meteor.methods({
 			throw new Meteor.Error(AuthError.NOT_AUTH);
 		}
 		const task = Tasks.findOne({ _id }).fetch();
+		if (!task) {
+			throw new Meteor.Error(TaskError.TASK_DOES_NOT_EXIST);
+		}
 		if (!(this.userId === task.creatorId || this.userId === task.assigneeId)) {
 			throw new Meteor.Error(AuthError.NO_PRIVILEGE);
 		}
@@ -119,21 +128,34 @@ Meteor.methods({
 			throw new Meteor.Error(AuthError.NOT_AUTH);
 		}
 		const task = Tasks.findOne({ _id }).fetch();
+		if (!task) {
+			throw new Meteor.Error(TaskError.TASK_DOES_NOT_EXIST);
+		}
 		//only allowed creator and current assignee to assign task to another employee
 		if (!(this.userId === task.creatorId || this.userId === task.assigneeId)) {
 			throw new Meteor.Error(AuthError.NO_PRIVILEGE);
 		}
 		//task should be allowed to be assigned to anyone
 		const currentAssigneeId = task.assigneeId;
-		Meteor.call("employees.removeAssignedTask", currentAssigneeId, _id);
-		Meteor.call("employees.assignNewTask", assigneeId, _id);
-		return Tasks.update({ _id }, { assigneeId });
+		return Tasks.update({ _id }, { assigneeId }, err => {
+			if (err) {
+				throw new Meteor.Error(TaskError.TASK_ASSIGN_FAIL);
+			} else {
+				Meteor.call("employees.removeAssignedTask", currentAssigneeId, _id);
+				Meteor.call("employees.assignNewTask", assigneeId, _id);
+				Meteor.call("tasks.removeWatcher", _id, currentAssigneeId);
+				Meteor.call("tasks.addWatcher", _id, assigneeId);
+			}
+		});
 	},
 	"tasks.changeDueDate"(_id, date) {
 		if (!this.userId) {
 			throw new Meteor.Error(Error.NOT_AUTH);
 		}
 		const task = Tasks.findOne({ _id }).fetch();
+		if (!task) {
+			throw new Meteor.Error(TaskError.TASK_DOES_NOT_EXIST);
+		}
 		if (!(this.userId === task.creatorId)) {
 			throw new Meteor.Error(Error.NO_PRIVILEGE);
 		}
@@ -167,12 +189,17 @@ Meteor.methods({
 			throw new Meteor.Error(TaskError.TASK_DOES_NOT_EXIST);
 		}
 		const { commentsId } = task;
-		if (!(this.userId === task.creatorId)) {
+		if (this.userId !== task.creatorId) {
 			throw new Meteor.Error(Error.NO_PRIVILEGE);
 		}
 		const newCommentsId = removeElement(commentsId, commentId);
-		Meteor.call("comments.remove", commentId);
-		return Tasks.update({ _id }, { commentsId: newCommentsId });
+		return Tasks.update({ _id }, { commentsId: newCommentsId }, err => {
+			if (err) {
+				throw new Meteor.Error(TaskError.TASK_REMOVE_COMMENT_FAIL);
+			} else {
+				Meteor.call("comments.remove", commentId);
+			}
+		});
 	},
 	"tasks.watch"(_id) {
 		if (!this.userId) {
@@ -281,7 +308,7 @@ Meteor.methods({
 			throw new Meteor.Error(TaskError.TASK_DOES_NOT_EXIST);
 		}
 		//only creator can remove people from watch list
-		if (this.userId === task.creatorId) {
+		if (this.userId === task.creatorId && !(watcherId === task.assigneeId || watcherId === task.creatorId)) {
 			let { watchersId } = task;
 			watchersId = removeElement(watchersId, watcherId);
 			return Tasks.update({ _id }, { watchersId }, err => {
@@ -303,13 +330,16 @@ Meteor.methods({
 			throw new Meteor.Error(TaskError.TASK_DOES_NOT_EXIST);
 		}
 		if (this.userId === task.creatorId) {
+			//only allow to unwatch is neither creator nor assignee
+			let targetRemovalId = removeElement(_watchersId, task.assigneeId);
+			targetRemovalId = removeElement(targetRemovalId, task.creatorId);
 			let { watchersId } = task;
-			watchersId = removeAllFromList(watchersId, _watchersId);
+			watchersId = removeAllFromList(watchersId, targetRemovalId);
 			return Tasks.update({ _id }, { watchersId }, err => {
 				if (err) {
 					throw new Meteor.Error(TaskError.TASK_NOT_WATCHABLE);
 				} else {
-					_watchersId.ForEach(w => {
+					targetRemovalId.ForEach(w => {
 						Meteor.call("employees.unwatchTask", w, _id);
 					});
 				}

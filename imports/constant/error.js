@@ -7,7 +7,8 @@ const NOT_AUTH = "Not signed in",
 	TASK_REMOVE_COMMENT_FAIL = "Failed to remove comment",
 	TASK_DOES_NOT_EXIST = "Task does not exist",
 	TASK_NOT_UNWATCHABLE = "Cannot unwatch task",
-	TASK_NOT_WATCHABLE = "Cannot watch task";
+	TASK_NOT_WATCHABLE = "Cannot watch task",
+	TASK_ASSIGN_FAIL = "Failed to assign task";
 
 export const AuthError = {
 	NOT_AUTH,
@@ -21,4 +22,5 @@ export const TaskError = {
 	TASK_DOES_NOT_EXIST,
 	TASK_NOT_UNWATCHABLE,
 	TASK_NOT_WATCHABLE,
+	TASK_ASSIGN_FAIL,
 };
