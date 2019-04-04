@@ -5,6 +5,11 @@ import { Tasks, Teams } from "./db";
 import Status from "../constant/status";
 import { TaskMessage } from "../constant/message";
 import { AuthError, TaskError } from "../constant/error";
+import TASKSAPI from "../constant/methods/tasksAPI";
+import RELATIONSHIPSAPI from "../constant/methods/relationshipsAPI";
+import EMPLOYEESAPI from "../constant/methods/employeesAPI";
+import COMMENTSAPI from "../constant/methods/commentsAPI";
+import FILESAPI from "../constant/methods/filesAPI";
 import {
 	removeElement,
 	addToList,
@@ -25,7 +30,7 @@ if (Meteor.isServer) {
 //TODO({nkWzRdX91}): file and relationship are left not implemented since we don't know how they work
 
 Meteor.methods({
-	"tasks.insert"(title, description) {
+	[TASKSAPI.INSERT](title, description) {
 		if (!this.userId) {
 			throw new Meteor.Error(AuthError.NOT_AUTH);
 		}
@@ -49,7 +54,7 @@ Meteor.methods({
 			}
 		});
 	},
-	"tasks.remove"(_id) {
+	[TASKSAPI.REMOVE](_id) {
 		if (!this.userId) {
 			throw new Meteor.Error(AuthError.NOT_AUTH);
 		}
@@ -79,25 +84,25 @@ Meteor.methods({
 				//strategy for relationships
 				//remove reference from team
 				relationshipsId.ForEach(r => {
-					Meteor.call("relationships.removeTask", r, _id);
+					Meteor.call(RELATIONSHIPSAPI.REMOVE_TASK, r, _id);
 					//TODO({qfWxN0X9U}): add a "valid" field. display grey out link if not valid. If both tasks are invalid, delete the relationship.
 				});
-				Meteor.call("employees.removeTaskFromCreator", creatorId, _id);
-				Meteor.call("employees.removeTaskFromAssignee", assigneeId, _id);
+				Meteor.call(EMPLOYEESAPI.REMOVE_CREATED_TASK, creatorId, _id);
+				Meteor.call(EMPLOYEESAPI.REMOVE_ASSIGNED_TASK, assigneeId, _id);
 				watchersId.ForEach(w => {
-					Meteor.call("employees.removeTaskFromWatcher", w, _id);
+					Meteor.call(EMPLOYEESAPI.REMOVE_WATCHED_TASK, w, _id);
 				});
 				commentsId.ForEach(c => {
-					Meteor.call("comments.remove", c);
+					Meteor.call(COMMENTSAPI.REMOVE, c);
 				});
 				filesId.ForEach(f => {
-					Meteor.call("files.removeRef", f, _id);
+					Meteor.call(FILESAPI.REMOVE_REFERENCE, f, _id);
 					//TODO({5abJJ8ON4}): do not remove file even the ref is zero, admin need to have a way to recover file.
 				});
 			}
 		});
 	},
-	"tasks.updateDescription"(_id, description) {
+	[TASKSAPI.UPDATE_DESCRIPTION](_id, description) {
 		if (!this.userId) {
 			throw new Meteor.Error(AuthError.NOT_AUTH);
 		}
@@ -110,7 +115,7 @@ Meteor.methods({
 		}
 		return Tasks.update(_id, { description });
 	},
-	"tasks.updateStatus"(_id, status) {
+	[TASKSAPI.UPDATE_STATUS](_id, status) {
 		if (!this.userId) {
 			throw new Meteor.Error(AuthError.NOT_AUTH);
 		}
@@ -123,7 +128,7 @@ Meteor.methods({
 		}
 		return Tasks.update(_id, { status });
 	},
-	"tasks.assignTo"(_id, assigneeId) {
+	[TASKSAPI.ASSIGN_TO](_id, assigneeId) {
 		if (!this.userId) {
 			throw new Meteor.Error(AuthError.NOT_AUTH);
 		}
@@ -141,14 +146,14 @@ Meteor.methods({
 			if (err) {
 				throw new Meteor.Error(TaskError.TASK_ASSIGN_FAIL);
 			} else {
-				Meteor.call("employees.removeAssignedTask", currentAssigneeId, _id);
-				Meteor.call("employees.assignNewTask", assigneeId, _id);
-				Meteor.call("tasks.removeWatcher", _id, currentAssigneeId);
-				Meteor.call("tasks.addWatcher", _id, assigneeId);
+				Meteor.call(EMPLOYEESAPI.REMOVE_ASSIGNED_TASK, currentAssigneeId, _id);
+				Meteor.call(EMPLOYEESAPI.ASSIGN_TASK, assigneeId, _id);
+				Meteor.call(TASKSAPI.REMOVE_WATCHER, _id, currentAssigneeId);
+				Meteor.call(TASKSAPI.ADD_WATCHER, _id, assigneeId);
 			}
 		});
 	},
-	"tasks.changeDueDate"(_id, date) {
+	[TASKSAPI.CHANGE_DUE_DATE](_id, date) {
 		if (!this.userId) {
 			throw new Meteor.Error(Error.NOT_AUTH);
 		}
@@ -167,7 +172,7 @@ Meteor.methods({
 		//Check if the date is before current date in front end
 		Tasks.update({ _id }, { dueDate: date });
 	},
-	"tasks.addComment"(_id, comment) {
+	[TASKSAPI.ADD_COMMENT](_id, comment) {
 		if (!this.userId) {
 			throw new Meteor.Error(Error.NOT_AUTH);
 		}
@@ -175,12 +180,12 @@ Meteor.methods({
 		if (!task) {
 			throw new Meteor.Error(TaskError.TASK_DOES_NOT_EXIST);
 		}
-		const { commentId } = Meteor.call("comments.insert", _id, comment),
+		const { commentId } = Meteor.call(COMMENTSAPI.INSERT, _id, comment),
 			{ commentsId } = task,
 			newCommentsId = addToList(commentsId, commentId);
 		return Tasks.update({ _id }, { newCommentsId });
 	},
-	"tasks.removeComment"(_id, commentId) {
+	[TASKSAPI.REMOVE_COMMENT](_id, commentId) {
 		if (!this.userId) {
 			throw new Meteor.Error(Error.NOT_AUTH);
 		}
@@ -197,11 +202,11 @@ Meteor.methods({
 			if (err) {
 				throw new Meteor.Error(TaskError.TASK_REMOVE_COMMENT_FAIL);
 			} else {
-				Meteor.call("comments.remove", commentId);
+				Meteor.call(COMMENTSAPI.REMOVE, commentId);
 			}
 		});
 	},
-	"tasks.watch"(_id) {
+	[TASKSAPI.WATCH](_id) {
 		if (!this.userId) {
 			throw new Meteor.Error(Error.NOT_AUTH);
 		}
@@ -217,12 +222,12 @@ Meteor.methods({
 				if (err) {
 					throw new Meteor.Error(TaskError.TASK_NOT_WATCHABLE);
 				} else {
-					Meteor.call("employees.watchTask", this.userId, _id);
+					Meteor.call(EMPLOYEESAPI.WATCH_TASK, this.userId, _id);
 				}
 			});
 		}
 	},
-	"tasks.addWatcher"(_id, watcherId) {
+	[TASKSAPI.ADD_WATCHER](_id, watcherId) {
 		if (!this.userId) {
 			throw new Meteor.Error(Error.NOT_AUTH);
 		}
@@ -231,7 +236,7 @@ Meteor.methods({
 			throw new Meteor.Error(TaskError.TASK_DOES_NOT_EXIST);
 		}
 		if (watcherId === this.userId) {
-			return Meteor.call("tasks.watch", _id);
+			return Meteor.call(TASKSAPI.WATCH, _id);
 		}
 		let { watchersId } = task;
 		watchersId = [...watchersId];
@@ -241,12 +246,12 @@ Meteor.methods({
 				if (err) {
 					throw new Meteor.Error(TaskError.TASK_NOT_WATCHABLE);
 				} else {
-					Meteor.call("employees.watchTask", watcherId, _id);
+					Meteor.call(EMPLOYEESAPI.WATCH_TASK, watcherId, _id);
 				}
 			});
 		}
 	},
-	"tasks.addWatchers"(_id, _watchersId) {
+	[TASKSAPI.ADD_WATCHERS](_id, _watchersId) {
 		if (!this.userId) {
 			throw new Meteor.Error(Error.NOT_AUTH);
 		}
@@ -260,13 +265,13 @@ Meteor.methods({
 				throw new Meteor.Error(TaskError.TASK_NOT_WATCHABLE);
 			} else {
 				_watchersId.ForEach(w => {
-					Meteor.call("employees.watchTask", w, _id);
+					Meteor.call(EMPLOYEESAPI.WATCH_TASK, w, _id);
 					//TODO({_H4-ssWr9}): when implementing employees method, only add to watch list if not watching, ignore if already watch
 				});
 			}
 		});
 	},
-	"tasks.addWatchersByTeam"(_id, teamId) {
+	[TASKSAPI.ADD_WATCHERS_BY_TEAM](_id, teamId) {
 		if (!this.userId) {
 			throw new Meteor.Error(Error.NOT_AUTH);
 		}
@@ -276,9 +281,9 @@ Meteor.methods({
 		}
 		const team = Teams.findOne({ _id: teamId }).fetch(),
 			{ membersId } = team;
-		return Meteor.call("tasks.addWatchers", _id, membersId);
+		return Meteor.call(TASKSAPI.ADD_WATCHERS, _id, membersId);
 	},
-	"tasks.unwatch"(_id) {
+	[TASKSAPI.UNWATCH](_id) {
 		if (!this.userId) {
 			throw new Meteor.Error(Error.NOT_AUTH);
 		}
@@ -293,13 +298,13 @@ Meteor.methods({
 				if (err) {
 					throw new Meteor.Error(TaskError.TASK_NOT_WATCHABLE);
 				} else {
-					Meteor.call("employees.unwatchTask", this.userId, _id);
+					Meteor.call(EMPLOYEESAPI.UNWATCH_TASK, this.userId, _id);
 				}
 			});
 		}
 		throw new Meteor.Error(TaskError.TASK_NOT_UNWATCHABLE);
 	},
-	"tasks.removeWatcher"(_id, watcherId) {
+	[TASKSAPI.REMOVE_WATCHER](_id, watcherId) {
 		if (!this.userId) {
 			throw new Meteor.Error(Error.NOT_AUTH);
 		}
@@ -315,13 +320,13 @@ Meteor.methods({
 				if (err) {
 					throw new Meteor.Error(TaskError.TASK_NOT_WATCHABLE);
 				} else {
-					Meteor.call("employees.unwatchTask", watcherId, _id);
+					Meteor.call(EMPLOYEESAPI.UNWATCH_TASK, watcherId, _id);
 				}
 			});
 		}
 		throw new Meteor.Error(AuthError.NO_PRIVILEGE);
 	},
-	"tasks.removeWatchers"(_id, _watchersId) {
+	[TASKSAPI.REMOVE_WATCHERS](_id, _watchersId) {
 		if (!this.userId) {
 			throw new Meteor.Error(Error.NOT_AUTH);
 		}
@@ -340,14 +345,14 @@ Meteor.methods({
 					throw new Meteor.Error(TaskError.TASK_NOT_WATCHABLE);
 				} else {
 					targetRemovalId.ForEach(w => {
-						Meteor.call("employees.unwatchTask", w, _id);
+						Meteor.call(EMPLOYEESAPI.UNWATCH_TASK, w, _id);
 					});
 				}
 			});
 		}
 		throw new Meteor.Error(AuthError.NO_PRIVILEGE);
 	},
-	"tasks.removeWatchersByTeam"(_id, teamId) {
+	[TASKSAPI.REMOVE_WATCHERS_BY_TEAM](_id, teamId) {
 		if (!this.userId) {
 			throw new Meteor.Error(Error.NOT_AUTH);
 		}
@@ -357,6 +362,6 @@ Meteor.methods({
 		}
 		const team = Teams.findOne({ _id: teamId }).fetch(),
 			{ membersId } = team;
-		return Meteor.call("tasks.removeWatchers", _id, membersId);
+		return Meteor.call(TASKSAPI.REMOVE_WATCHERS, _id, membersId);
 	},
 });

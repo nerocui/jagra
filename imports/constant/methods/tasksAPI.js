@@ -1,0 +1,18 @@
+export default {
+	INSERT: "tasks.insert",
+	REMOVE: "tasks.remove",
+	UPDATE_DESCRIPTION: "tasks.updateDescription",
+	UPDATE_STATUS: "tasks.updateStatus",
+	ASSIGN_TO: "tasks.assignTo",
+	CHANGE_DUE_DATE: "tasks.changeDueDate",
+	ADD_COMMENT: "tasks.addComment",
+	REMOVE_COMMENT: "tasks.removeComment",
+	WATCH: "tasks.watch",
+	ADD_WATCHER: "tasks.addWatcher",
+	ADD_WATCHERS: "tasks.addWatchers",
+	ADD_WATCHERS_BY_TEAM: "tasks.addWatchersByTeam",
+	UNWATCH: "tasks.unwatch",
+	REMOVE_WATCHER: "tasks.removeWatcher",
+	REMOVE_WATCHERS: "tasks.removeWatchers",
+	REMOVE_WATCHERS_BY_TEAM: "tasks.removeWatchersByTeam",
+};
