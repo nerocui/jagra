@@ -1,7 +1,7 @@
 import { Meteor } from "meteor/meteor";
 import moment from "moment";
 import SimpleSchema from "simpl-schema";
-import { Tasks, Teams } from "./db";
+import { Tasks, Teams, Comments } from "./db";
 import Status from "../constant/status";
 import { TaskMessage } from "../constant/message";
 import { AuthError, TaskError } from "../constant/error";
@@ -189,12 +189,14 @@ Meteor.methods({
 		if (!this.userId) {
 			throw new Meteor.Error(Error.NOT_AUTH);
 		}
-		const task = Tasks.findOne({ _id }).fetch();
-		if (!task) {
+		const task = Tasks.findOne({ _id }).fetch(),
+			comment = Comments.findOne({ commentId }).fetch();
+		if (!task || !comment) {
 			throw new Meteor.Error(TaskError.TASK_DOES_NOT_EXIST);
 		}
-		const { commentsId } = task;
-		if (this.userId !== task.creatorId) {
+		const { commentsId } = task,
+			{ creatorId } = comment;
+		if (this.userId !== creatorId) {
 			throw new Meteor.Error(Error.NO_PRIVILEGE);
 		}
 		const newCommentsId = removeElement(commentsId, commentId);
