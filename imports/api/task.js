@@ -172,6 +172,7 @@ Meteor.methods({
 		//Check if the date is before current date in front end
 		Tasks.update({ _id }, { dueDate: date });
 	},
+	//entry point: comments.insert()
 	[TASKSAPI.ADD_COMMENT](_id, commentId) {
 		if (!this.userId) {
 			throw new Meteor.Error(Error.NOT_AUTH);

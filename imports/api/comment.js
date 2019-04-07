@@ -9,7 +9,6 @@ import { addToList, removeElement } from "../util/arrayUtil";
 
 if (Meteor.isServer) {
 	Meteor.publish("comments", () => Comments.find());
-	//TODO: figure what to publish
 }
 
 Meteor.methods({
@@ -34,6 +33,7 @@ Meteor.methods({
 			}
 		});
 	},
+	//entry point: tasks.removeComment()
 	[COMMENTSAPI.REMOVE](_id) {
 		if (!this.userId) {
 			throw new Meteor.Error(AuthError.NOT_AUTH);
