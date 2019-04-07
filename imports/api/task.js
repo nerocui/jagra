@@ -75,7 +75,7 @@ Meteor.methods({
 		} = task;
 		return Tasks.remove({ _id }, err => {
 			if (err) {
-				throw new Meteor.Error(TaskError.TASK_INSERT_FAIL);
+				throw new Meteor.Error(TaskError.TASK_REMOVE_FAIL);
 			} else {
 				//only remove reference to all fields if removed task successfully
 				//remove reference from files
@@ -172,7 +172,7 @@ Meteor.methods({
 		//Check if the date is before current date in front end
 		Tasks.update({ _id }, { dueDate: date });
 	},
-	[TASKSAPI.ADD_COMMENT](_id, comment) {
+	[TASKSAPI.ADD_COMMENT](_id, commentId) {
 		if (!this.userId) {
 			throw new Meteor.Error(Error.NOT_AUTH);
 		}
@@ -180,8 +180,7 @@ Meteor.methods({
 		if (!task) {
 			throw new Meteor.Error(TaskError.TASK_DOES_NOT_EXIST);
 		}
-		const { commentId } = Meteor.call(COMMENTSAPI.INSERT, _id, comment),
-			{ commentsId } = task,
+		const { commentsId } = task,
 			newCommentsId = addToList(commentsId, commentId);
 		return Tasks.update({ _id }, { newCommentsId });
 	},
