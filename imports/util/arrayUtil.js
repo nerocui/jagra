@@ -31,3 +31,23 @@ export const addToList = (arr, ele) => {
 	const result = [...arr, ele];
 	return result;
 };
+export const addAllToList = (arr, eles) => {
+	let result,
+		i;
+	for (i = 0; i < eles.length; i++) {
+		if (!arr.includes(eles[i])) {
+			result = addToList(arr, eles[i]);
+		}
+	}
+	return result;
+};
+export const removeAllFromList = (arr, eles) => {
+	let result = [],
+		i;
+	for (i = 0; i < arr.length; i++) {
+		if (!eles.includes(arr[i])) {
+			result = addToList(result, arr[i]);
+		}
+	}
+	return result;
+};
