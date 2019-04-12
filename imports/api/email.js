@@ -1,17 +1,14 @@
-import { Meteor } from "meteor/meteor";
 import sendgrid from "sendgrid";
 import keys from "../config/keys";
 
-console.log(keys);
-
 const helper = sendgrid.mail;
 
-class Mailer extends helper.Mail {
+export default class Mailer extends helper.Mail {
 	constructor({ subject, recipients }, content) {
 		super();
   
 		this.sgApi = sendgrid(keys.sendGridKey);
-		this.from_email = new helper.Email("no-reply@emaily.com");
+		this.from_email = new helper.Email("no-reply@jagra.com");
 		this.subject = subject;
 		this.body = new helper.Content("text/html", content);
 		this.recipients = this.formatAddresses(recipients);
@@ -22,6 +19,7 @@ class Mailer extends helper.Mail {
 	}
   
 	formatAddresses(recipients) {
+		console.log("---------", recipients);
 		return recipients.map(({ email }) => new helper.Email(email));
 	}
   
@@ -52,12 +50,4 @@ class Mailer extends helper.Mail {
 		const response = await this.sgApi.API(request);
 		return response;
 	}
-  }
-
-// Server: Define a method that the client can call.
-Meteor.methods({
-	sendEmail(to, subject, text) {
-		const mailer = new Mailer({ subject, to }, text);
-		mailer.send();
-	},
-});
+}
