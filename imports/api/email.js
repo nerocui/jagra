@@ -19,7 +19,6 @@ export default class Mailer extends helper.Mail {
 	}
   
 	formatAddresses(recipients) {
-		console.log("---------", recipients);
 		return recipients.map(({ email }) => new helper.Email(email));
 	}
   
