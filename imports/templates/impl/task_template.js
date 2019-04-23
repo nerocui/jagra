@@ -9,6 +9,7 @@ class Create extends Template {
 	}
 	//TODO: in the future, more function will be added to each class and/or the interface
 	//like color of each field, template text etc.
+	//TODO: override toLog and toEmail functions
 }
 
 class Delete extends Template {
