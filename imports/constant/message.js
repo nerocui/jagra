@@ -1,7 +1,11 @@
 //Task
-const TASK_CREATED = "Created task: ";
+const TASK_CREATED = "Created task: ",
+	COMMENT_CREATED = "Created comment: ";
 
-// eslint-disable-next-line import/prefer-default-export
 export const TaskMessage = {
 	TASK_CREATED,
+};
+
+export const CommentMessage = {
+	COMMENT_CREATED,
 };
