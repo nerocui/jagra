@@ -14,7 +14,7 @@ Meteor.methods({
 			throw new Meteor.Error(AuthError.NOT_AUTH);
 		}
 		return Logs.insert({
-			data
+			data,
 		}, (err, log) => {
 			if (err) {
 				throw new Meteor.Error(LogError.LOG_INSERT_FAIL);
