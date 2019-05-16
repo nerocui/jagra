@@ -6,8 +6,8 @@ import { Meteor } from "meteor/meteor";
 import chai from "chai";
 // import StubCollections from "meteor/hwillson:stub-collections";
 // import { resetDatabase } from "meteor/xolvio:cleaner";
-import { Logs } from "../../imports/api/db";
-import { insertLog, removeLog } from "../../imports/api/log";
+import { Logs } from "./db";
+import { insertLog, removeLog } from "./log";
 
 if (Meteor.isServer) {
 	const { expect } = chai;
