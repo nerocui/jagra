@@ -11,7 +11,7 @@ import { insertLog, removeLog } from "./log";
 
 if (Meteor.isServer) {
 	const { expect } = chai;
-	describe("Log test", function () {
+	describe("Log API Tests", function () {
 		const log1 = {
 			name: "logid1",
 			type: "test",
