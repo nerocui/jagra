@@ -17,7 +17,8 @@ const NOT_AUTH = "Not signed in",
 	COMMENT_EDIT_FAIL = "Failed to edit comment",
 	COMMENT_REPLY_FAIL = "Failed to reply to comment",
 	//Logs
-	LOG_INSERT_FAIL = "Failed to create log";
+	LOG_INSERT_FAIL = "Failed to create log",
+	LOG_REMOVE_FAIL = "Failed to remove log";
 
 export const AuthError = {
 	NOT_AUTH,
@@ -45,4 +46,5 @@ export const CommentError = {
 
 export const LogError = {
 	LOG_INSERT_FAIL,
+	LOG_REMOVE_FAIL,
 };
