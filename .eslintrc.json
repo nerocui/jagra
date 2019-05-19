@@ -82,6 +82,7 @@
       "class-methods-use-this": "off",
       "one-var": "off",
       "quotes": ["error", "double"],
+      "linebreak-style": "off",
       "react/prop-types": "off",
       "no-trailing-spaces": [2, {
           "skipBlankLines": true

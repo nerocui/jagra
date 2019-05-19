@@ -23,7 +23,7 @@ if (Meteor.isServer) {
 
 		it("Should insert a log to the db", function () {
 			const log = Logs.findOne({ _id });
-			expect(log).to.not.be.null;
+			expect(log).to.not.be.undefined;
 			expect(Logs.find().fetch()).to.have.lengthOf(1);
 		});
 

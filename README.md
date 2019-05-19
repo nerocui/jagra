@@ -13,6 +13,10 @@
  meteor
  ```
  to build and delpoy to local
+ - To run tests
+ ```
+ meteor npm run test
+ ```
  #
  ## Coding Standard ##
  This project use eslint to ensure a consistent coding style and code quality.

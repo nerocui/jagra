@@ -32,13 +32,13 @@ export const insertComment = (db, taskId, content) => {
 			Meteor.call(TASKSAPI.ADD_COMMENT, taskId, comment._id);
 		}
 	});
-}
+};
 
 export const removeComment = (db, _id) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
-	const comment = db.findOne({ _id }).fetch(),
+	const comment = db.findOne({ _id }),
 		{ creatorId } = comment;
 	if (!comment) {
 		throw new Meteor.Error(CommentError.COMMENT_NOT_EXIST);
@@ -54,12 +54,12 @@ export const removeComment = (db, _id) => {
 		//for comments that replies to this comment, they will get null from frontend, as how it should be
 		//and the ui should deal with it by displaying "the original comment no longer exist"
 		if (replyToId) {
-			const { repliedById } = db.findOne({ _id: replyToId }).fetch(),
+			const { repliedById } = db.findOne({ _id: replyToId }),
 				newRepliedById = removeElement(repliedById, _id);
 			return db.update({ _id: replyToId }, { repliedById: newRepliedById });
 		}
 	});
-}
+};
 
 export const editComment = (db, _id, newContent) => {
 	if (!isAuthenticated()) {
@@ -78,7 +78,7 @@ export const editComment = (db, _id, newContent) => {
 			throw new Meteor.Error(CommentError.COMMENT_EDIT_FAIL);
 		}
 	});
-}
+};
 
 export const replyComment = (db, replyToId, taskId, content) => {
 	if (!isAuthenticated()) {
@@ -97,7 +97,7 @@ export const replyComment = (db, replyToId, taskId, content) => {
 			Meteor.call(COMMENTSAPI.REPLIED_BY, replyToId, _id);
 		}
 	});
-}
+};
 
 export const commentRepliedBy = (db, _id, replyerId) => {
 	if (!isAuthenticated()) {
@@ -115,23 +115,23 @@ export const commentRepliedBy = (db, _id, replyerId) => {
 			throw new Meteor.Error(CommentError.COMMENT_REPLY_FAIL);
 		}
 	});
-}
+};
 
 Meteor.methods({
 	[COMMENTSAPI.INSERT](taskId, content) {
-		insertComment(Comments, taskId, content);
+		return insertComment(Comments, taskId, content);
 	},
 	//entry point: tasks.removeComment()
 	[COMMENTSAPI.REMOVE](_id) {
-		removeComment(Comments, _id);
+		return removeComment(Comments, _id);
 	},
 	[COMMENTSAPI.EDIT](_id, newContent) {
-		editComment(Comments, _id, newContent);
+		return editComment(Comments, _id, newContent);
 	},
 	[COMMENTSAPI.REPLY](replyToId, taskId, content) {
-		replyComment(Comments, replyToId, taskId, content);
+		return replyComment(Comments, replyToId, taskId, content);
 	},
 	[COMMENTSAPI.REPLIED_BY](_id, replyerId) {
-		commentRepliedBy(Comments, _id, replyerId);
+		return commentRepliedBy(Comments, _id, replyerId);
 	},
 });
