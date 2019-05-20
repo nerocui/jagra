@@ -1,16 +1,28 @@
 import { Meteor } from "meteor/meteor";
 import moment from "moment";
 import { Comments, Tasks } from "./db";
-import { AuthError, CommentError } from "../constant/error";
+import { AuthError, CommentError, TaskError } from "../constant/error";
 import COMMENTSAPI from "../constant/methods/commentsAPI";
 import { CommentMessage } from "../constant/message";
 import { addToList, removeElement } from "../util/arrayUtil";
 import { isAuthenticated } from "../util/authUtil";
-import { addCommentToTask } from "./task";
 
 if (Meteor.isServer) {
 	Meteor.publish("comments", () => Comments.find());
 }
+
+export const addCommentToTask = (db, _id, commentId) => {
+	if (!isAuthenticated()) {
+		throw new Meteor.Error(Error.NOT_AUTH);
+	}
+	const task = db.findOne({ _id });
+	if (!task) {
+		throw new Meteor.Error(TaskError.TASK_DOES_NOT_EXIST);
+	}
+	const { commentsId } = task,
+		newCommentsId = addToList(commentsId, commentId);
+	return db.update({ _id }, { newCommentsId });
+};
 
 export const insertComment = (db, userId, taskId, content) => {
 	if (!isAuthenticated()) {

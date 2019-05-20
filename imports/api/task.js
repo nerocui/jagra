@@ -27,7 +27,7 @@ import {
 	assignTaskToEmployee,
 	watchTaskFromEmployee,
 } from "./employee";
-import { removeComment } from "./comment";
+import { removeComment, addCommentToTask } from "./comment";
 import { removeTaskReferenceFromFile } from "./file";
 
 if (Meteor.isServer) {
@@ -235,19 +235,6 @@ export const changeTaskDueDate = (db, _id, userId, date) => {
 	}).validate(date);
 	//Check if the date is before current date in front end
 	db.update({ _id }, { dueDate: date });
-};
-
-export const addCommentToTask = (db, _id, commentId) => {
-	if (!isAuthenticated()) {
-		throw new Meteor.Error(Error.NOT_AUTH);
-	}
-	const task = db.findOne({ _id });
-	if (!task) {
-		throw new Meteor.Error(TaskError.TASK_DOES_NOT_EXIST);
-	}
-	const { commentsId } = task,
-		newCommentsId = addToList(commentsId, commentId);
-	return db.update({ _id }, { newCommentsId });
 };
 
 export const removeCommentFromTask = (db, _id, commentId) => {
