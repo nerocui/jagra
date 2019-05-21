@@ -4,7 +4,7 @@
 /* eslint-disable func-names */
 import { Meteor } from "meteor/meteor";
 import chai from "chai";
-import { Comments } from "./db";
+import { Comments, Employees } from "./db";
 import {
 	insertComment,
 	removeComment,

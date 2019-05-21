@@ -9,7 +9,7 @@ if (Meteor.isServer) {
 	Meteor.publish("logs", () => Logs.find());
 }
 
-export const insertLog = (db, data) => {
+export const insertLog = (db, data, done) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
@@ -20,6 +20,9 @@ export const insertLog = (db, data) => {
 			throw new Meteor.Error(LogError.LOG_INSERT_FAIL);
 		} else {
 			console.log(LogMessage.LOG_CREATED, log);
+			if (done) {
+				done();
+			}
 		}
 	});
 };
@@ -36,8 +39,8 @@ export const removeLog = (db, _id) => {
 };
 
 Meteor.methods({
-	[LOGSAPI.INSERT](data) {
-		return insertLog(Logs, data);
+	[LOGSAPI.INSERT](data, done) {
+		return insertLog(Logs, data, done);
 	},
 	[LOGSAPI.REMOVE](_id) {
 		return removeLog(Logs, _id);

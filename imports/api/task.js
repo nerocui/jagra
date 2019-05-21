@@ -42,7 +42,7 @@ if (Meteor.isServer) {
 // private relationshipsId: Array<String>;
 //TODO({nkWzRdX91}): file and relationship are left not implemented since we don't know how they work
 
-export const insertTask = (db, userId, title, description) => {
+export const insertTask = (db, userId, title, description, done) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
@@ -63,6 +63,9 @@ export const insertTask = (db, userId, title, description) => {
 			throw new Meteor.Error(TaskError.TASK_INSERT_FAIL);
 		} else {
 			console.log(TaskMessage.TASK_CREATED, task);
+			if (done) {
+				done();
+			}
 		}
 	});
 };
@@ -337,8 +340,8 @@ export const removeWatchersFromTaskByTeam = (db, _id, userId, teamId) => {
 };
 
 Meteor.methods({
-	[TASKSAPI.INSERT](title, description) {
-		return insertTask(Tasks, this.userId, title, description);
+	[TASKSAPI.INSERT](title, description, done) {
+		return insertTask(Tasks, this.userId, title, description, done);
 	},
 	[TASKSAPI.REMOVE](_id) {
 		return removeTask(Tasks, _id, this.userId);
