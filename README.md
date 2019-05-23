@@ -53,4 +53,22 @@
 
  To see what rules are disabled, refer to .eslintrc.json
 
- 
+#
+
+## Features
+
+Admin dashboard
+ - On borading employee
+	- By form
+	- By importing from csv
+	- By importing from json
+ - Export/download all company data
+ - Track file reference
+ - Check logs/activities
+ - Create/manage Teams
+ - View/handle requests
+ - View/edit plan
+ - Delete account and be provided the option to download all data
+ - 
+
+
