@@ -53,4 +53,37 @@
 
  To see what rules are disabled, refer to .eslintrc.json
 
- 
+#
+
+## Features
+
+Admin dashboard
+ - On borading employee
+	- By form
+	- By importing from csv
+	- By importing from json
+ - Export/download all company data
+ - Track file reference
+ - Check logs/activities
+ - Create/manage Teams
+ - View/handle requests
+ - View/edit plan
+ - Delete account and be provided the option to download all data
+
+Employee dashboard
+ - Overview of tasks assigned, created, team activity, recent files, activities from watched tasks, comments replies, requests
+	- Each type is a section, each item in a section is a card with rich info
+ - Option to click into detailed pages
+	- All assigned tasks
+	- All created tasks
+	- All watched tasks, option to toggle if it's assigned or created
+	- All team member
+	- All team activities
+	- All files uploaded
+		- search by user, file name, team
+		- option to view all from self, team, or a specific employee
+	- All requests, including made by and to self
+
+
+
+
