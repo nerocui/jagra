@@ -15,7 +15,7 @@ export const insertEmployee = (db, employeeId, firstName, lastName, role) => {
         throw new Meteor.Error(AuthError.NOT_AUTH);
     }
     return db.insert({
-        creatorId: this.userId, employeeId, firstName, lastName,
+        employeeId, firstName, lastName,
         // not sure onBoard should be a today or not
         onBoard: today.getDate(),
         // should manager id and team id be null at the very begining when meteor doing auth
@@ -35,7 +35,7 @@ export const insertEmployee = (db, employeeId, firstName, lastName, role) => {
         teamsId: [],
         // from my understanding, role should be one of"employer", "employee", "admin"?
         // i think it would be better to have it once we create employee, since it make sense to determine the level of the account at the time we create it
-        role
+        role,
     }, (err, firstName, lastName) => {
         if (err) {
             throw new Meteor.Error(EmployeeError.EMPLOYEE_INSERT_FAIL);
@@ -50,8 +50,9 @@ export const insertEmployee = (db, employeeId, firstName, lastName, role) => {
 export const removeEmployee = (db, _id) => {
     if (!this.userId) {
         throw new Meteor.Error(AuthError.NOT_AUTH);
-    }
-    const employee = Employees.findOne({_id}).fetch(), {creatorId} = employee;
+	}
+	//TODO: not too sure use _id or employeeid
+    const employee = Employees.findOne({_id}), {creatorId} = employee;
     if (! employee) {
         throw new Meteor.Error(EmployeeError.EMPLOYEE_NOT_EXIST);
     }
@@ -60,11 +61,8 @@ export const removeEmployee = (db, _id) => {
     }
 
     // TODO:
-    // need to add update tasks status associated with this employee
-    // including task he created/ assigned/ watched
-    // should use TASKSAPI.UPDATE_STATUS/ TASKSAPI.UNWATCH/ TASKSAPI.REMOVE_WATCHER/
-
-    return Employees.remove({
+    // need to make sure tasks status associated with this employee has been updated 
+    return db.remove({
         _id
     }, err => {
         if (err) {
@@ -73,60 +71,70 @@ export const removeEmployee = (db, _id) => {
     });
 };
 
-export const createTask = (db, employeeId, taskId, taskTitle, taskDescription) => {
-    if (!this.userId) {
-        throw new Meteor.Error(AuthError.NOT_AUTH);
-    }
+//TODO: do we need this in employee???
+//I think so, delete this for now :/
+// export const createTask = (db, employeeId, taskId, taskTitle, taskDescription) => {
+//     if (!this.userId) {
+//         throw new Meteor.Error(AuthError.NOT_AUTH);
+// 	}
+// 	//TODO: not too sure use _id or employeeid
+// 	const employee = db.findOne({ employeeId });
+// 	if (!employee) {
+// 		throw new Meteor.Error(EmployeeError.EMPLOYEE_NOT_EXIST);
+// 	}
+// 	let { tasksCreatedId } = employee;
+// 	tasksCreatedId = [...tasksCreatedId];
+// 	if (!tasksCreatedId.includes(taskId)) {
+// 		tasksCreatedId = addToList(tasksCreatedId, taskId);
+// 		return db.update({ employeeId }, { tasksCreatedId }, err => {
+// 			if (err) {
+// 				throw new Meteor.Error(EmployeeError.TASK_NOT_CREATABLE);
+// 			} else {
+// 				//TODO:
+// 			}
+// 		});
+// 	}
+    
+//     return db.update(_id, {tasksCreatedId })
+// };
 
-    // why dont need taskid while inserting task?
-    TASKSAPI.INSERT(taskTitle, taskDescription);
-};
-
-export const removeCreatedTask = (db, employeeId, taskId) => {
-    if (!this.userId) {
-        throw new Meteor.Error(AuthError.NOT_AUTH);
-    }
-
-    // TODO:
-    // This need to be modified
-    // need to wrapped in `return`
-    TASKSAPI.REMOVE(taskId);
-
-};
-
-export const removeAssignedTask = (db, employeeId, taskId) => {
-    if (!this.userId) {
-        throw new Meteor.Error(AuthError.NOT_AUTH);
-    }
-
-    // TODO:
-    // This need to be modified
-    // need to wrapped in `return`
-    TASKSAPI.REMOVE(taskId);
-
-};
-
-export const removeWatchedTask = (db, employeeId, taskId) => {
+export const removeCreateTaskFromEmployee = (db, employeeId, taskId) => {
     if (!this.userId) {
         throw new Meteor.Error(AuthError.NOT_AUTH);
     }
 
     // TODO:
-    // This need to be modified
-    // need to wrapped in `return`
-    TASKSAPI.REMOVE(taskId);
+
 
 };
 
-export const assignTask = (db, employeeId, taskId) => {
+export const removeAssignedTaskFromExployee = (db, employeeId, taskId) => {
     if (!this.userId) {
         throw new Meteor.Error(AuthError.NOT_AUTH);
     }
 
     // TODO:
-    // This need to be modified
-    // need to wrapped in `return`
-    TASKSAPI.ASSIGN_TO(taskId, employeeId);
+    
+
+};
+
+export const removeWatchedTaskFromEmployee = (db, employeeId, taskId) => {
+    if (!this.userId) {
+        throw new Meteor.Error(AuthError.NOT_AUTH);
+    }
+
+    // TODO:
+    
+
+};
+
+export const assignTaskToEmployee = (db, employeeId, taskId) => {
+    if (!this.userId) {
+        throw new Meteor.Error(AuthError.NOT_AUTH);
+    }
+
+    // TODO:
+    
 };
 
 export const watchTask = (db, employeeId, taskId) => {
@@ -135,10 +143,7 @@ export const watchTask = (db, employeeId, taskId) => {
     }
 
     // TODO:
-    // This need to be modified
-    // need to wrapped in `return`
-    TASKSAPI.WATCH(taskId);
-    TASKSAPI.ADD_WATCHER(employeeId);
+   
 };
 
 export const unwatchTask = (db, employeeId, taskId) => {
@@ -147,34 +152,31 @@ export const unwatchTask = (db, employeeId, taskId) => {
     }
 
     // TODO:
-    // This need to be modified
-    // need to wrapped in `return`
-    TASKSAPI.UNWATCH(taskId);
-    TASKSAPI.REMOVE_WATCHER(taskId, employeeId);
 
 };
 
 Meteor.methods({
-	[EMPLOYEESAPI.INSERT]() {
-		return insertEmployee(Employees,);
+	[EMPLOYEESAPI.INSERT](employeeId, firstName, lastName, role) {
+		return insertEmployee(Employees, employeeId, firstName, lastName, role);
 	},
+	//TODO: ADDING parameters to the method mapping below
 	[EMPLOYEESAPI.REMOVE]() {
 		return removeEmployee(Employees,);
 	},
 	[EMPLOYEESAPI.REMOVE_CREATED_TASK]() {
-		return removeCreatedTask(Employees, );
+		return removeCreateTaskFromEmployee(Employees, );
 	},
 	[EMPLOYEESAPI.REMOVE_ASSIGNED_TASK]() {
-		return removeAssignedTask(Employees, );
+		return removeAssignedTaskFromExployee(Employees, );
 	},
 	[EMPLOYEESAPI.REMOVE_WATCHED_TASK]() {
-		return removeWatchedTask(Employees,);
+		return removeWatchedTaskFromEmployee(Employees,);
 	},
 	[EMPLOYEESAPI.CREATE_TASK]() {
 		return createTask(Employees, );
 	},
 	[EMPLOYEESAPI.ASSIGN_TASK]() {
-		return assignTask(Employees, );
+		return assignTaskToEmployee(Employees, );
 	},
 	[EMPLOYEESAPI.WATCH_TASK]() {
 		return watchTask(Employees, );
