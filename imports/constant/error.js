@@ -23,6 +23,7 @@ const NOT_AUTH = "Not signed in",
 	EMPLOYEE_INSERT_FAIL = "Failed to create employee";
 	EMPLOYEE_NOT_EXIST = "Employee does not exist";
 	EMPLOYEE_REMOVE_FAIL = "Failed to remove employee";
+	CREATED_TASK_NOT_REMOVABLE = "Failed to remove created task from employee";
 
 export const AuthError = {
 	NOT_AUTH,
@@ -57,4 +58,5 @@ export const EmployeeError = {
 	EMPLOYEE_INSERT_FAIL,
 	EMPLOYEE_NOT_EXIST,
 	EMPLOYEE_REMOVE_FAIL,
+	CREATED_TASK_NOT_REMOVABLE,
 };

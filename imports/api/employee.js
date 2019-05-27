@@ -1,6 +1,7 @@
 import {Meteor} from "meteor/meteor";
 import {Employees} from "./db";
 import EMPLOYEESAPI from "../constant/methods/employeesAPI";
+import { isAuthenticated } from "../util/authUtil";
 import {AuthError, EmployeeError} from "../constant/error";
 import TASKSAPI from "../constant/methods/tasksAPI";
 import {EmployeeMessage} from "../constant/message";
@@ -11,7 +12,7 @@ if (Meteor.isServer) {
 
 // username, password, accountId, employeeId
 export const insertEmployee = (db, employeeId, firstName, lastName, role) => {
-    if (!this.userId) {
+    if (!isAuthenticated()) {
         throw new Meteor.Error(AuthError.NOT_AUTH);
     }
     return db.insert({
@@ -48,7 +49,7 @@ export const insertEmployee = (db, employeeId, firstName, lastName, role) => {
 };
 
 export const removeEmployee = (db, _id) => {
-    if (!this.userId) {
+    if (!isAuthenticated()) {
         throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
 	//TODO: not too sure use _id or employeeid
@@ -99,9 +100,26 @@ export const removeEmployee = (db, _id) => {
 // };
 
 export const removeCreateTaskFromEmployee = (db, employeeId, taskId) => {
-    if (!this.userId) {
+    if (!isAuthenticated()) {
         throw new Meteor.Error(AuthError.NOT_AUTH);
-    }
+	}
+	
+	const employee = db.findOne({ employeeId });
+	if (!employee) {
+		throw new Meteor.Error(EmployeeError.EMPLOYEE_NOT_EXIST);
+	}
+	let {tasksAssienedId} = employee;
+	tasksAssienedId = [...tasksAssienedId];
+	if(tasksCreatedId.includes(taskId)){
+		tasksAssienedId = removeElement(tasksAssienedId, taskId);
+		return db.update({ employeeId }, { tasksAssienedId }, err => {
+			if (err) {
+				throw new Meteor.Error(EmployeeError.CREATED_TASK_NOT_REMOVABLE);
+			} else {
+				//TODO:
+			}
+		});
+	}
 
     // TODO:
 
@@ -109,7 +127,7 @@ export const removeCreateTaskFromEmployee = (db, employeeId, taskId) => {
 };
 
 export const removeAssignedTaskFromExployee = (db, employeeId, taskId) => {
-    if (!this.userId) {
+    if (!isAuthenticated()) {
         throw new Meteor.Error(AuthError.NOT_AUTH);
     }
 
@@ -119,7 +137,7 @@ export const removeAssignedTaskFromExployee = (db, employeeId, taskId) => {
 };
 
 export const removeWatchedTaskFromEmployee = (db, employeeId, taskId) => {
-    if (!this.userId) {
+    if (!isAuthenticated()) {
         throw new Meteor.Error(AuthError.NOT_AUTH);
     }
 
@@ -129,7 +147,7 @@ export const removeWatchedTaskFromEmployee = (db, employeeId, taskId) => {
 };
 
 export const assignTaskToEmployee = (db, employeeId, taskId) => {
-    if (!this.userId) {
+    if (!isAuthenticated()) {
         throw new Meteor.Error(AuthError.NOT_AUTH);
     }
 
@@ -138,7 +156,7 @@ export const assignTaskToEmployee = (db, employeeId, taskId) => {
 };
 
 export const watchTask = (db, employeeId, taskId) => {
-    if (!this.userId) {
+    if (!isAuthenticated()) {
         throw new Meteor.Error(AuthError.NOT_AUTH);
     }
 
@@ -147,7 +165,7 @@ export const watchTask = (db, employeeId, taskId) => {
 };
 
 export const unwatchTask = (db, employeeId, taskId) => {
-    if (!this.userId) {
+    if (!isAuthenticated()) {
         throw new Meteor.Error(AuthError.NOT_AUTH);
     }
 
@@ -185,3 +203,7 @@ Meteor.methods({
 		return unwatchTask(Employees, );
 	},
 });
+
+function newFunction() {
+	return this.userId;
+}
