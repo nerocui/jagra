@@ -45,6 +45,11 @@ Meteor.methods({
 			throw new Meteor.Error(AuthError.NO_PRIVILEGE);
 		}
 
+		//TODO:
+		//need to add update tasks status associated with this employee
+		//including task he created/ assigned/ watched
+		//should use TASKSAPI.UPDATE_STATUS/ TASKSAPI.UNWATCH/ TASKSAPI.REMOVE_WATCHER/ 
+
 		return Employees.remove({ _id }, err => {
 			if (err) {
 				throw new Meteor.Error(EmployeeError.EMPLOYEE_REMOVE_FAIL);
@@ -52,11 +57,13 @@ Meteor.methods({
 		});
 	},
 
-	[EMPLOYEESAPI.CREATE_TASK](employeeId, taskId){
+	[EMPLOYEESAPI.CREATE_TASK](employeeId, taskId, taskTitle, taskDescription){
 		if (!this.userId) {
 			throw new Meteor.Error(AuthError.NOT_AUTH);
 		}
 
+		//why dont need taskid while inserting task?
+		TASKSAPI.INSERT(taskTitle, taskDescription);
 	},
 
 	[EMPLOYEESAPI.REMOVE_CREATED_TASK](employeeId, taskId){
@@ -64,25 +71,70 @@ Meteor.methods({
 			throw new Meteor.Error(AuthError.NOT_AUTH);
 		}
 
-	},
-
-	[EMPLOYEESAPI.REMOVE_ASSIGNED_TASK](){
-
-	},
-
-	[EMPLOYEESAPI.REMOVE_WATCHED_TASK](){
+		//TODO:
+		//This need to be modified
+		//need to wrapped in `return`
+		TASKSAPI.REMOVE(taskId);
 
 	},
 
-	[EMPLOYEESAPI.ASSIGN_TASK](employeeId, ){
+	[EMPLOYEESAPI.REMOVE_ASSIGNED_TASK](employeeId, taskId){
+		if (!this.userId) {
+			throw new Meteor.Error(AuthError.NOT_AUTH);
+		}
+
+		//TODO:
+		//This need to be modified
+		//need to wrapped in `return`
+		TASKSAPI.REMOVE(taskId);
 
 	},
 
-	[EMPLOYEESAPI.WATCH_TASK](){
+	[EMPLOYEESAPI.REMOVE_WATCHED_TASK](employeeId, taskId){
+		if (!this.userId) {
+			throw new Meteor.Error(AuthError.NOT_AUTH);
+		}
+
+		//TODO:
+		//This need to be modified
+		//need to wrapped in `return`
+		TASKSAPI.REMOVE(taskId);
 
 	},
 
-	[EMPLOYEESAPI.UNWATCH_TASK](){
+	[EMPLOYEESAPI.ASSIGN_TASK](employeeId, taskId){
+		if (!this.userId) {
+			throw new Meteor.Error(AuthError.NOT_AUTH);
+		}
+
+		//TODO:
+		//This need to be modified
+		//need to wrapped in `return`
+		TASKSAPI.ASSIGN_TO(taskId, employeeId);
+	},
+
+	[EMPLOYEESAPI.WATCH_TASK](employeeId, taskId){
+		if (!this.userId) {
+			throw new Meteor.Error(AuthError.NOT_AUTH);
+		}
+
+		//TODO:
+		//This need to be modified
+		//need to wrapped in `return`
+		TASKSAPI.WATCH(taskId);
+		TASKSAPI.ADD_WATCHER(employeeId);
+	},
+
+	[EMPLOYEESAPI.UNWATCH_TASK](employeeId, taskId){
+		if (!this.userId) {
+			throw new Meteor.Error(AuthError.NOT_AUTH);
+		}
+
+		//TODO:
+		//This need to be modified
+		//need to wrapped in `return`
+		TASKSAPI.UNWATCH(taskId);
+		TASKSAPI.REMOVE_WATCHER(taskId, employeeId);
 
 	},
 })
