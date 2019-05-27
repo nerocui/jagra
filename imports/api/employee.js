@@ -52,11 +52,11 @@ export const removeEmployee = (db, _id) => {
         throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
 	//TODO: not too sure use _id or employeeid
-    const employee = Employees.findOne({_id}), {creatorId} = employee;
+    const employee = Employees.findOne({_id}), {employeeId} = employee;
     if (! employee) {
         throw new Meteor.Error(EmployeeError.EMPLOYEE_NOT_EXIST);
     }
-    if (creatorId !== this.userId) {
+    if (employeeId !== this.userId) {
         throw new Meteor.Error(AuthError.NO_PRIVILEGE);
     }
 
