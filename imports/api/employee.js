@@ -19,7 +19,10 @@ Meteor.methods({
 			employeeId,
 			employeeFirstName,
 			employeeLastName,
-			employeePosition
+			employeePosition,
+			assignedTasks: null,
+			watchTasks: null,
+			createdTasks: null,
 		},(err, employeeFirstName, employeeLastName) => {
 			if (err) {
 				throw new Meteor.Error(EmployeeError.EMPLOYEE_INSERT_FAIL);
@@ -41,7 +44,7 @@ Meteor.methods({
 		if (creatorId !== this.userId) {
 			throw new Meteor.Error(AuthError.NO_PRIVILEGE);
 		}
-		
+
 		return Employees.remove({ _id }, err => {
 			if (err) {
 				throw new Meteor.Error(EmployeeError.EMPLOYEE_REMOVE_FAIL);
@@ -49,7 +52,17 @@ Meteor.methods({
 		});
 	},
 
-	[EMPLOYEESAPI.REMOVE_CREATED_TASK](){
+	[EMPLOYEESAPI.CREATE_TASK](employeeId, taskId){
+		if (!this.userId) {
+			throw new Meteor.Error(AuthError.NOT_AUTH);
+		}
+
+	},
+
+	[EMPLOYEESAPI.REMOVE_CREATED_TASK](employeeId, taskId){
+		if (!this.userId) {
+			throw new Meteor.Error(AuthError.NOT_AUTH);
+		}
 
 	},
 
@@ -61,7 +74,7 @@ Meteor.methods({
 
 	},
 
-	[EMPLOYEESAPI.ASSIGN_TASK](){
+	[EMPLOYEESAPI.ASSIGN_TASK](employeeId, ){
 
 	},
 
