@@ -5,7 +5,8 @@
     "start": "meteor run",
     "lint": "eslint .",
     "pretest": "npm run lint --silent",
-    "test": "meteor test --driver-package cultofcoders:mocha"
+    "test": "meteor test --driver-package cultofcoders:mocha",
+    "testfullapp": "meteor test --full-app --driver-package cultofcoders:mocha"
   },
   "eslintConfig": {
     "extends": "@meteorjs/eslint-config-meteor"

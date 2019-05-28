@@ -5,7 +5,7 @@ import EMPLOYEESAPI from "../constant/methods/employeesAPI";
 import ADMIN_INFO from "../config/clientConf/conf";
 import { Employees } from "../api/db";
 
-export const isAuthenticated = () => Meteor.userId || Meteor.isTest;
+export const isAuthenticated = () => Meteor.user() || Meteor.isTest;
 
 export const isAdmin = employeeDb => {
 	const user = employeeDb.findOne({ _id: Meteor.userId });

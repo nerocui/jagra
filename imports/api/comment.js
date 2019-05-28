@@ -51,19 +51,14 @@ export const removeComment = (db, _id, userId) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
-	console.log("[REMOVING COMMENT] ID is: ", _id);
 	const comment = db.findOne({ _id }),
 		{ creatorId } = comment;
 	if (!comment) {
 		throw new Meteor.Error(CommentError.COMMENT_NOT_EXIST);
 	}
-	console.log("[REMOVING COMMENT] Creator ID is: ", !!creatorId);
-	console.log("[REMOVING COMMENT] Current User ID is: ", !!userId);
 	if (!creatorId || !userId || creatorId !== userId) {
-		console.log("[REMOVING COMMENT] Doing Auth...");
 		throw new Meteor.Error(AuthError.NO_PRIVILEGE);
 	}
-	console.log("[REMOVING COMMENT] Finished Auth.");
 	const { replyToId } = comment;
 	return db.remove({ _id }, err => {
 		if (err) {
@@ -137,14 +132,14 @@ export const replyComment = (db, replyToId, taskId, content) => {
 
 Meteor.methods({
 	[COMMENTSAPI.INSERT](taskId, content) {
-		return insertComment(Comments, this.userId, taskId, content);
+		return insertComment(Comments, Meteor.userId(), taskId, content);
 	},
 	//entry point: tasks.removeComment()
 	[COMMENTSAPI.REMOVE](_id) {
-		return removeComment(Comments, _id, this.userId);
+		return removeComment(Comments, _id, Meteor.userId());
 	},
 	[COMMENTSAPI.EDIT](_id, newContent) {
-		return editComment(Comments, _id, this.userId, newContent);
+		return editComment(Comments, _id, Meteor.userId(), newContent);
 	},
 	[COMMENTSAPI.REPLY](replyToId, taskId, content) {
 		return replyComment(Comments, replyToId, taskId, content);
