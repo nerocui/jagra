@@ -51,14 +51,19 @@ export const removeComment = (db, _id, userId) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
+	console.log("[REMOVING COMMENT] ID is: ", _id);
 	const comment = db.findOne({ _id }),
 		{ creatorId } = comment;
 	if (!comment) {
 		throw new Meteor.Error(CommentError.COMMENT_NOT_EXIST);
 	}
-	if (creatorId !== userId) {
+	console.log("[REMOVING COMMENT] Creator ID is: ", !!creatorId);
+	console.log("[REMOVING COMMENT] Current User ID is: ", !!userId);
+	if (!creatorId || !userId || creatorId !== userId) {
+		console.log("[REMOVING COMMENT] Doing Auth...");
 		throw new Meteor.Error(AuthError.NO_PRIVILEGE);
 	}
+	console.log("[REMOVING COMMENT] Finished Auth.");
 	const { replyToId } = comment;
 	return db.remove({ _id }, err => {
 		if (err) {
