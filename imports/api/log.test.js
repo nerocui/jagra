@@ -7,6 +7,7 @@ import chai from "chai";
 // import StubCollections from "meteor/hwillson:stub-collections";
 // import { resetDatabase } from "meteor/xolvio:cleaner";
 import { Logs } from "./db";
+import "./log";
 import LOGSAPI from "../constant/methods/logsAPI";
 
 if (Meteor.isServer) {
@@ -21,7 +22,6 @@ if (Meteor.isServer) {
 			Logs.remove({});
 		});
 		it("Should insert a log to the db", function () {
-			//const _id = insertLog(Logs, log1);
 			const _id = Meteor.call(LOGSAPI.INSERT, log1);
 			const log = Logs.findOne({ _id });
 			expect(log).to.not.be.undefined;
