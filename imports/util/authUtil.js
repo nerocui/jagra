@@ -1,9 +1,9 @@
 import { Meteor } from "meteor/meteor";
+import ROLE from "../constant/role";
 
-// eslint-disable-next-line import/prefer-default-export
-export const isAuthenticated = () => {
-	if (Meteor.isTest) {
-		return true;
-	}
-	return Meteor.userId;
+export const isAuthenticated = () => Meteor.userId || Meteor.isTest;
+
+export const isAdmin = employeeDb => {
+	const user = employeeDb.findOne({ _id: Meteor.userId });
+	return user.role === ROLE.ADMIN || Meteor.isTest;
 };
