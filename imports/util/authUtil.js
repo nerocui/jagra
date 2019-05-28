@@ -11,13 +11,13 @@ export const isAdmin = employeeDb => {
 	return user.role === ROLE.ADMIN || Meteor.isTest;
 };
 
-export const login = (email, password, callback) => {
+export const login = (email, password, callback, error) => {
 	const accountId = Meteor.loginWithPassword(email, password, err => {
-		callback(err);
+		error(err);
 	});
 	const employee = Employees.findOne({ accountId });
 	if (employee && employee.role === ROLE.ADMIN) {
-		//TODO: Do something here for redirection
+		callback();//callback will handle UI redirect
 	}
 };
 
