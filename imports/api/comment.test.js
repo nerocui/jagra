@@ -5,19 +5,19 @@
 import { Meteor } from "meteor/meteor";
 import chai from "chai";
 import { Comments } from "./db";
-import {
-	insertComment,
-	removeComment,
-	// editComment,
-	// replyComment,
-	// commentRepliedBy,
-} from "./comment";
+import "./comment";
+import "./employee";
 import COMMENTAPI from "../constant/methods/commentsAPI";
+import { signup, login } from "../util/authUtil";
 
 if (Meteor.isServer) {
 	const { expect } = chai;
 	describe("Comment API Tests", function () {
-		const comment1 = "content1";
+		signup("test@email.com", "123456789", "test", "name");
+		if (!this.userId) {
+			login("test@email.com", 123456789);
+		}
+		const comment1 = "content11";
 		Comments.remove({});
 		//const _id = insertComment(Comments, "taskId1", comment1);
 		const _id = Meteor.call(COMMENTAPI.INSERT, "taskId1", comment1);
