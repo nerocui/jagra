@@ -203,28 +203,28 @@ Meteor.methods({
 		return insertEmployee(Employees, _id, firstName, lastName, role);
 	},
 	// TODO: ADDING parameters to the method mapping below
-	[EMPLOYEESAPI.REMOVE]() {
-		return removeEmployee(Employees);
+	[EMPLOYEESAPI.REMOVE](_id) {
+		return removeEmployee(Employees, _id);
 	},
-	[EMPLOYEESAPI.REMOVE_CREATED_TASK]() {
-		return removeCreateTaskFromEmployee(Employees);
+	[EMPLOYEESAPI.REMOVE_CREATED_TASK](_id) {
+		return removeCreateTaskFromEmployee(Employees, _id);
 	},
-	[EMPLOYEESAPI.REMOVE_ASSIGNED_TASK]() {
-		return removeAssignedTaskFromExployee(Employees);
+	[EMPLOYEESAPI.REMOVE_ASSIGNED_TASK](_id) {
+		return removeAssignedTaskFromExployee(Employees, _id);
 	},
-	[EMPLOYEESAPI.REMOVE_WATCHED_TASK]() {
-		return removeWatchedTaskFromEmployee(Employees);
+	[EMPLOYEESAPI.REMOVE_WATCHED_TASK](_id) {
+		return removeWatchedTaskFromEmployee(Employees, _id);
 	},
-	[EMPLOYEESAPI.CREATE_TASK]() {
-		return createTask(Employees);
+	[EMPLOYEESAPI.CREATE_TASK](_id) {
+		return createTask(Employees, _id);
 	},
-	[EMPLOYEESAPI.ASSIGN_TASK]() {
-		return assignTaskToEmployee(Employees);
+	[EMPLOYEESAPI.ASSIGN_TASK](_id) {
+		return assignTaskToEmployee(Employees, _id);
 	},
-	[EMPLOYEESAPI.WATCH_TASK]() {
-		return watchTask(Employees);
+	[EMPLOYEESAPI.WATCH_TASK](_id) {
+		return watchTask(Employees, _id);
 	},
-	[EMPLOYEESAPI.UNWATCH_TASK]() {
-		return unwatchTask(Employees);
+	[EMPLOYEESAPI.UNWATCH_TASK](_id) {
+		return unwatchTask(Employees, _id);
 	},
 });
