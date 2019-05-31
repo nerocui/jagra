@@ -1,11 +1,11 @@
 import { Meteor } from "meteor/meteor";
-import { Employees } from "./db";
+import { Employees, Tasks } from "./db";
 import EMPLOYEESAPI from "../constant/methods/employeesAPI";
 import { isAuthenticated } from "../util/authUtil";
 import { AuthError, EmployeeError } from "../constant/error";
 import { EmployeeMessage } from "../constant/message";
 import { removeElement, addToList } from "../util/arrayUtil";
-import { isAdmin } from "../util/employeeUtil";
+import { isAdmin, removeRelatedTasks } from "../util/employeeUtil";
 
 if (Meteor.isServer) {
 	Meteor.publish("employees", () => Employees.find());
@@ -26,7 +26,6 @@ export const insertEmployee = (
 	if (!isAdmin(_id, Employees)) {
 		throw new Meteor.Error(EmployeeError.ADMIN_NOT_FOUND);
 	}
-	const today = new Date();
 
 	return db.insert(
 		{
@@ -34,7 +33,7 @@ export const insertEmployee = (
 			firstName,
 			lastName,
 			// not sure onBoard should be a today or not
-			onBoard: today.getDate(),
+			onBoard: new Date(),
 			// should manager id and team id be null at the very begining when meteor doing auth
 			// or it might come with assigned managerId while inserting employee??
 			// I will keep it null for now
@@ -89,6 +88,18 @@ export const removeEmployee = (db, _id, employeeId) => {
 		err => {
 			if (err) {
 				throw new Meteor.Error(EmployeeError.EMPLOYEE_REMOVE_FAIL);
+			} else {
+				let { tasksAssienedId } = employee;
+				tasksAssienedId = [...tasksAssienedId];
+				removeRelatedTasks(tasksAssienedId, employeeId, Tasks);
+				
+				let { tasksCreatedId } = employee;
+				tasksCreatedId = [...tasksCreatedId];
+				removeRelatedTasks(tasksCreatedId, employeeId, Tasks);
+
+				let { tasksWatchingId } = employee;
+				tasksWatchingId = [...tasksWatchingId];
+				removeRelatedTasks(tasksWatchingId, employeeId, Tasks);
 			}
 		},
 	);
@@ -118,7 +129,7 @@ export const createTask = (db, _id, taskId) => {
 				if (err) {
 					throw new Meteor.Error(EmployeeError.TASK_NOT_CREATABLE);
 				}
-			},
+			}
 		);
 	}
 
