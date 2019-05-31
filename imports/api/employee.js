@@ -32,7 +32,6 @@ export const insertEmployee = (
 			employeeId,
 			firstName,
 			lastName,
-			// not sure onBoard should be a today or not
 			onBoard: new Date(),
 			// should manager id and team id be null at the very begining when meteor doing auth
 			// or it might come with assigned managerId while inserting employee??
@@ -50,7 +49,6 @@ export const insertEmployee = (
 			individualsId: [],
 			teamsId: [],
 			// from my understanding, role should be one of"employer", "employee", "admin"?
-			// i think it would be better to have it once we create employee, since it make sense to determine the level of the account at the time we create it
 			role,
 		},
 		err => {
@@ -79,8 +77,6 @@ export const removeEmployee = (db, _id, employeeId) => {
 		throw new Meteor.Error(AuthError.NO_PRIVILEGE);
 	}
 
-	// TODO:
-	// need to make sure tasks status associated with this employee has been updated
 	return db.remove(
 		{
 			employeeId,
@@ -129,7 +125,7 @@ export const createTask = (db, _id, taskId) => {
 				if (err) {
 					throw new Meteor.Error(EmployeeError.TASK_NOT_CREATABLE);
 				}
-			}
+			},
 		);
 	}
 
