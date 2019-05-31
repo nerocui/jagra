@@ -3,36 +3,38 @@ import { Employees } from "./db";
 import EMPLOYEESAPI from "../constant/methods/employeesAPI";
 import { isAuthenticated } from "../util/authUtil";
 import { AuthError, EmployeeError } from "../constant/error";
-import TASKSAPI from "../constant/methods/tasksAPI";
 import { EmployeeMessage } from "../constant/message";
-import {
-	removeElement,
-	addToList,
-	removeAllFromList,
-} from "../util/arrayUtil";
+import { removeElement, addToList } from "../util/arrayUtil";
+import { isAdmin } from "../util/employeeUtil";
 
 if (Meteor.isServer) {
 	Meteor.publish("employees", () => Employees.find());
 }
 
 // username, password, accountId, employeeId
-export const insertEmployee = (db, employeeId, firstName, lastName, role) => {
+export const insertEmployee = (
+	db,
+	_id,
+	employeeId,
+	firstName,
+	lastName,
+	role,
+) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
-	let today = new Date();
-	const dd = String(today.getDate()).padStart(2, "0");
-	const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-	const yyyy = today.getFullYear();
+	if (!isAdmin(_id, Employees)) {
+		throw new Meteor.Error(EmployeeError.ADMIN_NOT_FOUND);
+	}
+	const today = new Date();
 
-	today = `${ mm }/${ dd }/${ yyyy }`;
 	return db.insert(
 		{
 			employeeId,
 			firstName,
 			lastName,
 			// not sure onBoard should be a today or not
-			onBoard: today,
+			onBoard: today.getDate(),
 			// should manager id and team id be null at the very begining when meteor doing auth
 			// or it might come with assigned managerId while inserting employee??
 			// I will keep it null for now
@@ -52,31 +54,29 @@ export const insertEmployee = (db, employeeId, firstName, lastName, role) => {
 			// i think it would be better to have it once we create employee, since it make sense to determine the level of the account at the time we create it
 			role,
 		},
-		(err, _id) => {
+		err => {
 			if (err) {
 				throw new Meteor.Error(EmployeeError.EMPLOYEE_INSERT_FAIL);
 			} else {
-				console.log(
-					`${
-						EmployeeMessage.EMPLOYEE_CREATED
-					} with employee id ${ _id }`,
-				);
+				console.log(EmployeeMessage.EMPLOYEE_CREATED);
 			}
 		},
 	);
 };
 
-export const removeEmployee = (db, _id) => {
+export const removeEmployee = (db, _id, employeeId) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
-	// TODO: not too sure use _id or employeeid
-	const employee = Employees.findOne({ _id }),
-		{ employeeId } = employee;
+	if (!isAdmin(_id, Employees)) {
+		throw new Meteor.Error(EmployeeError.ADMIN_NOT_FOUND);
+	}
+	const employee = Employees.findOne({ employeeId });
+	const removedId = employee.employeeId;
 	if (!employee) {
 		throw new Meteor.Error(EmployeeError.EMPLOYEE_NOT_EXIST);
 	}
-	if (_id !== this.userId) {
+	if (removedId !== this.employeeId) {
 		throw new Meteor.Error(AuthError.NO_PRIVILEGE);
 	}
 
@@ -94,7 +94,7 @@ export const removeEmployee = (db, _id) => {
 	);
 };
 
-export const createTask = (db, _id, taskId, taskTitle, taskDescription) => {
+export const createTask = (db, _id, taskId) => {
 	if (!this.userId) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
@@ -117,10 +117,8 @@ export const createTask = (db, _id, taskId, taskTitle, taskDescription) => {
 			err => {
 				if (err) {
 					throw new Meteor.Error(EmployeeError.TASK_NOT_CREATABLE);
-				} else {
-					// TODO:
 				}
-			}
+			},
 		);
 	}
 
@@ -152,8 +150,6 @@ export const removeCreateTaskFromEmployee = (db, _id, taskId) => {
 					throw new Meteor.Error(
 						EmployeeError.CREATED_TASK_NOT_REMOVABLE,
 					);
-				} else {
-					// TODO:
 				}
 			},
 		);
@@ -162,7 +158,7 @@ export const removeCreateTaskFromEmployee = (db, _id, taskId) => {
 	// TODO:
 };
 
-export const removeAssignedTaskFromExployee = (db, _id, taskId) => {
+export const removeAssignedTaskFromExployee = () => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
@@ -170,7 +166,7 @@ export const removeAssignedTaskFromExployee = (db, _id, taskId) => {
 	// TODO:
 };
 
-export const removeWatchedTaskFromEmployee = (db, _id, taskId) => {
+export const removeWatchedTaskFromEmployee = () => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
@@ -178,7 +174,7 @@ export const removeWatchedTaskFromEmployee = (db, _id, taskId) => {
 	// TODO:
 };
 
-export const assignTaskToEmployee = (db, _id, taskId) => {
+export const assignTaskToEmployee = () => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
@@ -186,7 +182,7 @@ export const assignTaskToEmployee = (db, _id, taskId) => {
 	// TODO:
 };
 
-export const watchTask = (db, _id, taskId) => {
+export const watchTask = () => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
@@ -194,7 +190,7 @@ export const watchTask = (db, _id, taskId) => {
 	// TODO:
 };
 
-export const unwatchTask = (db, _id, taskId) => {
+export const unwatchTask = () => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}

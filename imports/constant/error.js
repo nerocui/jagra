@@ -18,12 +18,13 @@ const NOT_AUTH = "Not signed in",
 	COMMENT_REPLY_FAIL = "Failed to reply to comment",
 	//Logs
 	LOG_INSERT_FAIL = "Failed to create log",
-	LOG_REMOVE_FAIL = "Failed to remove log";
+	LOG_REMOVE_FAIL = "Failed to remove log",
 	//Employee
-	EMPLOYEE_INSERT_FAIL = "Failed to create employee";
-	EMPLOYEE_NOT_EXIST = "Employee does not exist";
-	EMPLOYEE_REMOVE_FAIL = "Failed to remove employee";
-	CREATED_TASK_NOT_REMOVABLE = "Failed to remove created task from employee";
+	EMPLOYEE_INSERT_FAIL = "Failed to create employee",
+	EMPLOYEE_NOT_EXIST = "Employee does not exist",
+	EMPLOYEE_REMOVE_FAIL = "Failed to remove employee",
+	CREATED_TASK_NOT_REMOVABLE = "Failed to remove created task from employee",
+	ADMIN_NOT_FOUND = "Failed to find admin";
 
 export const AuthError = {
 	NOT_AUTH,
@@ -59,4 +60,5 @@ export const EmployeeError = {
 	EMPLOYEE_NOT_EXIST,
 	EMPLOYEE_REMOVE_FAIL,
 	CREATED_TASK_NOT_REMOVABLE,
+	ADMIN_NOT_FOUND,
 };
