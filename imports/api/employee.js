@@ -11,7 +11,6 @@ if (Meteor.isServer) {
 	Meteor.publish("employees", () => Employees.find());
 }
 
-// username, password, accountId, employeeId
 export const insertEmployee = (
 	db,
 	_id,
@@ -33,9 +32,7 @@ export const insertEmployee = (
 			firstName,
 			lastName,
 			onBoard: new Date(),
-			// should manager id and team id be null at the very begining when meteor doing auth
-			// or it might come with assigned managerId while inserting employee??
-			// I will keep it null for now
+			// keep it null for now
 			managerId: null,
 			teamId: null,
 			tasksAssienedId: [],
@@ -48,7 +45,7 @@ export const insertEmployee = (
 			employeesId: [],
 			individualsId: [],
 			teamsId: [],
-			// from my understanding, role should be one of"employer", "employee", "admin"?
+			// role should be one of"employer", "employee", "admin"?
 			role,
 		},
 		err => {
