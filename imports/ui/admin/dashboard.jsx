@@ -12,7 +12,7 @@ export default class AdminDashboard extends Component {
 		return (
 			<div>
 				<h1>{ this.state.tab }</h1>
-				admin dashboard
+				Admin dashboard
 			</div>
 		);
 	}

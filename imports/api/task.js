@@ -208,6 +208,9 @@ export const assignTaskTo = (db, _id, userId, assigneeId) => {
 	}
 	//task should be allowed to be assigned to anyone
 	const currentAssigneeId = task.assigneeId;
+	if (currentAssigneeId === assigneeId) {
+		return assigneeId;
+	}
 	return db.update({ _id }, { assigneeId }, err => {
 		if (err) {
 			throw new Meteor.Error(TaskError.TASK_ASSIGN_FAIL);
