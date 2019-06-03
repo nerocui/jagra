@@ -1,5 +1,6 @@
 import { Meteor } from "meteor/meteor";
 import { Employees, Tasks } from "./db";
+import { removeWatcherFromTask, assignTaskTo } from "./task";
 import EMPLOYEESAPI from "../constant/methods/employeesAPI";
 import { isAuthenticated } from "../util/authUtil";
 import { AuthError, EmployeeError } from "../constant/error";
@@ -14,7 +15,7 @@ if (Meteor.isServer) {
 export const insertEmployee = (
 	db,
 	_id,
-	employeeId,
+	accountId,
 	firstName,
 	lastName,
 	role,
@@ -28,7 +29,7 @@ export const insertEmployee = (
 
 	return db.insert(
 		{
-			employeeId,
+			accountId,
 			firstName,
 			lastName,
 			onBoard: new Date(),
@@ -70,7 +71,7 @@ export const removeEmployee = (db, _id, employeeId) => {
 	if (!employee) {
 		throw new Meteor.Error(EmployeeError.EMPLOYEE_NOT_EXIST);
 	}
-	if (removedId !== this.employeeId) {
+	if (removedId === _id) {
 		throw new Meteor.Error(AuthError.NO_PRIVILEGE);
 	}
 
@@ -82,24 +83,21 @@ export const removeEmployee = (db, _id, employeeId) => {
 			if (err) {
 				throw new Meteor.Error(EmployeeError.EMPLOYEE_REMOVE_FAIL);
 			} else {
-				let { tasksAssienedId } = employee;
-				tasksAssienedId = [...tasksAssienedId];
-				removeRelatedTasks(tasksAssienedId, employeeId, Tasks);
-				
-				let { tasksCreatedId } = employee;
-				tasksCreatedId = [...tasksCreatedId];
-				removeRelatedTasks(tasksCreatedId, employeeId, Tasks);
-
 				let { tasksWatchingId } = employee;
 				tasksWatchingId = [...tasksWatchingId];
-				removeRelatedTasks(tasksWatchingId, employeeId, Tasks);
+				if (tasksWatchingId) {
+					tasksWatchingId.forEach(e => {
+						removeWatcherFromTask(Tasks, e, _id, employeeId);
+						assignTaskTo(Tasks, e, _id, null);
+					});
+				}
 			}
 		},
 	);
 };
 
 export const createTask = (db, _id, taskId) => {
-	if (!this.userId) {
+	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
 	// TODO: not too sure use _id or employeeid
@@ -125,8 +123,6 @@ export const createTask = (db, _id, taskId) => {
 			},
 		);
 	}
-
-	return db.update(_id, { tasksCreatedId });
 };
 
 export const removeCreateTaskFromEmployee = (db, _id, taskId) => {
