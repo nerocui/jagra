@@ -37,9 +37,9 @@ export const removeLog = (db, _id) => {
 
 Meteor.methods({
 	[LOGSAPI.INSERT](data) {
-		insertLog(Logs, data);
+		return insertLog(Logs, data);
 	},
 	[LOGSAPI.REMOVE](_id) {
-		removeLog(Logs, _id);
+		return removeLog(Logs, _id);
 	},
 });

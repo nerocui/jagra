@@ -5,13 +5,15 @@
     "start": "meteor run",
     "lint": "eslint .",
     "pretest": "npm run lint --silent",
-    "test": "meteor test --driver-package cultofcoders:mocha"
+    "test": "meteor test --driver-package cultofcoders:mocha",
+    "testfullapp": "meteor test --full-app --driver-package cultofcoders:mocha"
   },
   "eslintConfig": {
     "extends": "@meteorjs/eslint-config-meteor"
   },
   "dependencies": {
     "@babel/runtime": "^7.1.5",
+    "bcrypt": "^3.0.6",
     "fast-deep-equal": "^2.0.1",
     "meteor-node-stubs": "^0.4.1",
     "moment": "^2.24.0",

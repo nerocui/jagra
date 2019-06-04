@@ -1,5 +1,5 @@
-# jagra
-## Meteor ##
+# Jagra - A task management service for every organization
+## Meteor Framework (dev) ##
 [Official Site](https://www.meteor.com/)
 
  - Follow the installatiion steps.
@@ -17,6 +17,9 @@
  ```bash
  meteor npm run test
  ```
+ - To connect to mongoDB via a GUI software
+ Download [Robo 3T](https://robomongo.org/download), and connect to port 3001.
+ ![Robo3T](https://github.com/nerocui/screenshots/blob/master/robo3t.jpg?raw=true)
  #
  ## Project Structure
  .meteor -- everything meteor related, like meteor packages, versions, etc.
