@@ -147,6 +147,7 @@ export const updateTaskStatus = (db, _id, userId, status) => {
 	return db.update(_id, { status });
 };
 
+//TODO: remove this action since I already have it in employee.js
 export const removeWatcherFromTask = (db, _id, userId, watcherId) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(Error.NOT_AUTH);
@@ -194,6 +195,7 @@ export const watchTask = (db, _id, newWatcherId) => {
 
 export const addWatchersToTask = (db, _id, _watchersId) => _watchersId.map(newWatcherId => watchTask(db, _id, newWatcherId));
 
+//TODO: remove this action since I already have it in employee.js
 export const assignTaskTo = (db, _id, userId, assigneeId) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);

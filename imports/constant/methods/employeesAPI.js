@@ -6,7 +6,7 @@ export default {
 	REMOVE_WATCHED_TASK: "employees.removeWatchedTask", //TODO
 	CREATE_TASK: "employees.createTask", //TODO
 	ASSIGN_TASK: "employees.assignTask", //TODO
-	WATCH_TASK: "employees.watchTask", //TODO
+	WATCH_TASK_FROM_EMPLOYEE: "employees.watchTaskFromEmployee", //TODO
 	UNWATCH_TASK: "employees.unwatchTask", //TODO
 	//TODO add more as implement
 };
