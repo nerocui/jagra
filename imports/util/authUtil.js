@@ -9,7 +9,7 @@ export const isAuthenticated = () => Meteor.user() || Meteor.isTest;
 
 export const isAdmin = employeeDb => {
 	const user = employeeDb.findOne({ _id: Meteor.userId });
-	return user.role === ROLE.ADMIN || Meteor.isTest;
+	return !!((user && user.role === ROLE.ADMIN) || Meteor.isTest);
 };
 
 export const login = (email, password, callback) => {
@@ -31,4 +31,9 @@ export const adminCheck = db => {
 		const newAdmin = Accounts.createUser({ email: ADMIN_INFO.ADMIN_EMAIL, password: ADMIN_INFO.ADMIN_PASSWORD });
 		Meteor.call(EMPLOYEESAPI.INSERT, newAdmin, ADMIN_INFO.ADMIN_EMAIL, "admin", ADMIN_INFO.COMPANY_NAME, ROLE.ADMIN);
 	}
+};
+
+export const getId = (accountId, db) => {
+	const employee = db.findOne({ accountId });
+	return employee._id;
 };

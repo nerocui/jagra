@@ -2,7 +2,7 @@
 const TASK_CREATED = "Created task: ",
 	COMMENT_CREATED = "Created comment: ",
 	LOG_CREATED = "Created log: ",
-	EMPLOYEE_CREATED = "Created employee whose name is: ";
+	EMPLOYEE_CREATED = "Created by: ";
 
 export const TaskMessage = {
 	TASK_CREATED,

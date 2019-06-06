@@ -1,7 +1,8 @@
 import { Meteor } from "meteor/meteor";
 import { Employees, Tasks } from "./db";
 import EMPLOYEESAPI from "../constant/methods/employeesAPI";
-import { isAuthenticated } from "../util/authUtil";
+import ROLE from "../constant/role";
+import { isAuthenticated, getId, isAdmin } from "../util/authUtil";
 import { AuthError, EmployeeError, TaskError } from "../constant/error";
 import { EmployeeMessage } from "../constant/message";
 import { removeElement, addToList } from "../util/arrayUtil";
@@ -10,15 +11,8 @@ if (Meteor.isServer) {
 	Meteor.publish("employees", () => Employees.find());
 }
 
-export const isAdmin = (id, db) => {
-	const admin = db.findOne({ id });
-	const adminrole = admin.role;
-	return !!(adminrole && adminrole === "admin");
-};
-
 export const insertEmployee = (
 	db,
-	_id,
 	accountId,
 	firstName,
 	lastName,
@@ -27,7 +21,7 @@ export const insertEmployee = (
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
-	if (!isAdmin(_id, Employees)) {
+	if (!isAdmin(Employees)) {
 		throw new Meteor.Error(EmployeeError.ADMIN_NOT_FOUND);
 	}
 
@@ -57,7 +51,7 @@ export const insertEmployee = (
 			if (err) {
 				throw new Meteor.Error(EmployeeError.EMPLOYEE_INSERT_FAIL);
 			} else {
-				console.log(EmployeeMessage.EMPLOYEE_CREATED);
+				console.log(`${ EmployeeMessage.EMPLOYEE_CREATED } ${ accountId }`);
 			}
 		},
 	);
@@ -145,15 +139,17 @@ export const assignTaskTo = (db, _id, userId, assigneeId) => {
 	});
 };
 
-export const removeEmployee = (db, _id, employeeId) => {
+export const removeEmployee = (db, employeeId) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
-	if (!isAdmin(_id, Employees)) {
+	if (!isAdmin(Employees)) {
 		throw new Meteor.Error(EmployeeError.ADMIN_NOT_FOUND);
 	}
 	const employee = Employees.findOne({ employeeId });
 	const removedId = employee.employeeId;
+	const _id = getId(this.userId);
+
 	if (!employee) {
 		throw new Meteor.Error(EmployeeError.EMPLOYEE_NOT_EXIST);
 	}
@@ -163,7 +159,7 @@ export const removeEmployee = (db, _id, employeeId) => {
 
 	return db.remove(
 		{
-			employeeId,
+			_id: employeeId,
 		},
 		err => {
 			if (err) {
@@ -172,9 +168,12 @@ export const removeEmployee = (db, _id, employeeId) => {
 				let { tasksWatchingId } = employee;
 				tasksWatchingId = [...tasksWatchingId];
 				if (tasksWatchingId) {
-					tasksWatchingId.forEach(e => {
-						removeWatcherFromTask(Tasks, e, _id, employeeId);
-						assignTaskTo(Tasks, e, _id, null);
+					tasksWatchingId.forEach(taskId => {
+						const task = Tasks.findOne({ taskId });
+						//only the creator of the task can remove watcher
+						removeWatcherFromTask(Tasks, taskId, task.creatorId, employeeId);
+						//both creator and current assignee can reassign, lets just use creator again
+						assignTaskTo(Tasks, taskId, task.creatorId, null);
 					});
 				}
 			}
@@ -253,13 +252,16 @@ export const unwatchTask = () => {
 };
 
 Meteor.methods({
-	[EMPLOYEESAPI.INSERT](_id, firstName, lastName, role) {
-		return insertEmployee(Employees, _id, firstName, lastName, role);
+	[EMPLOYEESAPI.INSERT](firstName, lastName) {
+		const _id = getId(this.userId, Employees);
+		return insertEmployee(Employees, _id, firstName, lastName, ROLE.EMPLOYEE);
 	},
 	// TODO: ADDING parameters to the method mapping below
-	[EMPLOYEESAPI.REMOVE](_id) {
-		return removeEmployee(Employees, _id);
+	[EMPLOYEESAPI.REMOVE](employeeId) {
+		const _id = getId(this.userId, Employees);
+		return removeEmployee(Employees, _id, employeeId);
 	},
+	//FOR this PR, IGNORE BELOW
 	[EMPLOYEESAPI.REMOVE_CREATED_TASK](_id) {
 		return removeCreateTaskFromEmployee(Employees, _id);
 	},
