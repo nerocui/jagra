@@ -20,6 +20,7 @@
     "office-ui-fabric-react": "^7.0.0-alpha030",
     "react": "^16.5.0",
     "react-dom": "^16.5.0",
+    "react-router-dom": "^5.0.1",
     "sendgrid": "^5.2.3",
     "simpl-schema": "^1.5.5"
   },
