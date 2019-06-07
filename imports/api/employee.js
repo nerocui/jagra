@@ -27,7 +27,7 @@ export const insertEmployee = (
 
 	return db.insert(
 		{
-			accountId,
+			_id: accountId,
 			firstName,
 			lastName,
 			onBoard: new Date(),
