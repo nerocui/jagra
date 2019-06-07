@@ -44,7 +44,6 @@ export const insertEmployee = (
 			employeesId: [],
 			individualsId: [],
 			teamsId: [],
-			// role should be one of"employer", "employee", "admin"?
 			role,
 		},
 		err => {
@@ -153,6 +152,8 @@ export const removeEmployee = (db, employeeId) => {
 	if (!employee) {
 		throw new Meteor.Error(EmployeeError.EMPLOYEE_NOT_EXIST);
 	}
+	
+	//creator cannot remove himself
 	if (removedId === _id) {
 		throw new Meteor.Error(AuthError.NO_PRIVILEGE);
 	}
@@ -170,10 +171,12 @@ export const removeEmployee = (db, employeeId) => {
 				if (tasksWatchingId) {
 					tasksWatchingId.forEach(taskId => {
 						const task = Tasks.findOne({ taskId });
-						//only the creator of the task can remove watcher
-						removeWatcherFromTask(Tasks, taskId, task.creatorId, employeeId);
-						//both creator and current assignee can reassign, lets just use creator again
-						assignTaskTo(Tasks, taskId, task.creatorId, null);
+						if (task && task.creatorId) {
+							//only the creator of the task can remove watcher
+							removeWatcherFromTask(Tasks, taskId, task.creatorId, employeeId);
+						}
+						//both creator and current assignee can reassign, lets just use employeeId so that we don't worry about the case theres no creator
+						assignTaskTo(Tasks, taskId, employeeId, null);
 					});
 				}
 			}
