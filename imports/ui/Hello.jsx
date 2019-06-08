@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { PrimaryButton } from "office-ui-fabric-react";
 
 export default class Hello extends Component {
 	constructor(props) {
@@ -17,8 +18,8 @@ export default class Hello extends Component {
 	render() {
 		return (
 			<div>
-				<button type="button" onClick={this.increment}>Click Me</button>
-				<p>You've pressed the button {this.state.counter} times.</p>
+				<PrimaryButton type="button" onClick={this.increment}>Click Me</PrimaryButton>
+				<p>You've pressed the PrimaryButton {this.state.counter} times.</p>
 			</div>
 		);
 	}
