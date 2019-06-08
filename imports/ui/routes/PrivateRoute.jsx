@@ -5,14 +5,11 @@ import { isAuthenticated } from "../../util/authUtil";
 export default class PrivateRoute extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			component: props.component,
-		};
 		this.renderRoute = this.renderRoute.bind(this);
 	}
 
 	renderRoute() {
-		const COMPONENT = this.state.component;
+		const COMPONENT = this.props.component;
 		return (
 			isAuthenticated() ? <COMPONENT /> : <Redirect to="/login" />
 		);
