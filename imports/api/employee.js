@@ -101,7 +101,7 @@ export const removeWatcherFromTask = (db, _id, userId, watcherId) => {
 	throw new Meteor.Error(AuthError.NO_PRIVILEGE);
 };
 
-export const removeAssignedTaskFromExployee = (db, accountId, taskId) => {
+export const removeAssignedTaskFromEmployee = (db, accountId, taskId) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
@@ -156,7 +156,7 @@ export const assignTaskTo = (db, _id, userId, assigneeId) => {
 		if (err) {
 			throw new Meteor.Error(TaskError.TASK_ASSIGN_FAIL);
 		} else {
-			removeAssignedTaskFromExployee(Employees, currentAssigneeId, _id);
+			removeAssignedTaskFromEmployee(Employees, currentAssigneeId, _id);
 			assignTaskToEmployee(Employees, assigneeId, _id);
 			removeWatcherFromTask(db, _id, userId, currentAssigneeId);
 			watchTaskFromEmployee(Tasks, _id, assigneeId);
@@ -295,7 +295,7 @@ Meteor.methods({
 		return removeCreateTaskFromEmployee(Employees, _id);
 	},
 	[EMPLOYEESAPI.REMOVE_ASSIGNED_TASK](_id) {
-		return removeAssignedTaskFromExployee(Employees, _id);
+		return removeAssignedTaskFromEmployee(Employees, _id);
 	},
 	[EMPLOYEESAPI.REMOVE_WATCHED_TASK](_id) {
 		return removeWatchedTaskFromEmployee(Employees, _id);
