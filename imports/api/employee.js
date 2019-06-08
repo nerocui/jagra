@@ -61,7 +61,7 @@ export const removeWatchedTaskFromEmployee = (db, accountId, taskId) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
-	const employee = db.findOne({ accountId });
+	const employee = db.findOne({ _id: accountId });
 	if (!employee) {
 		throw new Meteor.Error(EmployeeError.EMPLOYEE_NOT_EXIST);
 	}
@@ -89,14 +89,16 @@ export const removeWatcherFromTask = (db, _id, userId, watcherId) => {
 	//only creator can remove people from watch list
 	if (userId === task.creatorId && !(watcherId === task.assigneeId || watcherId === task.creatorId)) {
 		let { watchersId } = task;
-		watchersId = removeElement(watchersId, watcherId);
-		return db.update({ _id }, { watchersId }, err => {
-			if (err) {
-				throw new Meteor.Error(TaskError.TASK_NOT_WATCHABLE);
-			} else {
-				removeWatchedTaskFromEmployee(Employees, watcherId, _id);
-			}
-		});
+		if (watchersId.includes(watcherId)) {
+			watchersId = removeElement(watchersId, watcherId);
+			return db.update({ _id }, { watchersId }, err => {
+				if (err) {
+					throw new Meteor.Error(TaskError.TASK_NOT_WATCHABLE);
+				} else {
+					removeWatchedTaskFromEmployee(Employees, watcherId, _id);
+				}
+			});
+		}
 	}
 	throw new Meteor.Error(AuthError.NO_PRIVILEGE);
 };
@@ -105,7 +107,7 @@ export const removeAssignedTaskFromEmployee = (db, accountId, taskId) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
-	const employee = db.findOne({ accountId });
+	const employee = db.findOne({ _id: accountId });
 	if (!employee) {
 		throw new Meteor.Error(EmployeeError.EMPLOYEE_NOT_EXIST);
 	}
@@ -210,12 +212,12 @@ export const removeEmployee = (db, employeeId) => {
 	);
 };
 
-export const createTask = (db, _id, taskId) => {
+export const createTask = (db, accountId, taskId) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
 	// TODO: not too sure use _id or employeeid
-	const employee = db.findOne({ _id });
+	const employee = db.findOne({ _id: accountId });
 	if (!employee) {
 		throw new Meteor.Error(EmployeeError.EMPLOYEE_NOT_EXIST);
 	}
@@ -225,7 +227,7 @@ export const createTask = (db, _id, taskId) => {
 		tasksCreatedId = addToList(tasksCreatedId, taskId);
 		return db.update(
 			{
-				_id,
+				_id: accountId,
 			},
 			{
 				tasksCreatedId,
@@ -239,34 +241,24 @@ export const createTask = (db, _id, taskId) => {
 	}
 };
 
-export const removeCreateTaskFromEmployee = (db, _id, taskId) => {
+//TODO: check TASKAPI call this or not?
+export const removeCreatedTaskFromEmployee = (db, accountId, taskId) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
 
-	const employee = db.findOne({ _id });
+	const employee = db.findOne({ _id: accountId });
 	if (!employee) {
 		throw new Meteor.Error(EmployeeError.EMPLOYEE_NOT_EXIST);
 	}
 	let { tasksCreatedId } = employee;
-	tasksCreatedId = [...tasksCreatedId];
 	if (tasksCreatedId.includes(taskId)) {
 		tasksCreatedId = removeElement(tasksCreatedId, taskId);
-		return db.update(
-			{
-				_id,
-			},
-			{
-				tasksCreatedId,
-			},
-			err => {
-				if (err) {
-					throw new Meteor.Error(
-						EmployeeError.CREATED_TASK_NOT_REMOVABLE,
-					);
-				}
-			},
-		);
+		return db.update({ _id: accountId }, { tasksCreatedId }, err => {
+			if (err) {
+				throw new Meteor.Error(EmployeeError.CREATED_TASK_NOT_REMOVABLE);
+			}
+		});
 	}
 
 	// TODO:
@@ -280,31 +272,30 @@ export const unwatchTask = () => {
 	// TODO:
 };
 
+const _id = getId(this.userId, Employees);
 Meteor.methods({
 	[EMPLOYEESAPI.INSERT](firstName, lastName) {
-		const _id = getId(this.userId, Employees);
 		return insertEmployee(Employees, _id, firstName, lastName, ROLE.EMPLOYEE);
 	},
 	// TODO: ADDING parameters to the method mapping below
 	[EMPLOYEESAPI.REMOVE](employeeId) {
-		const _id = getId(this.userId, Employees);
 		return removeEmployee(Employees, _id, employeeId);
 	},
 	//FOR this PR, IGNORE BELOW
-	[EMPLOYEESAPI.REMOVE_CREATED_TASK](_id) {
-		return removeCreateTaskFromEmployee(Employees, _id);
+	[EMPLOYEESAPI.REMOVE_CREATED_TASK](taskId) {
+		return removeCreatedTaskFromEmployee(Employees, _id, taskId);
 	},
-	[EMPLOYEESAPI.REMOVE_ASSIGNED_TASK](_id) {
-		return removeAssignedTaskFromEmployee(Employees, _id);
+	[EMPLOYEESAPI.REMOVE_ASSIGNED_TASK](taskId) {
+		return removeAssignedTaskFromEmployee(Employees, _id, taskId);
 	},
-	[EMPLOYEESAPI.REMOVE_WATCHED_TASK](_id) {
-		return removeWatchedTaskFromEmployee(Employees, _id);
+	[EMPLOYEESAPI.REMOVE_WATCHED_TASK](taskId) {
+		return removeWatchedTaskFromEmployee(Employees, _id, taskId);
 	},
-	[EMPLOYEESAPI.CREATE_TASK](_id) {
-		return createTask(Employees, _id);
+	[EMPLOYEESAPI.CREATE_TASK](taskId) {
+		return createTask(Employees, _id, taskId);
 	},
-	[EMPLOYEESAPI.ASSIGN_TASK](_id) {
-		return assignTaskToEmployee(Employees, _id);
+	[EMPLOYEESAPI.ASSIGN_TASK](employeeId, taskId) {
+		return assignTaskToEmployee(Employees, employeeId, taskId);
 	},
 	[EMPLOYEESAPI.WATCH_TASK_FROM_EMPLOYEE](_id) {
 		return watchTaskFromEmployee(Employees, _id);
