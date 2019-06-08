@@ -101,9 +101,22 @@ export const removeWatcherFromTask = (db, _id, userId, watcherId) => {
 	throw new Meteor.Error(AuthError.NO_PRIVILEGE);
 };
 
-export const removeAssignedTaskFromExployee = () => {
+export const removeAssignedTaskFromExployee = (db, accountId, taskId) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
+	}
+	const employee = db.findOne({ accountId });
+	if (!employee) {
+		throw new Meteor.Error(EmployeeError.EMPLOYEE_NOT_EXIST);
+	}
+	let { tasksAssienedId } = employee;
+	if (tasksAssienedId.includes(taskId)) {
+		tasksAssienedId = removeElement(tasksAssienedId, taskId);
+		return db.update({ _id: accountId }, { tasksAssienedId }, err => {
+			if (err) {
+				throw new Meteor.Error(EmployeeError.ASSIGNED_TASK_NOT_REMOVABLE);
+			}
+		});
 	}
 
 	// TODO:
