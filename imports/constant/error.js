@@ -24,6 +24,7 @@ const NOT_AUTH = "Not signed in",
 	EMPLOYEE_NOT_EXIST = "Employee does not exist",
 	EMPLOYEE_REMOVE_FAIL = "Failed to remove employee",
 	CREATED_TASK_NOT_REMOVABLE = "Failed to remove created task from employee",
+	WATCHED_TASK_NOT_REMOVABLE = "Failed to remove watched task from employee",
 	ADMIN_NOT_FOUND = "Failed to find admin";
 
 export const AuthError = {
@@ -60,5 +61,6 @@ export const EmployeeError = {
 	EMPLOYEE_NOT_EXIST,
 	EMPLOYEE_REMOVE_FAIL,
 	CREATED_TASK_NOT_REMOVABLE,
+	WATCHED_TASK_NOT_REMOVABLE,
 	ADMIN_NOT_FOUND,
 };

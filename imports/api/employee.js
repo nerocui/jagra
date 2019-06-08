@@ -57,9 +57,22 @@ export const insertEmployee = (
 };
 
 
-export const removeWatchedTaskFromEmployee = () => {
+export const removeWatchedTaskFromEmployee = (db, accountId, taskId) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
+	}
+	const employee = db.findOne({ accountId });
+	if (!employee) {
+		throw new Meteor.Error(EmployeeError.EMPLOYEE_NOT_EXIST);
+	}
+	let { tasksWatchingId } = employee;
+	if (tasksWatchingId.includes(taskId)) {
+		tasksWatchingId = removeElement(tasksWatchingId, taskId);
+		return db.update({ _id: accountId }, { tasksWatchingId }, err => {
+			if (err) {
+				throw new Meteor.Error(EmployeeError.WATCHED_TASK_NOT_REMOVABLE);
+			}
+		});
 	}
 
 	// TODO:
