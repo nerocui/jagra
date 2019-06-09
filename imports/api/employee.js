@@ -198,7 +198,7 @@ export const removeEmployee = (db, employeeId) => {
 	}
 	const employee = Employees.findOne({ employeeId });
 	const removedId = employee.employeeId;
-	const _id = getId(this.userId);
+	const _id = getId(this.userId, Employees);
 
 	if (!employee) {
 		throw new Meteor.Error(EmployeeError.EMPLOYEE_NOT_EXIST);
