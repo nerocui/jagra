@@ -122,7 +122,6 @@ export const removeAssignedTaskFromEmployee = (db, employeeId, taskId) => {
 	throw new Meteor.Error(EmployeeError.TASK_NOT_EXISTED);
 };
 
-//add task to assignedids of employee
 export const assignTaskToEmployee = (db, employeeId, taskId) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);

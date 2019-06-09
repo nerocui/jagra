@@ -29,6 +29,7 @@ const NOT_AUTH = "Not signed in",
 	WATCHED_TASK_NOT_ADDABLE = "Failed to watch task from employee ",
 	ASSIGNED_TASK_NOT_ADDABLE = "Failed to assign task to employee",
 	TASK_ALREADY_EXISTED = "Task has already existed",
+	TASK_NOT_EXISTED = "Task does not exsit",
 	ADMIN_NOT_FOUND = "Failed to find admin";
 
 export const AuthError = {
@@ -70,5 +71,6 @@ export const EmployeeError = {
 	WATCHED_TASK_NOT_ADDABLE,
 	ASSIGNED_TASK_NOT_ADDABLE,
 	TASK_ALREADY_EXISTED,
+	TASK_NOT_EXISTED,
 	ADMIN_NOT_FOUND,
 };

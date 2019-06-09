@@ -35,5 +35,7 @@ export const adminCheck = db => {
 
 export const getId = (accountId, db) => {
 	const employee = db.findOne({ accountId });
-	return employee._id;
+	if (employee && employee._id) {
+		return employee._id;
+	}
 };
