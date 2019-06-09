@@ -21,8 +21,8 @@ import {
 } from "../util/arrayUtil";
 import { removeTaskFromRelationship } from "./relationship";
 import {
-	removeCreateTaskFromEmployee,
-	removeAssignedTaskFromExployee,
+	removeCreatedTaskFromEmployee,
+	removeAssignedTaskFromEmployee,
 	removeWatchedTaskFromEmployee,
 	assignTaskToEmployee,
 	watchTaskFromEmployee,
@@ -103,8 +103,8 @@ export const removeTask = (db, _id, userId) => {
 				removeTaskFromRelationship(Relationships, r, _id);
 				//TODO({qfWxN0X9U}): add a "valid" field. display grey out link if not valid. If both tasks are invalid, delete the relationship.
 			});
-			removeCreateTaskFromEmployee(Employees, creatorId, _id);
-			removeAssignedTaskFromExployee(Employees, assigneeId, _id);
+			removeCreatedTaskFromEmployee(Employees, creatorId, _id);
+			removeAssignedTaskFromEmployee(Employees, assigneeId, _id);
 			watchersId.forEach(w => {
 				removeWatchedTaskFromEmployee(Employees, w, _id);
 			});
@@ -214,7 +214,7 @@ export const assignTaskTo = (db, _id, userId, assigneeId) => {
 		if (err) {
 			throw new Meteor.Error(TaskError.TASK_ASSIGN_FAIL);
 		} else {
-			removeAssignedTaskFromExployee(Employees, currentAssigneeId, _id);
+			removeAssignedTaskFromEmployee(Employees, currentAssigneeId, _id);
 			assignTaskToEmployee(Employees, assigneeId, _id);
 			removeWatcherFromTask(db, _id, userId, currentAssigneeId);
 			watchTask(Tasks, _id, assigneeId);

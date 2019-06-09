@@ -57,25 +57,24 @@ export const insertEmployee = (
 };
 
 
-export const removeWatchedTaskFromEmployee = (db, accountId, taskId) => {
+export const removeWatchedTaskFromEmployee = (db, employeeId, taskId) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
-	const employee = db.findOne({ _id: accountId });
+	const employee = db.findOne({ _id: employeeId });
 	if (!employee) {
 		throw new Meteor.Error(EmployeeError.EMPLOYEE_NOT_EXIST);
 	}
 	let { tasksWatchingId } = employee;
 	if (tasksWatchingId.includes(taskId)) {
 		tasksWatchingId = removeElement(tasksWatchingId, taskId);
-		return db.update({ _id: accountId }, { tasksWatchingId }, err => {
+		return db.update({ _id: employeeId }, { tasksWatchingId }, err => {
 			if (err) {
 				throw new Meteor.Error(EmployeeError.WATCHED_TASK_NOT_REMOVABLE);
 			}
 		});
 	}
-
-	// TODO:
+	throw new Meteor.Error(EmployeeError.TASK_NOT_EXISTED);
 };
 
 export const removeWatcherFromTask = (db, _id, userId, watcherId) => {
@@ -103,41 +102,66 @@ export const removeWatcherFromTask = (db, _id, userId, watcherId) => {
 	throw new Meteor.Error(AuthError.NO_PRIVILEGE);
 };
 
-export const removeAssignedTaskFromEmployee = (db, accountId, taskId) => {
+export const removeAssignedTaskFromEmployee = (db, employeeId, taskId) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
-	const employee = db.findOne({ _id: accountId });
+	const employee = db.findOne({ _id: employeeId });
 	if (!employee) {
 		throw new Meteor.Error(EmployeeError.EMPLOYEE_NOT_EXIST);
 	}
 	let { tasksAssienedId } = employee;
 	if (tasksAssienedId.includes(taskId)) {
 		tasksAssienedId = removeElement(tasksAssienedId, taskId);
-		return db.update({ _id: accountId }, { tasksAssienedId }, err => {
+		return db.update({ _id: employeeId }, { tasksAssienedId }, err => {
 			if (err) {
 				throw new Meteor.Error(EmployeeError.ASSIGNED_TASK_NOT_REMOVABLE);
 			}
 		});
 	}
-
-	// TODO:
+	throw new Meteor.Error(EmployeeError.TASK_NOT_EXISTED);
 };
 
-export const assignTaskToEmployee = () => {
+//add task to assignedids of employee
+export const assignTaskToEmployee = (db, employeeId, taskId) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
 
-	// TODO:
+	const employee = db.findOne({ _id: employeeId });
+	if (!employee) {
+		throw new Meteor.Error(EmployeeError.EMPLOYEE_NOT_EXIST);
+	}
+	let { tasksAssienedId } = employee;
+	if (!tasksAssienedId.includes(taskId)) {
+		tasksAssienedId = addToList(tasksAssienedId, taskId);
+		return db.update({ _id: employeeId }, { tasksAssienedId }, err => {
+			if (err) {
+				throw new Meteor.Error(EmployeeError.ASSIGNED_TASK_NOT_ADDABLE);
+			}
+		});
+	}
+	throw new Meteor.Error(EmployeeError.TASK_ALREADY_EXISTED);
 };
 
-export const watchTaskFromEmployee = () => {
+export const watchTaskFromEmployee = (db, employeeId, taskId) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
-
-	// TODO:
+	const employee = db.findOne({ _id: employeeId });
+	if (!employee) {
+		throw new Meteor.Error(EmployeeError.EMPLOYEE_NOT_EXIST);
+	}
+	let { tasksWatchingId } = employee;
+	if (!tasksWatchingId.includes(taskId)) {
+		tasksWatchingId = addToList(tasksWatchingId, taskId);
+		return db.update({ _id: employeeId }, { tasksWatchingId }, err => {
+			if (err) {
+				throw new Meteor.Error(EmployeeError.WATCHED_TASK_NOT_ADDABLE);
+			}
+		});
+	}
+	throw new Meteor.Error(EmployeeError.TASK_ALREADY_EXISTED);
 };
 
 export const assignTaskTo = (db, _id, userId, assigneeId) => {
@@ -216,13 +240,11 @@ export const createTask = (db, accountId, taskId) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
-	// TODO: not too sure use _id or employeeid
 	const employee = db.findOne({ _id: accountId });
 	if (!employee) {
 		throw new Meteor.Error(EmployeeError.EMPLOYEE_NOT_EXIST);
 	}
 	let { tasksCreatedId } = employee;
-	tasksCreatedId = [...tasksCreatedId];
 	if (!tasksCreatedId.includes(taskId)) {
 		tasksCreatedId = addToList(tasksCreatedId, taskId);
 		return db.update(
@@ -239,37 +261,28 @@ export const createTask = (db, accountId, taskId) => {
 			},
 		);
 	}
+	throw new Meteor.Error(EmployeeError.TASK_ALREADY_EXISTED);
 };
 
-//TODO: check TASKAPI call this or not?
-export const removeCreatedTaskFromEmployee = (db, accountId, taskId) => {
+export const removeCreatedTaskFromEmployee = (db, employeeId, taskId) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
 
-	const employee = db.findOne({ _id: accountId });
+	const employee = db.findOne({ _id: employeeId });
 	if (!employee) {
 		throw new Meteor.Error(EmployeeError.EMPLOYEE_NOT_EXIST);
 	}
 	let { tasksCreatedId } = employee;
 	if (tasksCreatedId.includes(taskId)) {
 		tasksCreatedId = removeElement(tasksCreatedId, taskId);
-		return db.update({ _id: accountId }, { tasksCreatedId }, err => {
+		return db.update({ _id: employeeId }, { tasksCreatedId }, err => {
 			if (err) {
 				throw new Meteor.Error(EmployeeError.CREATED_TASK_NOT_REMOVABLE);
 			}
 		});
 	}
-
-	// TODO:
-};
-
-export const unwatchTask = () => {
-	if (!isAuthenticated()) {
-		throw new Meteor.Error(AuthError.NOT_AUTH);
-	}
-
-	// TODO:
+	throw new Meteor.Error(EmployeeError.TASK_NOT_EXISTED);
 };
 
 const _id = getId(this.userId, Employees);
@@ -277,19 +290,17 @@ Meteor.methods({
 	[EMPLOYEESAPI.INSERT](firstName, lastName) {
 		return insertEmployee(Employees, _id, firstName, lastName, ROLE.EMPLOYEE);
 	},
-	// TODO: ADDING parameters to the method mapping below
 	[EMPLOYEESAPI.REMOVE](employeeId) {
 		return removeEmployee(Employees, _id, employeeId);
 	},
-	//FOR this PR, IGNORE BELOW
-	[EMPLOYEESAPI.REMOVE_CREATED_TASK](taskId) {
-		return removeCreatedTaskFromEmployee(Employees, _id, taskId);
+	[EMPLOYEESAPI.REMOVE_CREATED_TASK](employeeId, taskId) {
+		return removeCreatedTaskFromEmployee(Employees, employeeId, taskId);
 	},
-	[EMPLOYEESAPI.REMOVE_ASSIGNED_TASK](taskId) {
-		return removeAssignedTaskFromEmployee(Employees, _id, taskId);
+	[EMPLOYEESAPI.REMOVE_ASSIGNED_TASK](employeeId, taskId) {
+		return removeAssignedTaskFromEmployee(Employees, employeeId, taskId);
 	},
-	[EMPLOYEESAPI.REMOVE_WATCHED_TASK](taskId) {
-		return removeWatchedTaskFromEmployee(Employees, _id, taskId);
+	[EMPLOYEESAPI.REMOVE_WATCHED_TASK](employeeId, taskId) {
+		return removeWatchedTaskFromEmployee(Employees, employeeId, taskId);
 	},
 	[EMPLOYEESAPI.CREATE_TASK](taskId) {
 		return createTask(Employees, _id, taskId);
@@ -297,10 +308,7 @@ Meteor.methods({
 	[EMPLOYEESAPI.ASSIGN_TASK](employeeId, taskId) {
 		return assignTaskToEmployee(Employees, employeeId, taskId);
 	},
-	[EMPLOYEESAPI.WATCH_TASK_FROM_EMPLOYEE](_id) {
-		return watchTaskFromEmployee(Employees, _id);
-	},
-	[EMPLOYEESAPI.UNWATCH_TASK](_id) {
-		return unwatchTask(Employees, _id);
+	[EMPLOYEESAPI.WATCH_TASK_FROM_EMPLOYEE](employeeId, taskId) {
+		return watchTaskFromEmployee(Employees, employeeId, taskId);
 	},
 });

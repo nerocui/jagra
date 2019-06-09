@@ -26,6 +26,9 @@ const NOT_AUTH = "Not signed in",
 	CREATED_TASK_NOT_REMOVABLE = "Failed to remove created task from employee",
 	WATCHED_TASK_NOT_REMOVABLE = "Failed to remove watched task from employee",
 	ASSIGNED_TASK_NOT_REMOVABLE = "Failed to remove assigned task from employee",
+	WATCHED_TASK_NOT_ADDABLE = "Failed to watch task from employee ",
+	ASSIGNED_TASK_NOT_ADDABLE = "Failed to assign task to employee",
+	TASK_ALREADY_EXISTED = "Task has already existed",
 	ADMIN_NOT_FOUND = "Failed to find admin";
 
 export const AuthError = {
@@ -64,5 +67,8 @@ export const EmployeeError = {
 	CREATED_TASK_NOT_REMOVABLE,
 	WATCHED_TASK_NOT_REMOVABLE,
 	ASSIGNED_TASK_NOT_REMOVABLE,
+	WATCHED_TASK_NOT_ADDABLE,
+	ASSIGNED_TASK_NOT_ADDABLE,
+	TASK_ALREADY_EXISTED,
 	ADMIN_NOT_FOUND,
 };
