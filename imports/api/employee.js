@@ -21,10 +21,9 @@ export const insertEmployee = (
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
-	if (!isAdmin(Employees)) {
+	if (!isAdmin(Employees) || !accountId) {
 		throw new Meteor.Error(EmployeeError.ADMIN_NOT_FOUND);
 	}
-
 	return db.insert(
 		{
 			_id: accountId,
