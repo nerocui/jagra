@@ -2,7 +2,7 @@ import { Meteor } from "meteor/meteor";
 import { Employees, Tasks } from "./db";
 import EMPLOYEESAPI from "../constant/methods/employeesAPI";
 import ROLE from "../constant/role";
-import { isAuthenticated, getId, isAdmin } from "../util/authUtil";
+import { isAuthenticated, isAdmin } from "../util/authUtil";
 import { AuthError, EmployeeError, TaskError } from "../constant/error";
 import { EmployeeMessage } from "../constant/message";
 import { removeElement, addToList } from "../util/arrayUtil";
@@ -190,23 +190,20 @@ export const assignTaskTo = (db, _id, userId, assigneeId) => {
 	});
 };
 
-export const removeEmployee = (db, employeeId) => {
+export const removeEmployee = (db, _id, employeeId) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
 	if (!isAdmin(Employees)) {
 		throw new Meteor.Error(EmployeeError.ADMIN_NOT_FOUND);
 	}
-	const employee = Employees.findOne({ employeeId });
-	const removedId = employee.employeeId;
-	const _id = getId(this.userId, Employees);
-
+	const employee = Employees.findOne({ _id: employeeId });
 	if (!employee) {
 		throw new Meteor.Error(EmployeeError.EMPLOYEE_NOT_EXIST);
 	}
 	
-	//creator cannot remove himself
-	if (removedId === _id) {
+	//admin cannot remove himself
+	if (employeeId === _id) {
 		throw new Meteor.Error(AuthError.NO_PRIVILEGE);
 	}
 
@@ -222,7 +219,7 @@ export const removeEmployee = (db, employeeId) => {
 				tasksWatchingId = [...tasksWatchingId];
 				if (tasksWatchingId) {
 					tasksWatchingId.forEach(taskId => {
-						const task = Tasks.findOne({ taskId });
+						const task = Tasks.findOne({ _id: taskId });
 						if (task && task.creatorId) {
 							//only the creator of the task can remove watcher
 							removeWatcherFromTask(Tasks, taskId, task.creatorId, employeeId);
@@ -290,7 +287,7 @@ Meteor.methods({
 		return insertEmployee(Employees, accountId, email, firstName, lastName, role);
 	},
 	[EMPLOYEESAPI.REMOVE](employeeId) {
-		return removeEmployee(Employees, _id, employeeId);
+		return removeEmployee(Employees, this.userId, employeeId);
 	},
 	[EMPLOYEESAPI.REMOVE_CREATED_TASK](employeeId, taskId) {
 		return removeCreatedTaskFromEmployee(Employees, employeeId, taskId);
@@ -302,7 +299,7 @@ Meteor.methods({
 		return removeWatchedTaskFromEmployee(Employees, employeeId, taskId);
 	},
 	[EMPLOYEESAPI.CREATE_TASK](taskId) {
-		return createTask(Employees, _id, taskId);
+		return createTask(Employees, this.userId, taskId);
 	},
 	[EMPLOYEESAPI.ASSIGN_TASK](employeeId, taskId) {
 		return assignTaskToEmployee(Employees, employeeId, taskId);
