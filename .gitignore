@@ -1,4 +1,3 @@
 node_modules/
 todoPlus.json
 imports/config/dev.js
-imports/config/clientConf/dev.js
