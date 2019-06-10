@@ -6,8 +6,8 @@ import ADMIN_INFO from "../config/clientConf/conf";
 import { Employees } from "../api/db";
 
 export const isAuthenticated = () => {
-	console.log("[Auth Check: ]", Meteor.user());
-	return !!Meteor.user() || Meteor.isTest;
+	console.log("[Auth Check: ]", Meteor.userId());
+	return !!Meteor.userId() || Meteor.isTest;
 };
 
 export const isAdmin = employeeDb => {
