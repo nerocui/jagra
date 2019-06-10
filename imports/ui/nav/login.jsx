@@ -1,27 +1,31 @@
 import React, { Component } from "react";
-import { login } from "../../util/authUtil";
+import { Meteor } from "meteor/meteor";
 
 export default class Login extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			err: "",
-			email: "",
+			username: "",
 			password: "",
 		};
 		this.onSubmit = this.onSubmit.bind(this);
-		this.setEmail = this.setEmail.bind(this);
+		this.setUsername = this.setUsername.bind(this);
 		this.setPassword = this.setPassword.bind(this);
 	}
 
-	onSubmit() {
-		login(this.state.email, this.state.password, () => {
-			this.setState({ err: "You are logged in!" });
+	onSubmit(e) {
+		e.preventDefault();
+		Meteor.loginWithPassword({ username: this.state.username }, this.state.password, err => {
+			console.log(err);
+			this.setState({ err });
 		});
+		console.log("[Current User: ]", Meteor.userId());
+		this.setState({ username: "", password: "" });
 	}
 
-	setEmail(e) {
-		this.setState({ email: e.target.value });
+	setUsername(e) {
+		this.setState({ username: e.target.value });
 	}
 
 	setPassword(e) {
@@ -34,8 +38,8 @@ export default class Login extends Component {
 				{this.state.err}
 				<h1>Login</h1>
 				<form onSubmit={this.onSubmit}>
-					<input value={this.state.email} onChange={this.setEmail} />
-					<input value={this.state.password} onChange={this.setPassword} />
+					<input value={this.state.username} onChange={this.setUsername} />
+					<input value={this.state.password} onChange={this.setPassword} type="password" />
 					<button type="submit">Login</button>
 				</form>
 			</div>

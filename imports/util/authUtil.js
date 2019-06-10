@@ -5,7 +5,10 @@ import EMPLOYEESAPI from "../constant/methods/employeesAPI";
 import ADMIN_INFO from "../config/clientConf/conf";
 import { Employees } from "../api/db";
 
-export const isAuthenticated = () => Meteor.user() || Meteor.isTest;
+export const isAuthenticated = () => {
+	console.log("[Auth Check: ]", Meteor.user());
+	return !!Meteor.user() || Meteor.isTest;
+};
 
 export const isAdmin = employeeDb => {
 	const user = employeeDb.findOne({ _id: Meteor.userId });
@@ -15,6 +18,7 @@ export const isAdmin = employeeDb => {
 export const login = (email, password, callback) => {
 	const accountId = Meteor.loginWithPassword({ email }, password);
 	const employee = Employees.findOne({ accountId });
+	console.log("[Current User: ]", employee);
 	if (employee && employee.role === ROLE.ADMIN) {
 		callback();//callback will handle UI redirect
 	}
@@ -29,9 +33,8 @@ export const adminCheck = db => {
 	const admin = db.findOne({ role: ROLE.ADMIN });
 	if (!admin) {
 		console.log("[ADMIN INFO: ]", ADMIN_INFO);
-		const newAdmin = Accounts.createUser({ email: ADMIN_INFO.ADMIN_EMAIL, password: ADMIN_INFO.ADMIN_PASSWORD });
-		//Meteor.call(EMPLOYEESAPI.INSERT, newAdmin, ADMIN_INFO.ADMIN_EMAIL, "admin", ADMIN_INFO.COMPANY_NAME, ROLE.ADMIN);
-		//TODO: manually insert admin to avoid role chekcing
+		const newAdmin = Accounts.createUser({ username: "admin", email: ADMIN_INFO.ADMIN_EMAIL, password: "admin" });
+		
 		return db.insert(
 			{
 				_id: newAdmin,
