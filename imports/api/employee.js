@@ -14,6 +14,7 @@ if (Meteor.isServer) {
 export const insertEmployee = (
 	db,
 	accountId,
+	email,
 	firstName,
 	lastName,
 	role,
@@ -21,12 +22,13 @@ export const insertEmployee = (
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
-	if (!isAdmin(Employees) || !accountId) {
+	if ((!isAdmin(Employees) || !accountId) && role === ROLE.EMPLOYEE) {
 		throw new Meteor.Error(EmployeeError.ADMIN_NOT_FOUND);
 	}
 	return db.insert(
 		{
 			_id: accountId,
+			email,
 			firstName,
 			lastName,
 			onBoard: new Date(),
@@ -283,10 +285,9 @@ export const removeCreatedTaskFromEmployee = (db, employeeId, taskId) => {
 	throw new Meteor.Error(EmployeeError.TASK_NOT_EXISTED);
 };
 
-const _id = getId(this.userId, Employees);
 Meteor.methods({
-	[EMPLOYEESAPI.INSERT](firstName, lastName) {
-		return insertEmployee(Employees, _id, firstName, lastName, ROLE.EMPLOYEE);
+	[EMPLOYEESAPI.INSERT](accountId, email, firstName, lastName, role) {
+		return insertEmployee(Employees, accountId, email, firstName, lastName, role);
 	},
 	[EMPLOYEESAPI.REMOVE](employeeId) {
 		return removeEmployee(Employees, _id, employeeId);

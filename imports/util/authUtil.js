@@ -32,10 +32,3 @@ export const adminCheck = db => {
 		Meteor.call(EMPLOYEESAPI.INSERT, newAdmin, ADMIN_INFO.ADMIN_EMAIL, "admin", ADMIN_INFO.COMPANY_NAME, ROLE.ADMIN);
 	}
 };
-
-export const getId = (accountId, db) => {
-	const employee = db.findOne({ accountId });
-	if (employee && employee._id) {
-		return employee._id;
-	}
-};
