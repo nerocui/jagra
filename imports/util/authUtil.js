@@ -13,7 +13,7 @@ export const isAdmin = employeeDb => {
 };
 
 export const login = (email, password, callback) => {
-	const accountId = Meteor.loginWithPassword(email, password);
+	const accountId = Meteor.loginWithPassword({ email }, password);
 	const employee = Employees.findOne({ accountId });
 	if (employee && employee.role === ROLE.ADMIN) {
 		callback();//callback will handle UI redirect
@@ -30,5 +30,6 @@ export const adminCheck = db => {
 	if (!admin) {
 		const newAdmin = Accounts.createUser({ email: ADMIN_INFO.ADMIN_EMAIL, password: ADMIN_INFO.ADMIN_PASSWORD });
 		Meteor.call(EMPLOYEESAPI.INSERT, newAdmin, ADMIN_INFO.ADMIN_EMAIL, "admin", ADMIN_INFO.COMPANY_NAME, ROLE.ADMIN);
+		//TODO: manually insert admin to avoid role chekcing
 	}
 };

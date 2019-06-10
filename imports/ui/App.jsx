@@ -1,25 +1,15 @@
-import React, { Component } from "react";
-import Hello from "./Hello.jsx";
-import Info from "./Info.jsx";
+import React from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import AdminDashboard from "./admin/dashboard.jsx";
+import EmployeeDashboard from "./employee/dashboard.jsx";
+import Login from "./nav/login.jsx";
 
-class App extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			title: "Jagra",
-		};
-	}
+const routes = (
+	<Router>
+		<Route exact path="/" component={Login} />
+		<Route exact path="/dashboard" component={EmployeeDashboard} />
+		<Route exact path="/admin" component={AdminDashboard} />
+	</Router>
+);
 
-	render() {
-		const { title } = this.state;
-		return (
-			<div>
-				<h1>Welcome to {title}!</h1>
-				<Hello />
-				<Info />
-			</div>
-		);
-	}
-}
-
-export default App;
+export default routes;
