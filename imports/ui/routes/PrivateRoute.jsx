@@ -11,7 +11,7 @@ export default class PrivateRoute extends Component {
 	renderRoute() {
 		const COMPONENT = this.props.component;
 		return (
-			isAuthenticated() ? <COMPONENT /> : <Redirect to="/login" />
+			isAuthenticated() ? <COMPONENT /> : <Redirect to="/" />
 		);
 	}
 

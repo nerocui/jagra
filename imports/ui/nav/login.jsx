@@ -36,7 +36,7 @@ export default class Login extends Component {
 				<form onSubmit={this.onSubmit}>
 					<input value={this.state.email} onChange={this.setEmail} />
 					<input value={this.state.password} onChange={this.setPassword} />
-					<button type="submit" />
+					<button type="submit">Login</button>
 				</form>
 			</div>
 		);
