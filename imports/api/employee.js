@@ -26,6 +26,7 @@ export const insertEmployee = (
 	if (!isAdmin(Employees, _id)) {
 		throw new Meteor.Error(EmployeeError.ADMIN_NOT_FOUND);
 	}
+	console.log("[TRYING TO INSERT USER: ]", firstName, lastName, email);
 	const username = generateUserName(firstName, lastName);
 	const accountId = Accounts.createUser({ email, username });
 	Accounts.sendEnrollmentEmail(accountId);

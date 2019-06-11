@@ -25,7 +25,7 @@ export const login = (email, password, callback) => {
 	}
 };
 
-export const signup = (email, password, firstName, lastName) => {
+export const signup = (email, firstName, lastName) => {
 	console.log("[CREATING USER: ]", email);
 	Meteor.call(EMPLOYEESAPI.INSERT, Meteor.userId(), email, firstName, lastName, ROLE.EMPLOYEE);
 };
@@ -51,6 +51,10 @@ export const adminCheck = db => {
 
 export const generateUserName = (firstName, lastName) => {
 	let username = firstName + lastName[0];
-	if (db.findOne({  }))
+	let extrachar = 1;
+	while (Meteor.users.findOne({ username })) {
+		username += extrachar.toString();
+		extrachar += 1;
+	}
 	return username;
 };
