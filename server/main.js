@@ -11,10 +11,10 @@ import "../imports/api/team";
 import { adminCheck } from "../imports/util/authUtil";
 import { Employees } from "../imports/api/db";
 
-Accounts.onEnrollmentLink((token, done) => {
-	Accounts.resetPassword(token, "12345678");
-	done();
-});
+// Accounts.onEnrollmentLink((token, done) => {
+// 	Accounts.resetPassword(token, "12345678");
+// 	done();
+// });
 
 Meteor.startup(() => {
 	adminCheck(Employees);
