@@ -12,31 +12,23 @@ class AdminDashboard extends Component {
 		this.state = {
 			tab: "dashboard",
 			email: "",
-			userName: "",
 			firstName: "",
 			lastName: "",
-			password: "",
 		};
 		this.onSubmit = this.onSubmit.bind(this);
 		this.onEmailChange = this.onEmailChange.bind(this);
-		this.onUsernameChange = this.onUsernameChange.bind(this);
 		this.onFirstnameChange = this.onFirstnameChange.bind(this);
 		this.onLastnameChange = this.onLastnameChange.bind(this);
-		this.onPasswordChange = this.onPasswordChange.bind(this);
 	}
 
 	onSubmit(e) {
 		e.preventDefault();
 		console.log("hello");
-		signup(this.state.email, this.state.password, this.state.firstName, this.state.lastName);
+		signup(this.state.email, this.state.firstName, this.state.lastName);
 	}
 
 	onEmailChange(e) {
 		this.setState({ email: e.target.value.trim() });
-	}
-
-	onUsernameChange(e) {
-		this.setState({ userName: e.target.value.trim() });
 	}
 
 	onFirstnameChange(e) {
@@ -47,10 +39,6 @@ class AdminDashboard extends Component {
 		this.setState({ lastName: e.target.value.trim() });
 	}
 
-	onPasswordChange(e) {
-		this.setState({ password: e.target.value.trim() });
-	}
-
 	render() {
 		return (
 			<div>
@@ -58,13 +46,11 @@ class AdminDashboard extends Component {
 				Admin Dashboard
 				<h2>Signup</h2>
 				<Signup
-					onSubmit={this.onSubmit}
-					onEmailChange={this.onEmailChange}
-					onUsernameChange={this.onUsernameChange}
-					onFirstnameChange={this.onFirstnameChange}
-					onLastnameChange={this.onLastnameChange}
-					onPasswordChange={this.onPasswordChange}
-  				/>
+  onSubmit={this.onSubmit}
+  onEmailChange={this.onEmailChange}
+  onFirstnameChange={this.onFirstnameChange}
+  onLastnameChange={this.onLastnameChange}
+				/>
 				<EmployeeList employees={this.props.employeeList} />
 			</div>
 		);

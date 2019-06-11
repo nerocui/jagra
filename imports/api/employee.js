@@ -1,8 +1,9 @@
 import { Meteor } from "meteor/meteor";
+import { Accounts } from "meteor/accounts-base";
 import { Employees, Tasks } from "./db";
 import EMPLOYEESAPI from "../constant/methods/employeesAPI";
 import ROLE from "../constant/role";
-import { isAuthenticated, isAdmin } from "../util/authUtil";
+import { isAuthenticated, isAdmin, generateUserName } from "../util/authUtil";
 import { AuthError, EmployeeError, TaskError } from "../constant/error";
 import { EmployeeMessage } from "../constant/message";
 import { removeElement, addToList } from "../util/arrayUtil";
@@ -14,7 +15,6 @@ if (Meteor.isServer) {
 export const insertEmployee = (
 	db,
 	_id,
-	accountId,
 	email,
 	firstName,
 	lastName,
@@ -23,10 +23,12 @@ export const insertEmployee = (
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
-	if (!isAdmin(Employees, _id) || !accountId) {
-		console.log("[GOING TO THROW ERROR FROM INSERT: ]", _id, accountId);
+	if (!isAdmin(Employees, _id)) {
 		throw new Meteor.Error(EmployeeError.ADMIN_NOT_FOUND);
 	}
+	const username = generateUserName(firstName, lastName);
+	const accountId = Accounts.createUser({ email, username });
+	Accounts.sendEnrollmentEmail(accountId);
 	return db.insert(
 		{
 			_id: accountId,
@@ -285,8 +287,8 @@ export const removeCreatedTaskFromEmployee = (db, employeeId, taskId) => {
 };
 
 Meteor.methods({
-	[EMPLOYEESAPI.INSERT](_id, accountId, email, firstName, lastName) {
-		return insertEmployee(Employees, _id, accountId, email, firstName, lastName, ROLE.EMPLOYEE);
+	[EMPLOYEESAPI.INSERT](_id, email, firstName, lastName) {
+		return insertEmployee(Employees, _id, email, firstName, lastName, ROLE.EMPLOYEE);
 	},
 	[EMPLOYEESAPI.REMOVE](employeeId) {
 		return removeEmployee(Employees, this.userId, employeeId);
