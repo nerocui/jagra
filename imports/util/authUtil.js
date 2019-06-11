@@ -10,14 +10,15 @@ export const isAuthenticated = () => {
 	return !!Meteor.userId() || Meteor.isTest;
 };
 
-export const isAdmin = employeeDb => {
-	const user = employeeDb.findOne({ _id: Meteor.userId });
+export const isAdmin = (employeeDb, _id) => {
+	const user = employeeDb.findOne({ _id });
+	console.log("[Chekcing Admin: ]", user);
 	return !!((user && user.role === ROLE.ADMIN) || Meteor.isTest);
 };
 
 export const login = (email, password, callback) => {
 	const accountId = Meteor.loginWithPassword({ email }, password);
-	const employee = Employees.findOne({ accountId });
+	const employee = Employees.findOne({ _id: accountId });
 	console.log("[Current User: ]", employee);
 	if (employee && employee.role === ROLE.ADMIN) {
 		callback();//callback will handle UI redirect
@@ -25,8 +26,9 @@ export const login = (email, password, callback) => {
 };
 
 export const signup = (email, password, firstName, lastName) => {
+	console.log("[CREATING USER: ]", email);
 	const accountId = Accounts.createUser({ email, password });
-	Meteor.call(EMPLOYEESAPI.INSERT, accountId, email, firstName, lastName, ROLE.EMPLOYEE);
+	Meteor.call(EMPLOYEESAPI.INSERT, Meteor.userId(), accountId, email, firstName, lastName, ROLE.EMPLOYEE);
 };
 
 export const adminCheck = db => {
