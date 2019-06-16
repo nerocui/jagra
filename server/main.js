@@ -10,6 +10,7 @@ import "../imports/api/task";
 import "../imports/api/team";
 import { adminCheck } from "../imports/util/authUtil";
 import { Employees } from "../imports/api/db";
+import emailUrl from "../imports/config/email";
 
 // Accounts.onEnrollmentLink((token, done) => {
 // 	Accounts.resetPassword(token, "12345678");
@@ -18,6 +19,5 @@ import { Employees } from "../imports/api/db";
 
 Meteor.startup(() => {
 	adminCheck(Employees);
-	//Temporary location to store this var for now. Need to remove before deploying to produciton
-	process.env.MAIL_URL = "smtps://jagrainc%40gmail.com:Jagra123-@smtp.gmail.com:465/";
+	process.env.MAIL_URL = emailUrl;
 });
