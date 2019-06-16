@@ -18,4 +18,6 @@ import { Employees } from "../imports/api/db";
 
 Meteor.startup(() => {
 	adminCheck(Employees);
+	//Temporary location to store this var for now. Need to remove before deploying to produciton
+	process.env.MAIL_URL = "smtps://jagrainc%40gmail.com:Jagra123-@smtp.gmail.com:465/";
 });

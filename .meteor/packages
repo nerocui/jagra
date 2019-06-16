@@ -21,6 +21,7 @@ hwillson:stub-collections
 xolvio:cleaner
 cultofcoders:mocha
 accounts-base@1.4.3
-accounts-password@1.5.1
+accounts-password
 dynamic-import
 underscore
+email
