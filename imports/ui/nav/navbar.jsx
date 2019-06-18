@@ -1,228 +1,75 @@
 /* eslint-disable react/jsx-indent-props */
-/* eslint-disable react/prefer-stateless-function */
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { CommandBar, initializeIcons, Stack, SearchBox } from "office-ui-fabric-react";
+import { Link, withRouter } from "react-router-dom";
+import {
+	CommandBar,
+	initializeIcons,
+	Stack,
+	SearchBox,
+	Modal,
+} from "office-ui-fabric-react";
+import { navItems, userCommandBarItems } from "../../config/uiConfig/navConfig";
 
 initializeIcons();
 
-const navItems = [
-	{
-		key: "tasksTab",
-		name: "Tasks",
-		cacheKey: "tasksTabCacheKey", // changing this key will invalidate this items cache
-		iconProps: {
-			iconName: "TaskManager",
-		},
-		ariaLabel: "Tasks",
-		subMenuProps: {
-			items: [
-				{
-					key: "tasksAssignedToMe",
-					name: "Assigned To Me",
-					iconProps: {
-						iconName: "Assign",
-					},
-					"data-automation-id": "newEmailButton",
-				},
-				{
-					key: "tasksCreatedByMe",
-					name: "Created By Me",
-					iconProps: {
-						iconName: "AddFriend",
-					},
-				},
-				{
-					key: "tasksIAmWatching",
-					name: "Watch List",
-					iconProps: {
-						iconName: "Glasses",
-					},
-				},
-				{
-					key: "teamTasks",
-					name: "Team Tasks",
-					iconProps: {
-						iconName: "Teamwork",
-					},
-				},
-				{
-					key: "allTasks",
-					name: "All Tasks",
-					iconProps: {
-						iconName: "AllApps",
-					},
-				},
-			],
-		},
-	},
-	{
-		key: "commentsTab",
-		name: "Comments",
-		iconProps: {
-			iconName: "Comment",
-		},
-		"data-automation-id": "uploadButton",
-		subMenuProps: {
-			items: [
-				{
-					key: "myComments",
-					name: "My Comments",
-					iconProps: {
-						iconName: "Mail",
-					},
-					"data-automation-id": "newEmailButton",
-				},
-				{
-					key: "repliesComment",
-					name: "Replies Comments",
-					iconProps: {
-						iconName: "MailReply",
-					},
-				},
-				{
-					key: "teamComments",
-					name: "Team Comments",
-					iconProps: {
-						iconName: "ConnectContacts",
-					},
-				},
-			],
-		},
-	},
-	{
-		key: "filesTab",
-		name: "Files",
-		iconProps: {
-			iconName: "Documentation",
-		},
-		subMenuProps: {
-			items: [
-				{
-					key: "myFiles",
-					name: "My Files",
-					iconProps: {
-						iconName: "UserFollowed",
-					},
-					"data-automation-id": "newEmailButton",
-				},
-				{
-					key: "teamFiles",
-					name: "Team Files",
-					iconProps: {
-						iconName: "People",
-					},
-				},
-			],
-		},
-	},
-	{
-		key: "employeesTab",
-		name: "Employees",
-		iconProps: {
-			iconName: "People",
-		},
-		subMenuProps: {
-			items: [
-				{
-					key: "teamMember",
-					name: "Team Member",
-					iconProps: {
-						iconName: "Teamwork",
-					},
-					"data-automation-id": "newEmailButton",
-				},
-				{
-					key: "managers",
-					name: "Managers",
-					iconProps: {
-						iconName: "WorkforceManagement",
-					},
-				},
-				{
-					key: "subordinates",
-					name: "Subordinates",
-					iconProps: {
-						iconName: "People",
-					},
-				},
-			],
-		},
-	},
-];
-
-const userCommandBarItems = name => [
-	{
-		key: "userTab",
-		name,
-		cacheKey: "userTabCacheKey", // changing this key will invalidate this items cache
-		iconProps: {
-			iconName: "Contact",
-		},
-		ariaLabel: "User Settings",
-		subMenuProps: {
-			items: [
-				{
-					key: "userProfile",
-					name: "Profile",
-					iconProps: {
-						iconName: "ContactInfo",
-					},
-					"data-automation-id": "newEmailButton",
-				},
-				{
-					key: "accountSettings",
-					name: "Settings",
-					iconProps: {
-						iconName: "Settings",
-					},
-				},
-				{
-					key: "logOut",
-					name: "Log Out",
-					iconProps: {
-						iconName: "Leave",
-					},
-				},
-			],
-		},
-	},
-];
-
 class Navbar extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			isSettingsOpen: false,
+		};
+		this.openModal = this.openModal.bind(this);
+		this.closeModal = this.closeModal.bind(this);
+		this.onAdminNav = this.onAdminNav.bind(this);
+		this.onEmployeeNav = this.onEmployeeNav.bind(this);
+	}
+
+	onAdminNav() {
+		this.props.history.push("/admin");
+	}
+
+	onEmployeeNav() {
+		this.props.history.push("/dashboard");
+	}
+
+	openModal() {
+		this.setState({ isSettingsOpen: true });
+	}
+
+	closeModal() {
+		this.setState({ isSettingsOpen: false });
+	}
+
+
 	render() {
 		return (
 			<div>
-				<h1>Navbar</h1>
-				<ul>
-					<li>
-						<Link to="/">Home</Link>
-					</li>
-					<li>
-						<Link to="/admin">Admin Dashboard</Link>
-					</li>
-					<li>
-						<Link to="/dashboard">Employee Dashboard</Link>
-					</li>
-				</ul>
 				<Stack horizontal horizontalAlign="space-between">
 					<Stack.Item>
-						<CommandBar items={navItems} />
+						<CommandBar items={navItems(this.onAdminNav, this.onEmployeeNav)} />
 					</Stack.Item>
 					<Stack horizontal>
 						<Stack.Item align="center">
 							<SearchBox placeholder="Search" />
 						</Stack.Item>
 						<Stack.Item>
-							<CommandBar items={userCommandBarItems("Temp Username")} />
+							<CommandBar items={userCommandBarItems("Temp Username", this.openModal)} />
 						</Stack.Item>
 					</Stack>
 					
 				</Stack>
-				
+				<Modal
+					isOpen={this.state.isSettingsOpen}
+					onDismiss={this.closeModal}
+					isBlocking={false}
+				>
+						Settings
+				</Modal>
 			</div>
 		);
 	}
 }
 
-export default Navbar;
+export default withRouter(({ history }) => (
+	<Navbar history={history} />
+));
