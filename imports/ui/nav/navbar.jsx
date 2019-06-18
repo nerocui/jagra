@@ -1,6 +1,8 @@
+/* eslint-disable react/jsx-indent-props */
+/* eslint-disable react/prefer-stateless-function */
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { CommandBar, initializeIcons } from "office-ui-fabric-react";
+import { CommandBar, initializeIcons, Stack, SearchBox } from "office-ui-fabric-react";
 
 initializeIcons();
 
@@ -147,7 +149,45 @@ const navItems = [
 			],
 		},
 	},
-  ];
+];
+
+const userCommandBarItems = name => [
+	{
+		key: "userTab",
+		name,
+		cacheKey: "userTabCacheKey", // changing this key will invalidate this items cache
+		iconProps: {
+			iconName: "Contact",
+		},
+		ariaLabel: "User Settings",
+		subMenuProps: {
+			items: [
+				{
+					key: "userProfile",
+					name: "Profile",
+					iconProps: {
+						iconName: "ContactInfo",
+					},
+					"data-automation-id": "newEmailButton",
+				},
+				{
+					key: "accountSettings",
+					name: "Settings",
+					iconProps: {
+						iconName: "Settings",
+					},
+				},
+				{
+					key: "logOut",
+					name: "Log Out",
+					iconProps: {
+						iconName: "Leave",
+					},
+				},
+			],
+		},
+	},
+];
 
 class Navbar extends Component {
 	render() {
@@ -165,10 +205,21 @@ class Navbar extends Component {
 						<Link to="/dashboard">Employee Dashboard</Link>
 					</li>
 				</ul>
-				<CommandBar
-  items={navItems}
-
-				/>
+				<Stack horizontal horizontalAlign="space-between">
+					<Stack.Item>
+						<CommandBar items={navItems} />
+					</Stack.Item>
+					<Stack horizontal>
+						<Stack.Item align="center">
+							<SearchBox placeholder="Search" />
+						</Stack.Item>
+						<Stack.Item>
+							<CommandBar items={userCommandBarItems("Temp Username")} />
+						</Stack.Item>
+					</Stack>
+					
+				</Stack>
+				
 			</div>
 		);
 	}
