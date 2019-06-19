@@ -26,9 +26,7 @@ class AdminDashboard extends Component {
 
 	onSubmit(e) {
 		e.preventDefault();
-		console.log("hello");
 		signup(this.state.email, this.state.firstName, this.state.lastName);
-		console.log(`before reset: the name is ${ this.state.firstName }`);
 		this.reset();
 	}
 
