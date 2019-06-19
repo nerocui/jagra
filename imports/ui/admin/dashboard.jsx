@@ -6,17 +6,16 @@ import { signup } from "../../util/authUtil";
 import EmployeeList from "../employee/employeeList.jsx";
 import { Employees } from "../../api/db";
 
-const initialState = {
-			tab: "dashboard",
-			email: "",
-			firstName: "",
-			lastName: "",
-};
 
 class AdminDashboard extends Component {
 	constructor(props) {
 		super(props);
-		this.state = initialState;
+		this.state = {
+			tab: "dashboard",
+			email: "",
+			firstName: "",
+			lastName: "",
+		};
 		this.onSubmit = this.onSubmit.bind(this);
 		this.onEmailChange = this.onEmailChange.bind(this);
 		this.onFirstnameChange = this.onFirstnameChange.bind(this);
@@ -46,8 +45,10 @@ class AdminDashboard extends Component {
 	}
 
 	reset() {
-		this.setState({ initialState }, () => {
-			console.log(`after reset, the state is ${ JSON.stringify(initialState) }`);
+		this.setState({
+			email: "",
+			firstName: "",
+			lastName: "",
 		});
 	}
 
