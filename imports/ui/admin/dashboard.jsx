@@ -6,6 +6,7 @@ import { signup } from "../../util/authUtil";
 import EmployeeList from "../employee/employeeList.jsx";
 import { Employees } from "../../api/db";
 
+
 class AdminDashboard extends Component {
 	constructor(props) {
 		super(props);
@@ -19,12 +20,14 @@ class AdminDashboard extends Component {
 		this.onEmailChange = this.onEmailChange.bind(this);
 		this.onFirstnameChange = this.onFirstnameChange.bind(this);
 		this.onLastnameChange = this.onLastnameChange.bind(this);
+		this.reset = this.reset.bind(this);
 	}
+
 
 	onSubmit(e) {
 		e.preventDefault();
-		console.log("hello");
 		signup(this.state.email, this.state.firstName, this.state.lastName);
+		this.reset();
 	}
 
 	onEmailChange(e) {
@@ -39,6 +42,14 @@ class AdminDashboard extends Component {
 		this.setState({ lastName: e.target.value.trim() });
 	}
 
+	reset() {
+		this.setState({
+			email: "",
+			firstName: "",
+			lastName: "",
+		});
+	}
+
 	render() {
 		return (
 			<div>
@@ -50,6 +61,9 @@ class AdminDashboard extends Component {
   onEmailChange={this.onEmailChange}
   onFirstnameChange={this.onFirstnameChange}
   onLastnameChange={this.onLastnameChange}
+  emailValue={this.state.email}
+  firstNameValue={this.state.firstName}
+  lastNameValue={this.state.lastName}
 				/>
 				<EmployeeList employees={this.props.employeeList} />
 			</div>
