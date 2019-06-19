@@ -58,9 +58,7 @@ class Navbar extends Component {
 						<Stack.Item align="center">
 							<SearchBox placeholder="Search" />
 						</Stack.Item>
-						<Stack.Item>
-							<CommandBar items={userCommandBarItems("Temp Username", this.openModal)} />
-						</Stack.Item>
+						<CommandBar items={userCommandBarItems("Temp Username", this.openModal)} />
 					</Stack>
 				</Stack>
 				<Modal
@@ -68,7 +66,7 @@ class Navbar extends Component {
 					onDismiss={this.closeModal}
 					isBlocking={false}
 				>
-						<Settings closeModal={this.closeModal} />
+					<Settings closeModal={this.closeModal} />
 				</Modal>
 			</div>
 		);
