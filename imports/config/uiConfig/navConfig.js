@@ -1,3 +1,13 @@
+const homeTab = onHomeNav => ({
+	key: "homeTab",
+	name: "Home",
+	cacheKey: "homeTabCacheKey", // changing this key will invalidate this items cache
+	iconProps: {
+		iconName: "Home",
+	},
+	onClick: onHomeNav,
+});
+
 const taskTab = {
 	key: "tasksTab",
 	name: "Tasks",
@@ -172,7 +182,8 @@ const employeesTab = {
 	},
 };
 
-export const navItems = (onAdminNav, onEmployeeNav) => [
+export const navItems = (onHomeNav, onAdminNav, onEmployeeNav) => [
+	homeTab(onHomeNav),
 	taskTab,
 	commentsTab,
 	filesTab,

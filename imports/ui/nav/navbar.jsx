@@ -9,6 +9,7 @@ import {
 	Modal,
 } from "office-ui-fabric-react";
 import { navItems, userCommandBarItems } from "../../config/uiConfig/navConfig";
+import Settings from "../settings/index.jsx";
 
 initializeIcons();
 
@@ -22,6 +23,7 @@ class Navbar extends Component {
 		this.closeModal = this.closeModal.bind(this);
 		this.onAdminNav = this.onAdminNav.bind(this);
 		this.onEmployeeNav = this.onEmployeeNav.bind(this);
+		this.onHomeNav = this.onHomeNav.bind(this);
 	}
 
 	onAdminNav() {
@@ -30,6 +32,10 @@ class Navbar extends Component {
 
 	onEmployeeNav() {
 		this.props.history.push("/dashboard");
+	}
+
+	onHomeNav() {
+		this.props.history.push("/");
 	}
 
 	openModal() {
@@ -46,7 +52,7 @@ class Navbar extends Component {
 			<div>
 				<Stack horizontal horizontalAlign="space-between">
 					<Stack.Item>
-						<CommandBar items={navItems(this.onAdminNav, this.onEmployeeNav)} />
+						<CommandBar items={navItems(this.onHomeNav, this.onAdminNav, this.onEmployeeNav)} />
 					</Stack.Item>
 					<Stack horizontal>
 						<Stack.Item align="center">
@@ -56,14 +62,13 @@ class Navbar extends Component {
 							<CommandBar items={userCommandBarItems("Temp Username", this.openModal)} />
 						</Stack.Item>
 					</Stack>
-					
 				</Stack>
 				<Modal
 					isOpen={this.state.isSettingsOpen}
 					onDismiss={this.closeModal}
 					isBlocking={false}
 				>
-						Settings
+						<Settings closeModal={this.closeModal} />
 				</Modal>
 			</div>
 		);
