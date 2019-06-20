@@ -1,5 +1,4 @@
-/* eslint-disable react/jsx-indent-props */
-import React, { Component } from "react";
+import React from "react";
 import {
  Stack, DefaultButton, PrimaryButton, CommandBarButton,
 } from "office-ui-fabric-react";

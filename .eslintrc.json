@@ -38,6 +38,7 @@
       "react/jsx-indent": "off",
       "react/jsx-one-expression-per-line": "off",
       "react/no-unescaped-entities": "off",
+      "react/jsx-indent-props": "off",
       "switch-colon-spacing": [0],
       "no-invalid-this": [0],
       "new-cap": [1],
