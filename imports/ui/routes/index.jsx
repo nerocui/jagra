@@ -5,6 +5,7 @@ import Login from "../nav/login.jsx";
 import EmployeeDashboard from "../employee/dashboard.jsx";
 import AdminDashboard from "../admin/dashboard.jsx";
 import Navbar from "../nav/navbar.jsx";
+import ResetPage from "../nav/reset.jsx";
 
 const routes = (
 	<Router>
@@ -14,6 +15,7 @@ const routes = (
 				<Route path="/" exact component={Login} />
 				<PrivateRoute path="/admin" exact component={AdminDashboard} />
 				<PrivateRoute path="/dashboard" exact component={EmployeeDashboard} />
+				<Route path="/reset" exact component={ResetPage} />
 			</Switch>
 		</div>
 	</Router>
