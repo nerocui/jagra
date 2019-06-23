@@ -5,6 +5,7 @@ import Signup from "../nav/signup.jsx";
 import { signup } from "../../util/authUtil";
 import EmployeeList from "../employee/employeeList.jsx";
 import { Employees } from "../../api/db";
+import EmployeeItem from "../employee/employeeItem.jsx";
 
 
 class AdminDashboard extends Component {
@@ -66,6 +67,11 @@ class AdminDashboard extends Component {
   lastNameValue={this.state.lastName}
 				/>
 				<EmployeeList employees={this.props.employeeList} />
+				<EmployeeItem
+  emailValue={this.state.email}
+  firstNameValue={this.state.firstName}
+  lastNameValue={this.state.lastName}
+				/>
 			</div>
 		);
 	}
