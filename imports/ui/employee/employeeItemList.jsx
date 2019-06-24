@@ -1,13 +1,15 @@
-import React, { Component } from "react";
-import { ScrollablePane } from "office-ui-fabric-react";
-import EmployeeItem from "./employeeItem.jsx";
+import React from "react";
+import { ScrollablePane, List } from "office-ui-fabric-react";
 
-const EmployeeItemList = ({ employees }) => (
-	<ScrollablePane>
-		<List items={}>
 
+const EmployeeItemList = props => {
+	return (
+		<ScrollablePane>
+		<List items={props.EmployItems}>
+		{EmployItems.map(EmployItem => <EmployeeItem item={EmployItem} />)}
 		</List>
-	</ScrollablePane>
-);
+		</ScrollablePane>
+	);
+};
 
 export default EmployeeItemList;
