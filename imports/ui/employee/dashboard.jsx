@@ -1,10 +1,8 @@
 import React, { Component } from "react";
-import { withTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
 import TaskCreate from "../task/taskCreate.jsx";
-import TaskList from "../task/taskList.jsx";
-import { Tasks } from "../../api/db";
 import TASKSAPI from "../../constant/methods/tasksAPI";
+import TaskMasterDetailViewContainer from "../task/taskMasterDetailView.jsx";
 
 const defaultState = {
 	newTaskTitle: "",
@@ -67,19 +65,10 @@ class EmployeeDashboard extends Component {
 					assigneeIdValue={this.state.newTaskAssigneeId}
 					dueDateValue={this.state.newTaskDueDate}
 				/>
-				<TaskList items={this.props.myTaskList || []} />
+				<TaskMasterDetailViewContainer subscriptionId="myTasks" />
 			</div>
 		);
 	}
 }
 
-const EmployeeDashboardContainer = withTracker(() => {
-	const myTaskListHandle = Meteor.subscribe("myTasks");
-	const loading = !myTaskListHandle.ready();
-	return {
-		loading,
-		myTaskList: Tasks.find({}).fetch(),
-	};
-})(EmployeeDashboard);
-
-export default EmployeeDashboardContainer;
+export default EmployeeDashboard;
