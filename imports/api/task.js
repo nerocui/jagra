@@ -42,7 +42,7 @@ if (Meteor.isServer) {
 // private relationshipsId: Array<String>;
 //TODO({nkWzRdX91}): file and relationship are left not implemented since we don't know how they work
 
-export const insertTask = (db, userId, title, description) => {
+export const insertTask = (db, userId, title, description, assigneeId, dueDate) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
@@ -51,9 +51,9 @@ export const insertTask = (db, userId, title, description) => {
 		description,
 		status: Status.TO_DO,
 		creatorId: userId,
-		assigneeId: userId,
+		assigneeId: assigneeId !== "" ? assigneeId : userId,
 		createdAt: moment.now(),
-		dueDate: null,
+		dueDate,
 		commentsId: [],
 		filesId: [],
 		watchersId: [userId],
@@ -342,9 +342,8 @@ export const removeWatchersFromTaskByTeam = (db, _id, userId, teamId) => {
 };
 
 Meteor.methods({
-	[TASKSAPI.INSERT](title, description) {
-		console.log(`Creating task with title ${ title } and description ${ description }`);
-		return insertTask(Tasks, this.userId, title, description);
+	[TASKSAPI.INSERT](title, description, assigneeId, dueDate) {
+		return insertTask(Tasks, this.userId, title, description, assigneeId, dueDate);
 	},
 	[TASKSAPI.REMOVE](_id) {
 		return removeTask(Tasks, _id, this.userId);

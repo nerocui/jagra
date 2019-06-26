@@ -25,7 +25,7 @@ class EmployeeDashboard extends Component {
 
 	onNewTask(e) {
 		e.preventDefault();
-		Meteor.call(TASKSAPI.INSERT, this.state.newTaskTitle, this.state.newTaskDescription);
+		Meteor.call(TASKSAPI.INSERT, this.state.newTaskTitle, this.state.newTaskDescription, this.state.newTaskAssigneeId, this.state.newTaskDueDate);
 		this.resetState();
 	}
 
