@@ -3,7 +3,7 @@ import TaskItem from "./taskItem.jsx";
 
 const TaskList = ({ items }) => (
 	<div>
-		{items.map(item => <TaskItem item={item} />)}
+		{items.map(item => <TaskItem item={item} key={item._id} />)}
 	</div>
 );
 

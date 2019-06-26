@@ -1,7 +1,7 @@
 import React from "react";
 
-const TaskItem = ({ name }) => (
-	<div>Task {name}</div>
+const TaskItem = ({ item }) => (
+	<div>Task: {item.title}</div>
 );
 
 export default TaskItem;
