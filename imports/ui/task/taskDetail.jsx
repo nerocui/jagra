@@ -1,8 +1,8 @@
 import React from "react";
 
-const TaskDetail = props => (
+const TaskDetail = ({ item }) => (
 	<div>
-		{props._id ? <div>task detail</div> : <div>choose a task</div>}
+		{item ? <div>task detail {item._id}</div> : <div>choose a task</div>}
 	</div>
 );
 

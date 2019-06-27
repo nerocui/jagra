@@ -1,0 +1,9 @@
+.component--task__item-container {
+	text-decoration: none;
+	font-size: 2rem;
+	width: 25rem;
+	border-radius: $small-radius;
+	box-shadow: .1rem .1rem .4rem rgb(185, 185, 185);
+	margin-bottom: $space;
+	padding: $space;
+}

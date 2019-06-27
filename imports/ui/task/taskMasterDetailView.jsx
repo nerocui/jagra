@@ -11,9 +11,8 @@ import { Tasks } from "../../api/db";
 class TaskMasterDetailView extends Component {
 	constructor(props) {
 		super(props);
-		const queries = queryString.parse(window.location.search);
 		this.state = {
-			chosenId: queries.taskId,
+			chosenId: queryString.parse(window.location.search).taskId,
 		};
 	}
 
