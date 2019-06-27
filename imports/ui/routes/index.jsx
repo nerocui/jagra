@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute.jsx";
+import TaskListRoute from "./TaskListRoute.jsx";
 import Login from "../nav/login.jsx";
 import EmployeeDashboard from "../employee/dashboard.jsx";
 import AdminDashboard from "../admin/dashboard.jsx";
@@ -15,7 +16,7 @@ const routes = (
 				<Route path="/" exact component={Login} />
 				<PrivateRoute path="/admin" exact component={AdminDashboard} />
 				<PrivateRoute path="/dashboard" exact component={EmployeeDashboard} />
-				<PrivateRoute path="/tasklist" exact component={TaskMasterDetailViewContainer} />
+				<TaskListRoute path="/tasklist" exact component={TaskMasterDetailViewContainer} />
 			</Switch>
 		</div>
 	</Router>

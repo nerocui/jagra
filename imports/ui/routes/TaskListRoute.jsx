@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import queryString from "query-string";
-import PrivateRoute from "./PrivateRoute.jsx";
+import { Route, Redirect } from "react-router-dom";
+import { isAuthenticated } from "../../util/authUtil";
 
 export default class TaskListRoute extends Component {
 	constructor(props) {
@@ -10,16 +11,18 @@ export default class TaskListRoute extends Component {
 
 	renderRoute() {
 		const COMPONENT = this.props.component;
-		console.log(`Passing subscription ${ queryString(window.location.search).subscriptionId }`)
 		return (
-			<COMPONENT subscriptionId={queryString(window.location.search).subscriptionId} />
+			isAuthenticated() ?
+			<COMPONENT subscriptionId={queryString.parse(window.location.search).subscriptionId} />
+			:
+			<Redirect to="/" />
 		);
 	}
 
 	render() {
 		const { component, ...rest } = this.props;
 		return (
-			<PrivateRoute {...rest} render={this.renderRoute} />
+			<Route {...rest} render={this.renderRoute} />
 		);
 	}
 }
