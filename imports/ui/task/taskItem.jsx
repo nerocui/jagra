@@ -16,7 +16,7 @@ const TaskItem = ({
 			</Link>
 		</div>
 	);
-}
+};
 
 
 export default TaskItem;

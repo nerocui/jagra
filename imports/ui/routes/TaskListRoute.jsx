@@ -12,13 +12,12 @@ export default class TaskListRoute extends Component {
 	renderRoute() {
 		const COMPONENT = this.props.component;
 		return (
-			isAuthenticated() ?
-			<COMPONENT 
+			isAuthenticated() ? (
+			<COMPONENT
 				subscriptionId={queryString.parse(window.location.search).subscriptionId}
 				taskId={queryString.parse(window.location.search).taskId}
 			/>
-			:
-			<Redirect to="/" />
+			) : <Redirect to="/" />
 		);
 	}
 
