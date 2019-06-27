@@ -11,8 +11,8 @@ const TaskItem = ({
 	return (
 		<div className="component--task__item-container">
 			<Link to={`?subscriptionId=${ queries.subscriptionId }&taskId=${ _id }`}>
-				<div>Task: {title}</div>
-				<div>dueDate: {dueDate}</div>
+				<p>Task: {title}</p>
+				<h3>dueDate: {dueDate?dueDate.toString():""}</h3>
 			</Link>
 		</div>
 	);

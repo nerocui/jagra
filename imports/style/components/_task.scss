@@ -1,11 +1,10 @@
 .component--task__item-container {
 	text-decoration: none;
-	font-size: 2rem;
 	width: $pane-width;
 	border-radius: $small-radius;
 	box-shadow: .1rem .1rem .4rem $grey;
 	margin-bottom: $space-small;
-	padding: $space;
+	padding: $space-small;
 }
 
 .component--task__detail-container {
@@ -15,6 +14,16 @@
 .component--task__list-container {
 	padding: $space-small;
 	width: $pane-width + 2*$space-small;
-	height: calc(100vh - #{$nav-height} - #{$space-small});
-	border-right: .2rem solid $grey;
+	height: calc(100vh - #{$nav-height});
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.component--task__create-container {
+	width: 40rem;
+	height: 40rem;
+	padding: $space;
+	.element--inpit__basic {
+		margin-bottom: $space-small;
+	}
 }

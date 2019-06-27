@@ -1,7 +1,7 @@
 import React from "react";
 import TaskItem from "./taskItem.jsx";
 
-const TaskList = ({ items, itemClickHandler }) => (
+const TaskList = ({ items }) => (
 	<div className="component--task__list-container">
 		{items.map(
 			item => (
@@ -10,7 +10,6 @@ const TaskList = ({ items, itemClickHandler }) => (
 				_id={item._id}
 				dueDate={item.dueDate}
 				key={item._id}
-				onClick={itemClickHandler}
 			/>
 			),
 		)}
