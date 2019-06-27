@@ -14,7 +14,7 @@ const tasksTab = navToTasklist => ({
 				iconProps: {
 					iconName: "Assign",
 				},
-				onClick: navToTasklist,
+				onClick: () => navToTasklist("tasksAssignedToMe"),
 			},
 			{
 				key: "tasksCreatedByMe",
@@ -22,6 +22,7 @@ const tasksTab = navToTasklist => ({
 				iconProps: {
 					iconName: "AddFriend",
 				},
+				onClick: () => navToTasklist("tasksCreatedByMe"),
 			},
 			{
 				key: "tasksIAmWatching",
@@ -29,6 +30,7 @@ const tasksTab = navToTasklist => ({
 				iconProps: {
 					iconName: "Glasses",
 				},
+				onClick: () => navToTasklist("tasksIAmWatching"),
 			},
 			{
 				key: "teamTasks",
@@ -36,6 +38,7 @@ const tasksTab = navToTasklist => ({
 				iconProps: {
 					iconName: "Teamwork",
 				},
+				onClick: () => navToTasklist("teamTasks"),
 			},
 			{
 				key: "allTasks",
@@ -43,6 +46,7 @@ const tasksTab = navToTasklist => ({
 				iconProps: {
 					iconName: "AllApps",
 				},
+				onClick: () => navToTasklist("allTasks"),
 			},
 		],
 	},

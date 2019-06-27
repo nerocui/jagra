@@ -35,9 +35,9 @@ class TaskMasterDetailView extends Component {
 	}
 }
 
-const TaskMasterDetailViewContainer = withTracker(() => {
-	const queries = queryString.parse(window.location.search);
-	const myTaskListHandle = Meteor.subscribe(queries.subscriptionId);
+const TaskMasterDetailViewContainer = withTracker(({ subscriptionId }) => {
+	console.log(`Getting subscription ${ subscriptionId }`);
+	const myTaskListHandle = Meteor.subscribe(subscriptionId);
 	const loading = !myTaskListHandle.ready();
 	return {
 		loading,

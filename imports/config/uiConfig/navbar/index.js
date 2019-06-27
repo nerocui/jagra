@@ -5,9 +5,9 @@ import filesTab from "./filesTab";
 import employeesTab from "./employeesTab";
 import dashboardTab from "./dashboardsTab";
 
-const navItems = (onHomeNav, onAdminNav, onEmployeeNav) => [
+const navItems = (onHomeNav, onAdminNav, onEmployeeNav, navToTasklist) => [
 	homeTab(onHomeNav),
-	taskTab,
+	taskTab(navToTasklist),
 	commentsTab,
 	filesTab,
 	employeesTab,

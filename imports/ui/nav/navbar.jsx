@@ -24,6 +24,7 @@ class Navbar extends Component {
 		this.onAdminNav = this.onAdminNav.bind(this);
 		this.onEmployeeNav = this.onEmployeeNav.bind(this);
 		this.onHomeNav = this.onHomeNav.bind(this);
+		this.navToTasklist = this.navToTasklist.bind(this);
 	}
 
 	onAdminNav() {
@@ -46,13 +47,16 @@ class Navbar extends Component {
 		this.setState({ isSettingsOpen: false });
 	}
 
+	navToTasklist(route) {
+		this.props.history.push(`/tasklist?subscriptionId=${ route }`);
+	}
 
 	render() {
 		return (
 			<div>
 				<Stack horizontal horizontalAlign="space-between">
 					<Stack.Item>
-						<CommandBar items={navItems(this.onHomeNav, this.onAdminNav, this.onEmployeeNav)} />
+						<CommandBar items={navItems(this.onHomeNav, this.onAdminNav, this.onEmployeeNav, this.navToTasklist)} />
 					</Stack.Item>
 					<Stack horizontal>
 						<Stack.Item align="center">

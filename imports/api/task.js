@@ -31,7 +31,7 @@ import { removeComment, addCommentToTask } from "./comment";
 import { removeTaskReferenceFromFile } from "./file";
 
 if (Meteor.isServer) {
-	Meteor.publish("myTasks", () => Tasks.find({ creatorId: Meteor.userId() }));
+	Meteor.publish("tasksCreatedByMe", () => Tasks.find({ creatorId: Meteor.userId() }));
 	//publish all tasks in my team
 	//publish all tasks created by me
 	//publish all tasks I watch
