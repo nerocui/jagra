@@ -43,6 +43,12 @@ class AdminDashboard extends Component {
 		this.setState({ lastName: e.target.value.trim() });
 	}
 
+	employees() {
+emailValue={this.state.email},
+firstNameValue={this.state.firstName},
+lastNameValue={this.state.lastName},
+	}
+
 	reset() {
 		this.setState({
 			email: "",
@@ -67,7 +73,7 @@ class AdminDashboard extends Component {
   lastNameValue={this.state.lastName}
 				/>
 				<EmployeeList employees={this.props.employeeList} />
-				<EmployeeItemList items={this.props.EmployeeItemList} />
+				<EmployeeItemList employeesinfo={employees} />
 			</div>
 		);
 	}
