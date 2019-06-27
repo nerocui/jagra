@@ -53,7 +53,7 @@ class Navbar extends Component {
 
 	render() {
 		return (
-			<div>
+			<div className="component--nav__navbar-container">
 				<Stack horizontal horizontalAlign="space-between">
 					<Stack.Item>
 						<CommandBar items={navItems(this.onHomeNav, this.onAdminNav, this.onEmployeeNav, this.navToTasklist)} />

@@ -1,9 +1,20 @@
 .component--task__item-container {
 	text-decoration: none;
 	font-size: 2rem;
-	width: 25rem;
+	width: $pane-width;
 	border-radius: $small-radius;
-	box-shadow: .1rem .1rem .4rem rgb(185, 185, 185);
-	margin-bottom: $space;
+	box-shadow: .1rem .1rem .4rem $grey;
+	margin-bottom: $space-small;
 	padding: $space;
+}
+
+.component--task__detail-container {
+	font-size: 2rem;
+}
+
+.component--task__list-container {
+	padding: $space-small;
+	width: $pane-width + 2*$space;
+	height: calc(100vh - #{$nav-height} - #{$space-small});
+	border-right: .2rem solid $grey;
 }
