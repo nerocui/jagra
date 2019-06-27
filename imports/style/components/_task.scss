@@ -14,7 +14,7 @@
 
 .component--task__list-container {
 	padding: $space-small;
-	width: $pane-width + 2*$space;
+	width: $pane-width + 2*$space-small;
 	height: calc(100vh - #{$nav-height} - #{$space-small});
 	border-right: .2rem solid $grey;
 }

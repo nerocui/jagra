@@ -2,22 +2,27 @@
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
-  }
-  
-  html {
-	font-size: 62.5%;
-  }
+}
 
-  h1 {
+html {
+	font-size: 62.5%;
+}
+
+h1 {
 	font-weight: 400;
 	margin-bottom: $space;
-  }
-  
-  h2 {
+}
+
+h2 {
 	font-size: $large-font-size;
 	margin-bottom: $space;
-  }
-  
-  p {
+}
+
+p {
 	margin-bottom: $space;
-  }
+}
+
+#react-target {
+	height: 100vh;
+	width: 100vw;
+}

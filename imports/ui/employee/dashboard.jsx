@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
 import TaskCreate from "../task/taskCreate.jsx";
 import TASKSAPI from "../../constant/methods/tasksAPI";
-import TaskMasterDetailViewContainer from "../task/taskMasterDetailView.jsx";
 
 const defaultState = {
 	newTaskTitle: "",
@@ -65,7 +64,6 @@ class EmployeeDashboard extends Component {
 					assigneeIdValue={this.state.newTaskAssigneeId}
 					dueDateValue={this.state.newTaskDueDate}
 				/>
-				<TaskMasterDetailViewContainer subscriptionId="myTasks" />
 			</div>
 		);
 	}
