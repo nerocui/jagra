@@ -7,7 +7,8 @@ import {
 	SearchBox,
 	Modal,
 } from "office-ui-fabric-react";
-import { navItems, userCommandBarItems } from "../../config/uiConfig/navConfig";
+import navItems from "../../config/uiConfig/navbar";
+import userCommandBarItems from "../../config/uiConfig/navbar/userTab";
 import Settings from "../settings/index.jsx";
 
 initializeIcons();
