@@ -10,7 +10,8 @@ import { Tasks } from "../../api/db";
 class TaskMasterDetailView extends PureComponent {
 	render() {
 		let items = this.props.items || [];
-		items = items.map(item => ({ ...item, chosen: item._id === this.props.chosenItem._id }));
+		const isChosen = item => (this.props.chosenItem ? item._id === this.props.chosenItem._id : false);
+		items = items.map(item => ({ ...item, chosen: isChosen(item) }));
 		return (
 			<Stack horizontal>
 				<TaskList items={items} />
