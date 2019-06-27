@@ -15,6 +15,7 @@
     "@babel/runtime": "^7.4.5",
     "bcrypt": "^3.0.6",
     "connected-react-router": "^6.4.0",
+    "dateformat": "^3.0.3",
     "fast-deep-equal": "^2.0.1",
     "history": "^4.9.0",
     "meteor-node-stubs": "^0.4.1",

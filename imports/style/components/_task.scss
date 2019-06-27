@@ -1,10 +1,32 @@
 .component--task__item-container {
-	text-decoration: none;
+	a {
+		text-decoration: none;
+		color: black;
+	}
 	width: $pane-width;
 	border-radius: $small-radius;
 	box-shadow: .1rem .1rem .4rem $grey;
 	margin-bottom: $space-small;
 	padding: $space-small;
+
+	transition: all 400ms;
+    user-select: none;
+    animation-name: moveInScale;
+    animation-duration: 600ms;
+	animation-timing-function: ease-in;
+	&:hover {
+		box-shadow: .2rem .2rem .4rem $grey;
+		transform: translateY(-1px);
+	}
+	&:active {
+		box-shadow: .1rem .1rem .4rem $grey;
+		transform: translateY(1px);
+	}
+}
+
+
+.component--task__item-chosen {
+	background: rgb(236, 236, 236);
 }
 
 .component--task__detail-container {

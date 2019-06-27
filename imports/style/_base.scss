@@ -6,7 +6,6 @@
 
 html {
 	font-size: 62.5%;
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 h1 {
@@ -21,11 +20,6 @@ h2 {
 
 h3 {
 	font-size: $medium-font-size;
-}
-
-p {
-	font-weight: 200;
-	font-size: $base-font-size;
 }
 
 #react-target {

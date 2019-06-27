@@ -9,6 +9,7 @@ const TaskList = ({ items }) => (
 				title={item.title}
 				_id={item._id}
 				dueDate={item.dueDate}
+				chosen={item.chosen}
 				key={item._id}
 			/>
 			),

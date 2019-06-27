@@ -9,9 +9,11 @@ import { Tasks } from "../../api/db";
 
 class TaskMasterDetailView extends PureComponent {
 	render() {
+		let items = this.props.items || [];
+		items = items.map(item => ({ ...item, chosen: item._id === this.props.chosenItem._id }));
 		return (
 			<Stack horizontal>
-				<TaskList items={this.props.items || []} />
+				<TaskList items={items} />
 				<TaskDetail item={this.props.chosenItem} />
 			</Stack>
 		);
