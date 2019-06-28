@@ -13,10 +13,12 @@ class TaskMasterDetailView extends PureComponent {
 		const isChosen = item => (this.props.chosenItem ? item._id === this.props.chosenItem._id : false);
 		items = items.map(item => ({ ...item, chosen: isChosen(item) }));
 		return (
-			<Stack horizontal>
-				<TaskList items={items} />
-				<TaskDetail item={this.props.chosenItem} />
-			</Stack>
+			<div className="component--task__master-detail">
+				<Stack horizontal>
+					<TaskList items={items} />
+					<TaskDetail item={this.props.chosenItem} />
+				</Stack>
+			</div>
 		);
 	}
 }

@@ -16,7 +16,7 @@ const TaskItem = ({
 			<Link to={`?subscriptionId=${ queries.subscriptionId }&taskId=${ _id }`}>
 				<Stack>
 					<Stack.Item>
-						<p className="element--text_basic">Task: {title}</p>
+						<p className="element--text_basic">{title}</p>
 					</Stack.Item>
 					<Stack.Item align="end">
 						<p className="element--text_basic">{dueDate ? `Due ${ dateformat(dueDate, "yyyy-mm-dd") }` : ""}</p>

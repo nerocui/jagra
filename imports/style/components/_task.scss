@@ -5,7 +5,7 @@
 	}
 	width: $pane-width;
 	border-radius: $small-radius;
-	box-shadow: .1rem .1rem .4rem $grey;
+	box-shadow: $shadow-surface;
 	margin-bottom: $space-small;
 	padding: $space-small;
 
@@ -19,7 +19,7 @@
 		transform: translateY(-1px);
 	}
 	&:active {
-		box-shadow: .1rem .1rem .4rem $grey;
+		box-shadow: $shadow-surface;
 		transform: translateY(1px);
 	}
 }
@@ -31,12 +31,15 @@
 
 .component--task__detail-container {
 	font-size: 2rem;
+	width: calc(100vw - #{$pane-width} - 2*#{$space-small});
+	padding: $space-small;
 }
 
 .component--task__list-container {
 	padding: $space-small;
 	width: $pane-width + 2*$space-small;
 	height: calc(100vh - #{$nav-height});
+	box-shadow: $shadow-surface;
 	overflow-x: hidden;
 	overflow-y: auto;
 }
