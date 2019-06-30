@@ -1,3 +1,7 @@
 export default {
-	input: "element--inpit__basic",
+	input: "element--input__basic",
+	searchBox: {
+		normal: "element--input__search-normal",
+		large: "element--input__search-large",
+	},
 };

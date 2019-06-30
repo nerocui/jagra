@@ -5,6 +5,9 @@ import {
 } from "office-ui-fabric-react";
 import TASKSAPI from "../../constant/methods/tasksAPI";
 import style from "../../constant/style";
+import SearchField from "../input/SearchField.jsx";
+import SEARCH_DOMAIN from "../../constant/actions/searchDomain";
+import SEARCH_MODE from "../../constant/actions/searchMode";
 
 const DayPickerStrings = {
 	months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
@@ -29,8 +32,13 @@ const defaultState = {
 	newTaskDescription: "",
 	newTaskAssigneeId: "",
 	newTaskDueDate: null,
+	searchTerm: "",
+	searchChoices: [],
 	err: "",
 };
+
+const searchDomain = [SEARCH_DOMAIN.EMPLOYEE];
+const searchClickMode = SEARCH_MODE.SELECTION;
 
 class TaskCreate extends Component {
 	constructor(props) {
@@ -91,6 +99,15 @@ class TaskCreate extends Component {
 							value={this.state.newTaskAssigneeId}
 							onChange={this.onNewTaskAssigneeIdChange}
 							placeholder="This is a temp assigneeId entry"
+						/>
+						<SearchField
+							searchDomain={searchDomain}
+							searchTerm={this.state.searchTerm}
+							choices={this.state.searchChoices}
+							numberOfChoice={1}
+							dataPool={this.props.dataPool || []}
+							clickMode={searchClickMode}
+							size={style.searchBox.normal}
 						/>
 						<DatePicker
 							className={style.input}

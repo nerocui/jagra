@@ -1,0 +1,4 @@
+export default {
+	SELECTION: "SELECTION",
+	NAVIGATION: "NAVIGATION",
+};
