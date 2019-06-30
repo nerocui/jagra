@@ -6,7 +6,7 @@ import {
 import TASKSAPI from "../../constant/methods/tasksAPI";
 import { Tasks } from "../../api/db";
 import style from "../../constant/style";
-import SearchField from "../input/SearchField.jsx";
+import SearchField from "../input/searchField.jsx";
 import SEARCH_DOMAIN from "../../constant/actions/searchDomain";
 import SEARCH_MODE from "../../constant/actions/searchMode";
 
@@ -55,6 +55,7 @@ class TaskCreate extends Component {
 		this.onSearchChange = this.onSearchChange.bind(this);
 		this.onSearchRequest = this.onSearchRequest.bind(this);
 		this.onSearchFocus = this.onSearchFocus.bind(this);
+		this.onSearchBlur = this.onSearchBlur.bind(this);
 	}
 
 	componentDidMount() {
@@ -94,6 +95,10 @@ class TaskCreate extends Component {
 
 	onSearchRequest() {
 
+	}
+
+	onSearchBlur() {
+		console.log("escape");
 	}
 
 	onSearchFocus() {
@@ -141,6 +146,7 @@ class TaskCreate extends Component {
 							onSearchChange={this.onSearchChange}
 							onSearchFocus={this.onSearchFocus}
 							onSearchRequest={this.onSearchRequest}
+							onSearchBlur={this.onSearchBlur}
 						/>
 						<DatePicker
 							className={style.input}

@@ -1,6 +1,7 @@
 import React from "react";
 import { SearchBox } from "office-ui-fabric-react";
 import CLICK_MODE from "../../constant/actions/searchMode";
+import SuggestionBox from "./suggestionBox.jsx";
 
 const SearchField = ({
 	searchDomain, //[employee, task, comment, file, ]
@@ -13,10 +14,10 @@ const SearchField = ({
 	onSearchChange,
 	onSearchRequest,
 	onSearchFocus,
+	onSearchBlur,
 }) => {
 	const _searchDomain = [...searchDomain];
 	const _choices = [...choices].slice(0, numberOfChoice);
-	const _datapool = [...dataPool];
 	const disabled = (_searchDomain.length === 0) || (parseInt(numberOfChoice, 10) <= choices.length);
 	return (
 		<div className="component--input__search-container">
@@ -28,6 +29,7 @@ const SearchField = ({
 				onSearch={onSearchRequest}
 				onFocus={onSearchFocus}
 				disabled={disabled}
+				onBlur={onSearchBlur}
 			/>
 			<div>
 				{clickMode === CLICK_MODE.SELECTION
@@ -41,13 +43,7 @@ const SearchField = ({
 					</div>
 				) : <div />}
 			</div>
-			<div>
-				{_datapool.map(data => (
-					<div key={data._id}>
-						{data.title}
-					</div>
-				))}
-			</div>
+			<SuggestionBox dataPool={dataPool} />
 		</div>
 	);
 };
