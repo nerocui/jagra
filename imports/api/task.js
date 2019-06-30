@@ -32,6 +32,8 @@ import { removeTaskReferenceFromFile } from "./file";
 
 if (Meteor.isServer) {
 	Meteor.publish("tasksCreatedByMe", () => Tasks.find({ creatorId: Meteor.userId() }));
+	Meteor.publish("allTasks", () => Tasks.find({}));
+	
 	//publish all tasks in my team
 	//publish all tasks created by me
 	//publish all tasks I watch

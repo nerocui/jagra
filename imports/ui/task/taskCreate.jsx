@@ -4,6 +4,7 @@ import {
  Stack, TextField, PrimaryButton, DatePicker, DayOfWeek,
 } from "office-ui-fabric-react";
 import TASKSAPI from "../../constant/methods/tasksAPI";
+import { Tasks } from "../../api/db";
 import style from "../../constant/style";
 import SearchField from "../input/SearchField.jsx";
 import SEARCH_DOMAIN from "../../constant/actions/searchDomain";
@@ -33,7 +34,9 @@ const defaultState = {
 	newTaskAssigneeId: "",
 	newTaskDueDate: null,
 	searchTerm: "",
+	searchDataPool: [],
 	searchChoices: [],
+	isSearchFocused: false,
 	err: "",
 };
 
@@ -49,6 +52,17 @@ class TaskCreate extends Component {
 		this.onNewTaskDescriptionChange = this.onNewTaskDescriptionChange.bind(this);
 		this.onNewTaskAssigneeIdChange = this.onNewTaskAssigneeIdChange.bind(this);
 		this.onNewTaskDueDateChange = this.onNewTaskDueDateChange.bind(this);
+		this.onSearchChange = this.onSearchChange.bind(this);
+		this.onSearchRequest = this.onSearchRequest.bind(this);
+		this.onSearchFocus = this.onSearchFocus.bind(this);
+	}
+
+	componentDidMount() {
+		this.allTasksHandle = Meteor.subscribe("allTasks");
+	}
+
+	componentWillUnmount() {
+		this.allTasksHandle.stop();
 	}
 
 	onNewTask(e) {
@@ -72,6 +86,22 @@ class TaskCreate extends Component {
 	onNewTaskDueDateChange(newTaskDueDate) {
 		this.setState({ newTaskDueDate });
 	}
+
+	//Search related functions
+	onSearchChange() {
+
+	}
+
+	onSearchRequest() {
+
+	}
+
+	onSearchFocus() {
+		this.setState({ isSearchFocused: true, searchDataPool: Tasks.find({}).fetch() });
+		console.log("focus");
+	}
+
+	//[End] search related functions
 
 	resetState() {
 		this.setState(defaultState);
@@ -105,9 +135,12 @@ class TaskCreate extends Component {
 							searchTerm={this.state.searchTerm}
 							choices={this.state.searchChoices}
 							numberOfChoice={1}
-							dataPool={this.props.dataPool || []}
+							dataPool={this.state.searchDataPool}
 							clickMode={searchClickMode}
 							size={style.searchBox.normal}
+							onSearchChange={this.onSearchChange}
+							onSearchFocus={this.onSearchFocus}
+							onSearchRequest={this.onSearchRequest}
 						/>
 						<DatePicker
 							className={style.input}

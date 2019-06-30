@@ -10,29 +10,23 @@ const SearchField = ({
 	dataPool, //[{type: employee/task/comment/file, index: [key words...], link, content }]
 	clickMode, //select/navigate
 	size, //normal/large
-	onSearchEscape,
-	onSearchClear,
 	onSearchChange,
 	onSearchRequest,
 	onSearchFocus,
-	onSearchBlur,
 }) => {
 	const _searchDomain = [...searchDomain];
 	const _choices = [...choices].slice(0, numberOfChoice);
 	const _datapool = [...dataPool];
 	const disabled = (_searchDomain.length === 0) || (parseInt(numberOfChoice, 10) <= choices.length);
 	return (
-		<div>
+		<div className="component--input__search-container">
 			<SearchBox
 				value={searchTerm}
 				className={size}
 				placeholder="Search"
-				onEscape={onSearchEscape}
-				onClear={onSearchClear}
 				onChange={onSearchChange}
 				onSearch={onSearchRequest}
 				onFocus={onSearchFocus}
-				onBlur={onSearchBlur}
 				disabled={disabled}
 			/>
 			<div>
@@ -49,8 +43,8 @@ const SearchField = ({
 			</div>
 			<div>
 				{_datapool.map(data => (
-					<div>
-						{data.content}
+					<div key={data._id}>
+						{data.title}
 					</div>
 				))}
 			</div>
