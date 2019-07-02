@@ -3,12 +3,13 @@ import { Meteor } from "meteor/meteor";
 import {
  Stack, TextField, PrimaryButton, DatePicker, DayOfWeek,
 } from "office-ui-fabric-react";
-import TASKSAPI from "../../constant/methods/tasksAPI";
+import { connect } from "react-redux";
 import { Tasks } from "../../api/db";
 import style from "../../constant/style";
 import SearchField from "../input/searchField.jsx";
 import SEARCH_DOMAIN from "../../constant/actions/searchDomain";
 import SEARCH_MODE from "../../constant/actions/searchMode";
+import * as actions from "../../actions/index";
 
 const DayPickerStrings = {
 	months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
@@ -27,35 +28,20 @@ const DayPickerStrings = {
 };
 
 const minDate = new Date(Date.now());
-
-const defaultState = {
-	newTaskTitle: "",
-	newTaskDescription: "",
-	newTaskAssigneeId: "",
-	newTaskDueDate: null,
-	searchTerm: "",
-	isSearchInFocus: false,
-	searchDataPool: [],
-	searchChoices: [],
-	err: "",
-};
-
 const searchDomain = [SEARCH_DOMAIN.EMPLOYEE];
 const searchClickMode = SEARCH_MODE.SELECTION;
 
 class TaskCreate extends Component {
 	constructor(props) {
 		super(props);
-		this.state = defaultState;
-		this.onNewTask = this.onNewTask.bind(this);
 		this.onNewTaskTitleChange = this.onNewTaskTitleChange.bind(this);
 		this.onNewTaskDescriptionChange = this.onNewTaskDescriptionChange.bind(this);
 		this.onNewTaskAssigneeIdChange = this.onNewTaskAssigneeIdChange.bind(this);
+		this.onNewTaskSearchChange = this.onNewTaskSearchChange.bind(this);
+		this.onNewTaskSearchFocus = this.onNewTaskSearchFocus.bind(this);
+		this.onNewTaskSearchBlur = this.onNewTaskSearchBlur.bind(this);
 		this.onNewTaskDueDateChange = this.onNewTaskDueDateChange.bind(this);
-		this.onSearchChange = this.onSearchChange.bind(this);
-		this.onSearchRequest = this.onSearchRequest.bind(this);
-		this.onSearchFocus = this.onSearchFocus.bind(this);
-		this.onSearchBlur = this.onSearchBlur.bind(this);
+		this.onNewTask = this.onNewTask.bind(this);
 	}
 
 	componentDidMount() {
@@ -66,49 +52,36 @@ class TaskCreate extends Component {
 		this.allTasksHandle.stop();
 	}
 
-	onNewTask(e) {
-		e.preventDefault();
-		Meteor.call(TASKSAPI.INSERT, this.state.newTaskTitle, this.state.newTaskDescription, this.state.newTaskAssigneeId, this.state.newTaskDueDate);
-		this.resetState();
-	}
-
 	onNewTaskTitleChange(e) {
-		this.setState({ newTaskTitle: e.target.value });
+		this.props.onNewTaskTitleChange(e.target.value);
 	}
 
 	onNewTaskDescriptionChange(e) {
-		this.setState({ newTaskDescription: e.target.value });
+		this.props.onNewTaskDescriptionChange(e.target.value);
 	}
 
 	onNewTaskAssigneeIdChange(e) {
-		this.setState({ newTaskAssigneeId: e.target.value });
+		this.props.onNewTaskAssigneeIdChange(this.props.newTaskAssigneeId);
 	}
 
-	onNewTaskDueDateChange(newTaskDueDate) {
-		this.setState({ newTaskDueDate });
+	onNewTaskSearchChange(e) {
+		this.props.onNewTaskSearchChange(e.target.value);
 	}
 
-	//Search related functions
-	onSearchChange() {
-
+	onNewTaskSearchFocus() {
+		this.props.onNewTaskSearchFocus(true, Tasks.find({}).fetch());
 	}
 
-	onSearchRequest() {
-
+	onNewTaskSearchBlur() {
+		this.props.onNewTaskSearchBlur(false);
 	}
 
-	onSearchBlur() {
-		this.setState({ isSearchInFocus: false });
+	onNewTaskDueDateChange(e) {
+		this.props.onNewTaskDueDateChange(e);
 	}
 
-	onSearchFocus() {
-		this.setState({ isSearchInFocus: true, searchDataPool: Tasks.find({}).fetch() });
-	}
-
-	//[End] search related functions
-
-	resetState() {
-		this.setState(defaultState);
+	onNewTask(e) {
+		this.props.onNewTask(e, this.props.newTaskTitle, this.props.newTaskDescription, this.props.newTaskAssigneeId, this.props.newTaskDueDate);
 	}
 
 	render() {
@@ -118,35 +91,34 @@ class TaskCreate extends Component {
 					<Stack>
 						<TextField
 							className={style.input}
-							value={this.state.newTaskTitle}
+							value={this.props.newTaskTitle}
 							onChange={this.onNewTaskTitleChange}
 							placeholder="Task Title"
 						/>
 						<TextField
 							className={style.input}
-							value={this.state.newTaskDescription}
+							value={this.props.newTaskDescription}
 							onChange={this.onNewTaskDescriptionChange}
 							placeholder="Task Description"
 						/>
 						<TextField
 							className={style.input}
-							value={this.state.newTaskAssigneeId}
+							value={this.props.newTaskAssigneeId}
 							onChange={this.onNewTaskAssigneeIdChange}
 							placeholder="This is a temp assigneeId entry"
 						/>
 						<SearchField
 							searchDomain={searchDomain}
-							searchTerm={this.state.searchTerm}
-							choices={this.state.searchChoices}
+							searchTerm={this.props.searchTerm}
+							choices={this.props.searchChoices}
 							numberOfChoice={1}
-							dataPool={this.state.searchDataPool}
+							dataPool={this.props.searchDataPool}
 							clickMode={searchClickMode}
 							size={style.searchBox.normal}
-							isInFocus={this.state.isSearchInFocus}
-							onSearchChange={this.onSearchChange}
-							onSearchFocus={this.onSearchFocus}
-							onSearchRequest={this.onSearchRequest}
-							onSearchBlur={this.onSearchBlur}
+							isInFocus={this.props.isSearchInFocus}
+							onSearchChange={this.onNewTaskSearchChange}
+							onSearchFocus={this.onNewTaskSearchFocus}
+							onSearchBlur={this.onNewTaskSearchBlur}
 						/>
 						<DatePicker
 							className={style.input}
@@ -158,7 +130,7 @@ class TaskCreate extends Component {
 							ariaLabel="Please pick a due date"
 							allowTextInput={false}
 							onSelectDate={this.onNewTaskDueDateChange}
-							value={this.state.newTaskDueDate}
+							value={this.props.newTaskDueDate}
 						/>
 						<PrimaryButton type="submit">Create</PrimaryButton>
 					</Stack>
@@ -168,4 +140,47 @@ class TaskCreate extends Component {
 	}
 }
 
-export default TaskCreate;
+function mapStateToProps(state) {
+	return {
+		newTaskTitle: state.newTaskForm.newTaskTitle,
+		newTaskDescription: state.newTaskForm.newTaskDescription,
+		newTaskAssigneeId: state.newTaskForm.newTaskAssigneeId,
+		newTaskDueDate: state.newTaskForm.searchTerm,
+		searchTerm: state.newTaskForm.newTaskDueDate,
+		isSearchInFocus: state.newTaskForm.isSearchInFocus,
+		searchDataPool: state.newTaskForm.searchDataPool,
+		searchChoices: state.newTaskForm.searchChoices,
+	};
+}
+
+const mapDispatchToProps = dispatch => ({
+	onNewTask: (e, newTaskTitle, newTaskDescription, newTaskAssigneeId, newTaskDueDate) => {
+		dispatch(actions.onNewTask(e, newTaskTitle, newTaskDescription, newTaskAssigneeId, newTaskDueDate));
+	},
+	onNewTaskTitleChange: title => {
+		dispatch(actions.onNewTaskTitleChange(title));
+	},
+	onNewTaskDescriptionChange: description => {
+		dispatch(actions.onNewTaskDescriptionChange(description));
+	},
+	onNewTaskAssigneeIdChange: assigneeId => {
+		dispatch(actions.onNewTaskAssigneeIdChange(assigneeId));
+	},
+	onNewTaskDueDateChange: dueDate => {
+		dispatch(actions.onNewTaskDueDateChange(dueDate));
+	},
+	onNewTaskSearchChange: searchTerm => {
+		dispatch(actions.onNewTaskSearchChange(searchTerm));
+	},
+	onNewTaskSearchBlur: isSearchInFocus => {
+		dispatch(actions.onNewTaskSearchBlur(isSearchInFocus));
+	},
+	onNewTaskSearchFocus: (isSearchInFocus, searchDataPool) => {
+		dispatch(actions.onNewTaskSearchFocus(isSearchInFocus, searchDataPool));
+	},
+	onNewTaskSearchItemClick: item => {
+		dispatch(actions.onNewTaskSearchItemClick(item));
+	},
+});
+  
+export default connect(mapStateToProps, mapDispatchToProps)(TaskCreate);

@@ -50,3 +50,8 @@ export const onNewTaskSearchFocus = (isSearchInFocus, searchDataPool) => ({
 		searchDataPool,
 	},
 });
+
+export const onNewTaskSearchItemClick = value => ({
+	type: NEW_TASK_FORM_ACTION.ON_NEW_TASK_SEARCH_ITEM_CLICK,
+	payload: value,
+});
