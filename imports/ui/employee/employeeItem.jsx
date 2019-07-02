@@ -1,9 +1,13 @@
 import React from "react";
 import { Persona } from "office-ui-fabric-react";
 
-const EmployeeItem = employee => (
+const EmployeeItem = ({
+	firsName,
+	lastName,
+	email,
+}) => (
 	<div>
-		<Persona text={`${ employee.firstNameValue } \n ${ employee.lastNameValue }`} secondaryText={employee.emailValue} />
+		<Persona text={`${ firsName } \n ${ lastName }`} secondaryText={email} />
 	</div>
 );
 

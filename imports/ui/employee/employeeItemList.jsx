@@ -6,10 +6,16 @@ import EmployeeItem from "./employeeItem.jsx";
 const EmployeeItemList = ({ employeesinfo }) => (
 		<div>
 			<ScrollablePane>
-				<List employees={employeesinfo.employees}>
-					{employeesinfo.employees.map(employee => (
-							<EmployeeItem employee={employee} />
-						))}
+				<List items={employeesinfo.items}>
+					{employeesinfo.items.map(
+						item => (
+							<EmployeeItem
+  firsName={item.firstName}
+  lastName={item.lastName}
+  email={item.email}
+							/>
+						),
+						)}
 				</List>
 			</ScrollablePane>
 		</div>
