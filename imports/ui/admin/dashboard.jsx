@@ -4,7 +4,7 @@ import { Meteor } from "meteor/meteor";
 import Signup from "../nav/signup.jsx";
 import { signup } from "../../util/authUtil";
 import { Employees } from "../../api/db";
-import EmployeeItemList from "../employee/employeeItemList.jsx";
+import EmployeeList from "../employee/employeeItemList.jsx";
 
 
 class AdminDashboard extends Component {
@@ -65,7 +65,7 @@ class AdminDashboard extends Component {
   firstNameValue={this.state.firstName}
   lastNameValue={this.state.lastName}
 				/>
-				<EmployeeItemList employees={this.props.employeeList} />
+				<EmployeeList employees={this.props.employeeList} />
 			</div>
 		);
 	}

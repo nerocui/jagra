@@ -3,7 +3,7 @@ import { ScrollablePane } from "office-ui-fabric-react";
 import EmployeeItem from "./employeeItem.jsx";
 
 
-const EmployeeItemList = ({ employees }) => (
+const EmployeeList = ({ employees }) => (
 		<div>
 			<ScrollablePane>
 					{employees.map(
@@ -21,4 +21,4 @@ const EmployeeItemList = ({ employees }) => (
 		</div>
 	);
 
-export default EmployeeItemList;
+export default EmployeeList;
