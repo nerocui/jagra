@@ -3,7 +3,6 @@ import { withTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
 import Signup from "../nav/signup.jsx";
 import { signup } from "../../util/authUtil";
-import EmployeeList from "../employee/employeeList.jsx";
 import { Employees } from "../../api/db";
 import EmployeeItemList from "../employee/employeeItemList.jsx";
 
@@ -66,8 +65,7 @@ class AdminDashboard extends Component {
   firstNameValue={this.state.firstName}
   lastNameValue={this.state.lastName}
 				/>
-				<EmployeeList employees={this.props.employeeList} />
-				<EmployeeItemList employeesinfo={this.props.employeeList} />
+				<EmployeeItemList employees={this.props.employeeList} />
 			</div>
 		);
 	}

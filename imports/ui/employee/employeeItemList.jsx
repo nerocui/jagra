@@ -1,22 +1,22 @@
 import React from "react";
-import { ScrollablePane, List } from "office-ui-fabric-react";
+import { ScrollablePane } from "office-ui-fabric-react";
 import EmployeeItem from "./employeeItem.jsx";
 
 
-const EmployeeItemList = ({ employeesinfo }) => (
+const EmployeeItemList = ({ employees }) => (
 		<div>
 			<ScrollablePane>
-				<List items={employeesinfo.items}>
-					{employeesinfo.items.map(
-						item => (
-							<EmployeeItem
-  firsName={item.firstName}
-  lastName={item.lastName}
-  email={item.email}
-							/>
+					{employees.map(
+						employee => (
+							<div key={employee._id}>
+								<EmployeeItem
+  firsName={employee.firstName}
+  lastName={employee.lastName}
+  email={employee.email}
+								/>
+							</div>
 						),
 						)}
-				</List>
 			</ScrollablePane>
 		</div>
 	);
