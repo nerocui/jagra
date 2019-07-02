@@ -31,7 +31,9 @@ import { removeComment, addCommentToTask } from "./comment";
 import { removeTaskReferenceFromFile } from "./file";
 
 if (Meteor.isServer) {
-	Meteor.publish("tasks-assigned-to-me", () => Tasks.find({ assigneeId: this.userId }));
+	Meteor.publish("tasksCreatedByMe", () => Tasks.find({ creatorId: Meteor.userId() }));
+	Meteor.publish("allTasks", () => Tasks.find({}));
+	
 	//publish all tasks in my team
 	//publish all tasks created by me
 	//publish all tasks I watch
@@ -42,7 +44,7 @@ if (Meteor.isServer) {
 // private relationshipsId: Array<String>;
 //TODO({nkWzRdX91}): file and relationship are left not implemented since we don't know how they work
 
-export const insertTask = (db, userId, title, description, done) => {
+export const insertTask = (db, userId, title, description, assigneeId, dueDate) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
@@ -51,9 +53,9 @@ export const insertTask = (db, userId, title, description, done) => {
 		description,
 		status: Status.TO_DO,
 		creatorId: userId,
-		assigneeId: userId,
+		assigneeId: assigneeId !== "" ? assigneeId : userId,
 		createdAt: moment.now(),
-		dueDate: null,
+		dueDate,
 		commentsId: [],
 		filesId: [],
 		watchersId: [userId],
@@ -63,9 +65,6 @@ export const insertTask = (db, userId, title, description, done) => {
 			throw new Meteor.Error(TaskError.TASK_INSERT_FAIL);
 		} else {
 			console.log(TaskMessage.TASK_CREATED, task);
-			if (done) {
-				done();
-			}
 		}
 	});
 };
@@ -345,8 +344,8 @@ export const removeWatchersFromTaskByTeam = (db, _id, userId, teamId) => {
 };
 
 Meteor.methods({
-	[TASKSAPI.INSERT](title, description, done) {
-		return insertTask(Tasks, this.userId, title, description, done);
+	[TASKSAPI.INSERT](title, description, assigneeId, dueDate) {
+		return insertTask(Tasks, this.userId, title, description, assigneeId, dueDate);
 	},
 	[TASKSAPI.REMOVE](_id) {
 		return removeTask(Tasks, _id, this.userId);

@@ -1,0 +1,54 @@
+.component--task__item-container {
+	a {
+		text-decoration: none;
+		color: black;
+	}
+	width: $pane-width;
+	border-radius: $small-radius;
+	box-shadow: $shadow-surface;
+	margin-bottom: $space-small;
+	padding: $space-small;
+
+	transition: all 200ms;
+    user-select: none;
+    animation-name: moveInScale;
+    animation-duration: 600ms;
+	animation-timing-function: ease-in;
+	&:hover {
+		box-shadow: .2rem .2rem .4rem $grey;
+		transform: translateY(-1px);
+	}
+	&:active {
+		box-shadow: $shadow-surface;
+		transform: translateY(1px);
+	}
+}
+
+
+.component--task__item-chosen {
+	background: rgb(236, 236, 236);
+}
+
+.component--task__detail-container {
+	font-size: 2rem;
+	width: calc(100vw - #{$pane-width} - 2*#{$space-small});
+	padding: $space-small;
+}
+
+.component--task__list-container {
+	padding: $space-small;
+	width: $pane-width + 2*$space-small;
+	height: calc(100vh - #{$nav-height});
+	box-shadow: $shadow-surface;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.component--task__create-container {
+	width: 40rem;
+	height: 40rem;
+	padding: $space;
+	.element--inpit__basic {
+		margin-bottom: $space-small;
+	}
+}

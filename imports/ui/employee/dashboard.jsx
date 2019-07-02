@@ -1,11 +1,17 @@
 import React, { Component } from "react";
 
-export default class EmployeeDashboard extends Component {
+const defaultState = {
+	newTaskTitle: "",
+	newTaskDescription: "",
+	newTaskAssigneeId: "",
+	newTaskDueDate: null,
+	err: "",
+};
+
+class EmployeeDashboard extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			err: "",
-		};
+		this.state = defaultState;
 	}
 
 	render() {
@@ -17,3 +23,5 @@ export default class EmployeeDashboard extends Component {
 		);
 	}
 }
+
+export default EmployeeDashboard;
