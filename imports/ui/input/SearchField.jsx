@@ -11,6 +11,7 @@ const SearchField = ({
 	dataPool, //[{type: employee/task/comment/file, index: [key words...], link, content }]
 	clickMode, //select/navigate
 	size, //normal/large
+	isInFocus,
 	onSearchChange,
 	onSearchRequest,
 	onSearchFocus,
@@ -43,7 +44,7 @@ const SearchField = ({
 					</div>
 				) : <div />}
 			</div>
-			<SuggestionBox dataPool={dataPool} />
+			{isInFocus ? <SuggestionBox dataPool={dataPool} /> : <div />}
 		</div>
 	);
 };

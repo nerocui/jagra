@@ -34,9 +34,9 @@ const defaultState = {
 	newTaskAssigneeId: "",
 	newTaskDueDate: null,
 	searchTerm: "",
+	isSearchInFocus: false,
 	searchDataPool: [],
 	searchChoices: [],
-	isSearchFocused: false,
 	err: "",
 };
 
@@ -98,12 +98,11 @@ class TaskCreate extends Component {
 	}
 
 	onSearchBlur() {
-		console.log("escape");
+		this.setState({ isSearchInFocus: false });
 	}
 
 	onSearchFocus() {
-		this.setState({ isSearchFocused: true, searchDataPool: Tasks.find({}).fetch() });
-		console.log("focus");
+		this.setState({ isSearchInFocus: true, searchDataPool: Tasks.find({}).fetch() });
 	}
 
 	//[End] search related functions
@@ -143,6 +142,7 @@ class TaskCreate extends Component {
 							dataPool={this.state.searchDataPool}
 							clickMode={searchClickMode}
 							size={style.searchBox.normal}
+							isInFocus={this.state.isSearchInFocus}
 							onSearchChange={this.onSearchChange}
 							onSearchFocus={this.onSearchFocus}
 							onSearchRequest={this.onSearchRequest}

@@ -7,6 +7,8 @@ import EmployeeDashboard from "../employee/dashboard.jsx";
 import AdminDashboard from "../admin/dashboard.jsx";
 import Navbar from "../nav/navbar.jsx";
 import TaskMasterDetailViewContainer from "../task/taskMasterDetailView.jsx";
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
 
 const routes = (
 	<Router>
