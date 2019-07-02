@@ -12,8 +12,6 @@ const defaultState = {
 	err: "",
 };
 function newTaskForm(state = defaultState, action) {
-	console.log('got here');
-	console.log(action);
 	switch (action.type) {
 		case NEW_TASK_FORM_ACTION.ON_NEW_TASK_SUBMIT:
 			return defaultState;
@@ -31,6 +29,8 @@ function newTaskForm(state = defaultState, action) {
 			return Object.assign({}, state, { isSearchInFocus: action.payload.isSearchInFocus, searchDataPool: action.payload.searchDataPool });
 		case NEW_TASK_FORM_ACTION.ON_NEW_TASK_SEARCH_FOCUS:
 			return Object.assign({}, state, { isSearchInFocus: action.payload.isSearchInFocus, searchDataPool: action.payload.searchDataPool });
+		case NEW_TASK_FORM_ACTION.ON_NEW_TASK_SEARCH_ITEM_CLICK:
+			return Object.assign({}, state, { searchChoices: [...state.searchChoices, action.payload] });
 		default:
 			return state;
 	}
