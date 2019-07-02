@@ -178,9 +178,6 @@ const mapDispatchToProps = dispatch => ({
 	onNewTaskSearchFocus: (isSearchInFocus, searchDataPool) => {
 		dispatch(actions.onNewTaskSearchFocus(isSearchInFocus, searchDataPool));
 	},
-	onNewTaskSearchItemClick: item => {
-		dispatch(actions.onNewTaskSearchItemClick(item));
-	},
 });
   
 export default connect(mapStateToProps, mapDispatchToProps)(TaskCreate);
