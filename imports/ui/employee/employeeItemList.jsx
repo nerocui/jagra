@@ -4,7 +4,7 @@ import EmployeeItem from "./employeeItem.jsx";
 
 
 const EmployeeList = ({ employees }) => (
-		<div>
+		<div className="employeelist">
 			<ScrollablePane>
 					{employees.map(
 						employee => (

@@ -52,7 +52,7 @@ class AdminDashboard extends Component {
 
 	render() {
 		return (
-			<div>
+			<div className="dashboard">
 				<h1>{this.state.tab}</h1>
 				Admin Dashboard
 				<h2>Signup</h2>
