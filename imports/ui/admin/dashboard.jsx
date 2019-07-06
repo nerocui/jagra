@@ -5,6 +5,7 @@ import Signup from "../nav/signup.jsx";
 import { signup } from "../../util/authUtil";
 import { Employees } from "../../api/db";
 import EmployeeList from "../employee/employeeItemList.jsx";
+import style from "../../constant/style";
 
 
 class AdminDashboard extends Component {
@@ -52,7 +53,7 @@ class AdminDashboard extends Component {
 
 	render() {
 		return (
-			<div className="dashboard">
+			<div className="component--dashboard">
 				<h1>{this.state.tab}</h1>
 				Admin Dashboard
 				<h2>Signup</h2>
@@ -65,7 +66,10 @@ class AdminDashboard extends Component {
   firstNameValue={this.state.firstName}
   lastNameValue={this.state.lastName}
 				/>
-				<EmployeeList employees={this.props.employeeList} />
+				<EmployeeList
+				employees={this.props.employeeList}
+				size={style.scrollablePane.normal}
+				/>
 			</div>
 		);
 	}

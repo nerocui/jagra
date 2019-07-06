@@ -5,9 +5,14 @@ const EmployeeItem = ({
 	firsName,
 	lastName,
 	email,
+	size, //normal/large
 }) => (
 	<div>
-		<Persona text={`${ firsName } \n ${ lastName }`} secondaryText={email} />
+		<Persona
+		className={size}
+		text={`${ firsName } \n ${ lastName }`}
+		secondaryText={email}
+		/>
 	</div>
 );
 
