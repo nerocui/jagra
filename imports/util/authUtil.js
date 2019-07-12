@@ -56,5 +56,5 @@ export const generateUserName = (firstName, lastName) => {
 		username += extrachar.toString();
 		extrachar += 1;
 	}
-	return username;
+	return username.toLowerCase();
 };

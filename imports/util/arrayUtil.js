@@ -51,3 +51,5 @@ export const removeAllFromList = (arr, eles) => {
 	}
 	return result;
 };
+
+export const convertToPickerItems = (items, key, name) => (items ? items.map(item => Object.assign({}, item, { key: item[key], name: item[name] })) : []);

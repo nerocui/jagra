@@ -9,6 +9,7 @@ import { Employees } from "../../api/db";
 import style from "../../constant/style";
 import Picker from "../input/picker.jsx";
 import * as actions from "../../actions/index";
+import { convertToPickerItems } from "../../util/arrayUtil";
 
 const DayPickerStrings = {
 	months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
@@ -52,8 +53,8 @@ class TaskCreate extends Component {
 		this.setState({ newTaskDescription: e.target.value });
 	}
 
-	onNewTaskAssigneeIdChange() {
-		this.props.onNewTaskAssigneeIdChange(this.props.newTaskAssigneeId);
+	onNewTaskAssigneeIdChange(newTaskAssigneeId) {
+		this.setState({ newTaskAssigneeId });
 	}
 
 	onNewTaskDueDateChange(e) {
@@ -83,7 +84,11 @@ class TaskCreate extends Component {
 						/>
 						<Picker
 							itemLimit={1}
+							placeholder="Pick an assignee"
+							suggestionsHeaderText="Suggested Employees"
+							noResultsFoundText="No Matching Employee Found"
 							items={this.props.employeeList}
+							addItemSelected={this.onNewTaskAssigneeIdChange}
 						/>
 						<DatePicker
 							className={style.input}
@@ -148,9 +153,10 @@ const mapDispatchToProps = dispatch => ({
 const TaskCreateContainer = withTracker(() => {
 	const employeeListHandle = Meteor.subscribe("allEmployees");
 	const loading = !employeeListHandle.ready();
+	const employeeList = convertToPickerItems(Employees.find({}).fetch(), "email", "firstName");
 	return {
 		loading,
-		employeeList: Employees.find({}).fetch().map(employee => Object.assign({}, employee, { key: employee.email, name: employee.firstName })),
+		employeeList,
 	};
 })(TaskCreate);
   
