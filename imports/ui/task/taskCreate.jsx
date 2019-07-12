@@ -4,12 +4,11 @@ import { withTracker } from "meteor/react-meteor-data";
 import {
  Stack, TextField, PrimaryButton, DatePicker, DayOfWeek,
 } from "office-ui-fabric-react";
-import { connect } from "react-redux";
 import { Employees } from "../../api/db";
 import style from "../../constant/style";
 import Picker from "../input/picker.jsx";
-import * as actions from "../../actions/index";
 import { convertToPickerItems } from "../../util/arrayUtil";
+import TASKSAPI from "../../constant/methods/tasksAPI";
 
 const DayPickerStrings = {
 	months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
@@ -62,7 +61,8 @@ class TaskCreate extends Component {
 	}
 
 	onNewTask(e) {
-		this.props.onNewTask(e, this.state.newTaskTitle, this.state.newTaskDescription, this.state.newTaskAssigneeId, this.state.newTaskDueDate);
+		e.preventDefault();
+		Meteor.call(TASKSAPI.INSERT, this.state.newTaskTitle, this.state.newTaskDescription, this.state.newTaskAssigneeId, this.state.newTaskDueDate);
 	}
 
 	render() {
@@ -70,15 +70,16 @@ class TaskCreate extends Component {
 			<div className="component--task__create-container">
 				<form onSubmit={this.onNewTask}>
 					<Stack>
+						<h2>New Task</h2>
 						<TextField
 							className={style.input}
-							value={this.props.newTaskTitle}
+							value={this.state.newTaskTitle}
 							onChange={this.onNewTaskTitleChange}
 							placeholder="Task Title"
 						/>
 						<TextField
 							className={style.input}
-							value={this.props.newTaskDescription}
+							value={this.state.newTaskDescription}
 							onChange={this.onNewTaskDescriptionChange}
 							placeholder="Task Description"
 						/>
@@ -100,55 +101,15 @@ class TaskCreate extends Component {
 							ariaLabel="Please pick a due date"
 							allowTextInput={false}
 							onSelectDate={this.onNewTaskDueDateChange}
-							value={this.props.newTaskDueDate}
+							value={this.state.newTaskDueDate}
 						/>
 						<PrimaryButton type="submit">Create</PrimaryButton>
 					</Stack>
-				</form>	
+				</form>
 			</div>
 		);
 	}
 }
-
-function mapStateToProps(state) {
-	return {
-		newTaskTitle: state.newTaskForm.newTaskTitle,
-		newTaskDescription: state.newTaskForm.newTaskDescription,
-		newTaskAssigneeId: state.newTaskForm.newTaskAssigneeId,
-		newTaskDueDate: state.newTaskForm.searchTerm,
-		searchTerm: state.newTaskForm.newTaskDueDate,
-		isSearchInFocus: state.newTaskForm.isSearchInFocus,
-		searchDataPool: state.newTaskForm.searchDataPool,
-		searchChoices: state.newTaskForm.searchChoices,
-	};
-}
-
-const mapDispatchToProps = dispatch => ({
-	onNewTask: (e, newTaskTitle, newTaskDescription, newTaskAssigneeId, newTaskDueDate) => {
-		dispatch(actions.onNewTask(e, newTaskTitle, newTaskDescription, newTaskAssigneeId, newTaskDueDate));
-	},
-	onNewTaskTitleChange: title => {
-		dispatch(actions.onNewTaskTitleChange(title));
-	},
-	onNewTaskDescriptionChange: description => {
-		dispatch(actions.onNewTaskDescriptionChange(description));
-	},
-	onNewTaskAssigneeIdChange: assigneeId => {
-		dispatch(actions.onNewTaskAssigneeIdChange(assigneeId));
-	},
-	onNewTaskDueDateChange: dueDate => {
-		dispatch(actions.onNewTaskDueDateChange(dueDate));
-	},
-	onNewTaskSearchChange: searchTerm => {
-		dispatch(actions.onNewTaskSearchChange(searchTerm));
-	},
-	onNewTaskSearchBlur: isSearchInFocus => {
-		dispatch(actions.onNewTaskSearchBlur(isSearchInFocus));
-	},
-	onNewTaskSearchFocus: (isSearchInFocus, searchDataPool) => {
-		dispatch(actions.onNewTaskSearchFocus(isSearchInFocus, searchDataPool));
-	},
-});
 
 const TaskCreateContainer = withTracker(() => {
 	const employeeListHandle = Meteor.subscribe("allEmployees");
@@ -160,4 +121,4 @@ const TaskCreateContainer = withTracker(() => {
 	};
 })(TaskCreate);
   
-export default connect(mapStateToProps, mapDispatchToProps)(TaskCreateContainer);
+export default TaskCreateContainer;

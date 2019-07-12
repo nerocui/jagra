@@ -48,17 +48,18 @@ export const insertTask = (db, userId, title, description, assigneeId, dueDate) 
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
+	const hasAssigneeId = assigneeId && assigneeId !== "";
 	return db.insert({
 		title,
 		description,
 		status: Status.TO_DO,
 		creatorId: userId,
-		assigneeId: assigneeId !== "" ? assigneeId : userId,
+		assigneeId: hasAssigneeId ? assigneeId : userId,
 		createdAt: moment.now(),
 		dueDate,
 		commentsId: [],
 		filesId: [],
-		watchersId: [userId],
+		watchersId: hasAssigneeId ? [userId, assigneeId] : [userId],
 		relationshipsId: [],
 	}, (err, task) => {
 		if (err) {
