@@ -76,7 +76,7 @@ class AdminDashboard extends Component {
 }
 
 const AdminDashboardContainer = withTracker(() => {
-	const employeeListHandle = Meteor.subscribe("employees");
+	const employeeListHandle = Meteor.subscribe("allEmployees");
 	const loading = !employeeListHandle.ready();
 	return {
 		loading,

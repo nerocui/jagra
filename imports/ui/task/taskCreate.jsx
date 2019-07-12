@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
+import { withTracker } from "meteor/react-meteor-data";
 import {
  Stack, TextField, PrimaryButton, DatePicker, DayOfWeek,
 } from "office-ui-fabric-react";
 import { connect } from "react-redux";
-import { Tasks } from "../../api/db";
+import { Employees } from "../../api/db";
 import style from "../../constant/style";
 import Picker from "../input/picker.jsx";
 import * as actions from "../../actions/index";
@@ -39,19 +40,8 @@ class TaskCreate extends Component {
 		this.onNewTaskTitleChange = this.onNewTaskTitleChange.bind(this);
 		this.onNewTaskDescriptionChange = this.onNewTaskDescriptionChange.bind(this);
 		this.onNewTaskAssigneeIdChange = this.onNewTaskAssigneeIdChange.bind(this);
-		this.onNewTaskSearchChange = this.onNewTaskSearchChange.bind(this);
-		this.onNewTaskSearchFocus = this.onNewTaskSearchFocus.bind(this);
-		this.onNewTaskSearchBlur = this.onNewTaskSearchBlur.bind(this);
 		this.onNewTaskDueDateChange = this.onNewTaskDueDateChange.bind(this);
 		this.onNewTask = this.onNewTask.bind(this);
-	}
-
-	componentDidMount() {
-		this.allTasksHandle = Meteor.subscribe("allTasks");
-	}
-
-	componentWillUnmount() {
-		this.allTasksHandle.stop();
 	}
 
 	onNewTaskTitleChange(e) {
@@ -91,7 +81,10 @@ class TaskCreate extends Component {
 							onChange={this.onNewTaskDescriptionChange}
 							placeholder="Task Description"
 						/>
-						<Picker itemLimit={1} />
+						<Picker
+							itemLimit={1}
+							items={this.props.employeeList}
+						/>
 						<DatePicker
 							className={style.input}
 							isRequired={false}
@@ -106,7 +99,7 @@ class TaskCreate extends Component {
 						/>
 						<PrimaryButton type="submit">Create</PrimaryButton>
 					</Stack>
-				</form>
+				</form>	
 			</div>
 		);
 	}
@@ -151,5 +144,14 @@ const mapDispatchToProps = dispatch => ({
 		dispatch(actions.onNewTaskSearchFocus(isSearchInFocus, searchDataPool));
 	},
 });
+
+const TaskCreateContainer = withTracker(() => {
+	const employeeListHandle = Meteor.subscribe("allEmployees");
+	const loading = !employeeListHandle.ready();
+	return {
+		loading,
+		employeeList: Employees.find({}).fetch().map(employee => Object.assign({}, employee, { key: employee.email, name: employee.firstName })),
+	};
+})(TaskCreate);
   
-export default connect(mapStateToProps, mapDispatchToProps)(TaskCreate);
+export default connect(mapStateToProps, mapDispatchToProps)(TaskCreateContainer);
