@@ -6,9 +6,7 @@ import {
 import { connect } from "react-redux";
 import { Tasks } from "../../api/db";
 import style from "../../constant/style";
-import SearchField from "../input/searchField.jsx";
-import SEARCH_DOMAIN from "../../constant/actions/searchDomain";
-import SEARCH_MODE from "../../constant/actions/searchMode";
+import Picker from "../input/picker.jsx";
 import * as actions from "../../actions/index";
 
 const DayPickerStrings = {
@@ -28,12 +26,16 @@ const DayPickerStrings = {
 };
 
 const minDate = new Date(Date.now());
-const searchDomain = [SEARCH_DOMAIN.EMPLOYEE];
-const searchClickMode = SEARCH_MODE.SELECTION;
 
 class TaskCreate extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			newTaskTitle: "",
+			newTaskDescription: "",
+			newTaskAssigneeId: "",
+			newTaskDueDate: null,
+		};
 		this.onNewTaskTitleChange = this.onNewTaskTitleChange.bind(this);
 		this.onNewTaskDescriptionChange = this.onNewTaskDescriptionChange.bind(this);
 		this.onNewTaskAssigneeIdChange = this.onNewTaskAssigneeIdChange.bind(this);
@@ -53,35 +55,23 @@ class TaskCreate extends Component {
 	}
 
 	onNewTaskTitleChange(e) {
-		this.props.onNewTaskTitleChange(e.target.value);
+		this.setState({ newTaskTitle: e.target.value });
 	}
 
 	onNewTaskDescriptionChange(e) {
-		this.props.onNewTaskDescriptionChange(e.target.value);
+		this.setState({ newTaskDescription: e.target.value });
 	}
 
-	onNewTaskAssigneeIdChange(e) {
+	onNewTaskAssigneeIdChange() {
 		this.props.onNewTaskAssigneeIdChange(this.props.newTaskAssigneeId);
 	}
 
-	onNewTaskSearchChange(e) {
-		this.props.onNewTaskSearchChange(e.target.value);
-	}
-
-	onNewTaskSearchFocus() {
-		this.props.onNewTaskSearchFocus(true, Tasks.find({}).fetch());
-	}
-
-	onNewTaskSearchBlur() {
-		this.props.onNewTaskSearchBlur(false);
-	}
-
 	onNewTaskDueDateChange(e) {
-		this.props.onNewTaskDueDateChange(e);
+		this.setState({ newTaskDueDate: e });
 	}
 
 	onNewTask(e) {
-		this.props.onNewTask(e, this.props.newTaskTitle, this.props.newTaskDescription, this.props.newTaskAssigneeId, this.props.newTaskDueDate);
+		this.props.onNewTask(e, this.state.newTaskTitle, this.state.newTaskDescription, this.state.newTaskAssigneeId, this.state.newTaskDueDate);
 	}
 
 	render() {
@@ -101,25 +91,7 @@ class TaskCreate extends Component {
 							onChange={this.onNewTaskDescriptionChange}
 							placeholder="Task Description"
 						/>
-						<TextField
-							className={style.input}
-							value={this.props.newTaskAssigneeId}
-							onChange={this.onNewTaskAssigneeIdChange}
-							placeholder="This is a temp assigneeId entry"
-						/>
-						<SearchField
-							searchDomain={searchDomain}
-							searchTerm={this.props.searchTerm}
-							choices={this.props.searchChoices}
-							numberOfChoice={1}
-							dataPool={this.props.searchDataPool}
-							clickMode={searchClickMode}
-							size={style.searchBox.normal}
-							isInFocus={this.props.isSearchInFocus}
-							onSearchChange={this.onNewTaskSearchChange}
-							onSearchFocus={this.onNewTaskSearchFocus}
-							onSearchBlur={this.onNewTaskSearchBlur}
-						/>
+						<Picker itemLimit={1} />
 						<DatePicker
 							className={style.input}
 							isRequired={false}
