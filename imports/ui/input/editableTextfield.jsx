@@ -10,25 +10,27 @@ class EditableTextfield extends React.Component {
 		this.renderTextfield = this.renderTextfield.bind(this);
 	}
 
-	toggleEdit() {
-		this.setState({ editing: !this.state.editing });
-	}
-
 	renderTextblock() {
 		return (
-			<p>{this.props.value}</p>
+			<p onClick={() => this.setState({ editing: true })}>{this.props.value}</p>
 		);
 	}
 
 	renderTextfield() {
 		return (
-			<input value={this.props.value} />
+			<div>
+				<input value={this.props.value} onClick={() => this.setState({ editing: false })} />
+				<form onSubmit={this.onSubmit}>
+					<button type="submit">Save</button>
+					<button type="button">Cancel</button>
+				</form>
+			</div>
 		);
 	}
 
 	render() {
 		return (
-			<div onClick={this.toggleEdit}>
+			<div>
 				{this.state.editing ? this.renderTextfield() : this.renderTextblock()}
 			</div>
 		);
