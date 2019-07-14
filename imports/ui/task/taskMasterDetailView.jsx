@@ -16,7 +16,7 @@ class TaskMasterDetailView extends PureComponent {
 			<div className="component--task__master-detail">
 				<Stack horizontal>
 					<TaskList items={items} />
-					<TaskDetail item={this.props.chosenItem} />
+					<TaskDetail {...this.props.chosenItem} />
 				</Stack>
 			</div>
 		);
