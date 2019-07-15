@@ -1,6 +1,7 @@
 import React from "react";
 import onClickOutside from "react-onclickoutside";
 import { connect } from "react-redux";
+import { DefaultButton, PrimaryButton } from "office-ui-fabric-react";
 import * as actions from "../../actions/index";
 
 class EditableTextfield extends React.Component {
@@ -59,17 +60,21 @@ class EditableTextfield extends React.Component {
 
 	renderTextblock() {
 		return (
-			<p onClick={this.onEdit}>{this.props.value}</p>
+			<div className="element--text__text-block">
+				<p onClick={this.onEdit}>{this.props.value}</p>
+			</div>
 		);
 	}
 
 	renderTextfield() {
 		return (
-			<div>
-				<input value={this.state.editable} onChange={this.onChange} />
+			<div className="element--text__textfield">
 				<form onSubmit={this.onSubmit}>
-					<button type="submit">Save</button>
-					<button type="button" onClick={this.onCancel}>Cancel</button>
+					<input value={this.state.editable} onChange={this.onChange} autoFocus />
+				</form>
+				<form onSubmit={this.onSubmit} className="element--button__form">
+					<PrimaryButton type="submit">Save</PrimaryButton>
+					<DefaultButton type="button" onClick={this.onCancel}>Cancel</DefaultButton>
 				</form>
 			</div>
 		);
@@ -77,7 +82,7 @@ class EditableTextfield extends React.Component {
 
 	render() {
 		return (
-			<div>
+			<div className="component--input__editable-textfield">
 				{this.state.editing ? this.renderTextfield() : this.renderTextblock()}
 			</div>
 		);
