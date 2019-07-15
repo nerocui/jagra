@@ -14,8 +14,8 @@ class TaskMasterDetailView extends PureComponent {
 		let items = this.props.items || [];
 		const isChosen = item => (this.props.chosenItem ? item._id === this.props.chosenItem._id : false);
 		items = items.map(item => ({ ...item, chosen: isChosen(item) }));
-		console.log("Master Detail View Rerender");
-		this.props.setTaskDetailItem(this.props.chosenItem);
+		this.props.setTaskDetailItem(Object.assign({}, this.props.chosenItem));
+		this.props.setTaskDetailEditableItem(Object.assign({}, this.props.chosenItem));
 		return (
 			<div className="component--task__master-detail">
 				<Stack horizontal>
@@ -27,11 +27,14 @@ class TaskMasterDetailView extends PureComponent {
 	}
 }
 
-const TaskMasterDetailViewConnector = connect(null, actions)(TaskMasterDetailView);
+function mapDispatchToProps(dispatch) {
+	return {
+		setTaskDetailItem: item => dispatch(actions.setTaskDetailItem(item)),
+		setTaskDetailEditableItem: item => dispatch(actions.setTaskDetailEditableItem(item)),
+	};
+}
 
 const TaskMasterDetailViewContainer = withTracker(({ subscriptionId, taskId }) => {
-	console.log(`Getting subscription ${ subscriptionId }`);
-	console.log(`Chose item with id: ${ taskId }`);
 	const myTaskListHandle = Meteor.subscribe(subscriptionId);
 	const loading = !myTaskListHandle.ready();
 	const items = Tasks.find({}).fetch() || [];
@@ -41,6 +44,6 @@ const TaskMasterDetailViewContainer = withTracker(({ subscriptionId, taskId }) =
 		items,
 		chosenItem,
 	};
-})(TaskMasterDetailViewConnector);
+})(TaskMasterDetailView);
 
-export default TaskMasterDetailViewContainer;
+export default connect(null, mapDispatchToProps)(TaskMasterDetailViewContainer);

@@ -1,21 +1,30 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Meteor } from "meteor/meteor";
 import EditableTextfield from "../input/editableTextfield.jsx";
+import TASKSAPI from "../../constant/methods/tasksAPI";
 
 class TaskDetail extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = Object.assign({}, props);
+		this.onDescriptionSubmit = this.onDescriptionSubmit.bind(this);
+	}
+
+	onDescriptionSubmit(description) {
+		Meteor.call(TASKSAPI.UPDATE_DESCRIPTION, this.props.detailItem._id, description);
 	}
 
 	render() {
-		console.log("Detail rerender! Props is:");
-		console.log(this.props.description);
 		return (
 			<div className="component--task__detail-container">
-				{this.props._id
+				{this.props.detailItem && this.props.detailItem._id
 				? (
-					<EditableTextfield value={this.props.description} />
+					<EditableTextfield
+						value={this.props.detailItem.description}
+						editable={this.props.editorItem.description}
+						editorKey="description"
+						onValueSubmit={this.onDescriptionSubmit}
+					/>
 				)
 				: (
 					<div>
@@ -28,7 +37,10 @@ class TaskDetail extends React.Component {
 }
 
 function mapStateToProps(state) {
-	return { ...state.taskDetailItem };
+	return {
+		detailItem: state.taskDetailView.detailItem,
+		editorItem: state.taskDetailView.editorItem,
+	};
 }
 
-export default connect(mapStateToProps, null)(TaskDetail);
+export default connect(mapStateToProps)(TaskDetail);

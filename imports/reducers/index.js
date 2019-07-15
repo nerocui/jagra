@@ -1,8 +1,8 @@
 import { combineReducers } from "redux";
-import taskDetailItem from "./taskDetailReducer";
+import taskDetailView from "./taskDetailReducer";
 
 const rootReducer = combineReducers({
-	taskDetailItem,
+	taskDetailView,
 });
 
 export default rootReducer;

@@ -130,7 +130,7 @@ export const updateTaskDescription = (db, _id, userId, description) => {
 	if (!(userId === task.creatorId || userId === task.assigneeId)) {
 		throw new Meteor.Error(AuthError.NO_PRIVILEGE);
 	}
-	return db.update(_id, { description });
+	return db.update({ _id }, { $set: { description } });
 };
 
 export const updateTaskStatus = (db, _id, userId, status) => {
@@ -144,7 +144,7 @@ export const updateTaskStatus = (db, _id, userId, status) => {
 	if (!(userId === task.creatorId || userId === task.assigneeId)) {
 		throw new Meteor.Error(AuthError.NO_PRIVILEGE);
 	}
-	return db.update(_id, { status });
+	return db.update({ _id }, { $set: { status } });
 };
 
 //TODO: remove this action since I already have it in employee.js
@@ -160,7 +160,7 @@ export const removeWatcherFromTask = (db, _id, userId, watcherId) => {
 	if (userId === task.creatorId && !(watcherId === task.assigneeId || watcherId === task.creatorId)) {
 		let { watchersId } = task;
 		watchersId = removeElement(watchersId, watcherId);
-		return db.update({ _id }, { watchersId }, err => {
+		return db.update({ _id }, { $set: { watchersId } }, err => {
 			if (err) {
 				throw new Meteor.Error(TaskError.TASK_NOT_WATCHABLE);
 			} else {
@@ -183,7 +183,7 @@ export const watchTask = (db, _id, newWatcherId) => {
 	watchersId = [...watchersId];
 	if (!watchersId.includes(newWatcherId)) {
 		watchersId = addToList(watchersId, newWatcherId);
-		return db.update({ _id }, { watchersId }, err => {
+		return db.update({ _id }, { $set: { watchersId } }, err => {
 			if (err) {
 				throw new Meteor.Error(TaskError.TASK_NOT_WATCHABLE);
 			} else {
@@ -213,7 +213,7 @@ export const assignTaskTo = (db, _id, userId, assigneeId) => {
 	if (currentAssigneeId === assigneeId) {
 		return assigneeId;
 	}
-	return db.update({ _id }, { assigneeId }, err => {
+	return db.update({ _id }, { $set: { assigneeId } }, err => {
 		if (err) {
 			throw new Meteor.Error(TaskError.TASK_ASSIGN_FAIL);
 		} else {
@@ -242,7 +242,7 @@ export const changeTaskDueDate = (db, _id, userId, date) => {
 		},
 	}).validate(date);
 	//Check if the date is before current date in front end
-	db.update({ _id }, { dueDate: date });
+	db.update({ _id }, { $set: { dueDate: date } });
 };
 
 export const removeCommentFromTask = (db, _id, commentId) => {
@@ -260,7 +260,7 @@ export const removeCommentFromTask = (db, _id, commentId) => {
 		throw new Meteor.Error(Error.NO_PRIVILEGE);
 	}
 	const newCommentsId = removeElement(commentsId, commentId);
-	return db.update({ _id }, { commentsId: newCommentsId }, err => {
+	return db.update({ _id }, { $set: { commentsId: newCommentsId } }, err => {
 		if (err) {
 			throw new Meteor.Error(TaskError.TASK_REMOVE_COMMENT_FAIL);
 		} else {
@@ -293,7 +293,7 @@ export const unwatchTask = (db, _id, userId) => {
 	if (!(userId === task.assigneeId || userId === task.creatorId)) {
 		let { watchersId } = task;
 		watchersId = removeElement(watchersId, userId);
-		return db.update({ _id }, { watchersId }, err => {
+		return db.update({ _id }, { $set: { watchersId } }, err => {
 			if (err) {
 				throw new Meteor.Error(TaskError.TASK_NOT_WATCHABLE);
 			} else {
@@ -318,7 +318,7 @@ export const removeWatchersFromTask = (db, _id, userId, _watchersId) => {
 		targetRemovalId = removeElement(targetRemovalId, task.creatorId);
 		let { watchersId } = task;
 		watchersId = removeAllFromList(watchersId, targetRemovalId);
-		return db.update({ _id }, { watchersId }, err => {
+		return db.update({ _id }, { $set: { watchersId } }, err => {
 			if (err) {
 				throw new Meteor.Error(TaskError.TASK_NOT_WATCHABLE);
 			} else {
