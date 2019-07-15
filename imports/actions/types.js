@@ -1,1 +1,1 @@
-
+export const SET_TASK_DETAIL_ITEM = "SET_TASK_DETAIL_ITEM";
