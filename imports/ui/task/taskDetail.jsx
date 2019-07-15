@@ -21,7 +21,6 @@ class TaskDetail extends React.Component {
 				? (
 					<EditableTextfield
 						value={this.props.detailItem.description}
-						editable={this.props.editorItem.description}
 						editorKey="description"
 						onValueSubmit={this.onDescriptionSubmit}
 					/>
@@ -39,7 +38,6 @@ class TaskDetail extends React.Component {
 function mapStateToProps(state) {
 	return {
 		detailItem: state.taskDetailView.detailItem,
-		editorItem: state.taskDetailView.editorItem,
 	};
 }
 

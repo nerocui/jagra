@@ -15,7 +15,6 @@ class TaskMasterDetailView extends PureComponent {
 		const isChosen = item => (this.props.chosenItem ? item._id === this.props.chosenItem._id : false);
 		items = items.map(item => ({ ...item, chosen: isChosen(item) }));
 		this.props.setTaskDetailItem(Object.assign({}, this.props.chosenItem));
-		this.props.setTaskDetailEditableItem(Object.assign({}, this.props.chosenItem));
 		return (
 			<div className="component--task__master-detail">
 				<Stack horizontal>
@@ -30,7 +29,6 @@ class TaskMasterDetailView extends PureComponent {
 function mapDispatchToProps(dispatch) {
 	return {
 		setTaskDetailItem: item => dispatch(actions.setTaskDetailItem(item)),
-		setTaskDetailEditableItem: item => dispatch(actions.setTaskDetailEditableItem(item)),
 	};
 }
 
