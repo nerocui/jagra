@@ -23,6 +23,7 @@
     "office-ui-fabric-react": "^7.10.0",
     "query-string": "^6.8.1",
     "react": "^16.5.0",
+    "react-center": "^1.1.1",
     "react-dom": "^16.5.0",
     "react-onclickoutside": "^6.8.0",
     "react-redux": "^7.1.0",

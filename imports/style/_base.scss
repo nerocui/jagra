@@ -21,6 +21,19 @@ h3 {
 	font-size: $medium-font-size;
 }
 
+.full-width {
+	width: 100%;
+}
+
+.full-height {
+	height: 100%;
+}
+
+.center-icon {
+	width: 15rem;
+	margin-bottom: $space-small;
+}
+
 #react-target {
 	height: 100vh;
 	width: 100vw;
