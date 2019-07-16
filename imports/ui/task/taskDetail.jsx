@@ -20,10 +20,26 @@ class TaskDetail extends React.Component {
 
 	renderDetailPage() {
 		return (
-			<EditableTextfield
-				value={this.props.detailItem.description}
-				onValueSubmit={this.onDescriptionSubmit}
-			/>
+			<div>
+				<h2>{this.props.detailItem.title}</h2>
+				<div>
+					<p>Status: {this.props.detailItem.status}</p>
+					<p>Created at: {this.props.detailItem.createdAt}</p>
+					<p>Due: {this.props.detailItem.dueDate.toString()}</p>
+					<p>Created by: {this.props.detailItem.creatorId}</p>
+					<p>Assigned to: {this.props.detailItem.assingeeId}</p>
+					<div>
+						<p>Watched by: </p>
+						{this.props.detailItem.watchersId.map(watcher => <p>{watcher}</p>)}
+					</div>
+				</div>
+				<h3>Description</h3>
+				<EditableTextfield
+					value={this.props.detailItem.description}
+					onValueSubmit={this.onDescriptionSubmit}
+				/>
+
+			</div>
 		);
 	}
 
