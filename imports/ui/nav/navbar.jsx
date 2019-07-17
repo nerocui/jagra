@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { withTracker } from "meteor/react-meteor-data";
+import { Meteor } from "meteor/meteor";
 import {
 	CommandBar,
 	initializeIcons,
@@ -12,7 +13,6 @@ import navItems from "../../config/uiConfig/navbar";
 import userCommandBarItems from "../../config/uiConfig/navbar/userTab";
 import Settings from "../settings/index.jsx";
 import NewTaskCreator from "../task/taskCreate.jsx";
-
 
 initializeIcons();
 
@@ -99,7 +99,7 @@ class Navbar extends Component {
 }
 const NavbarContainer = withTracker(() => {
 	return {
-		username: Meteor.users.find({}).fetch().map(e => e.username),
+		username: Meteor.user() && Meteor.user().username,
 	};
 })(Navbar);
 
