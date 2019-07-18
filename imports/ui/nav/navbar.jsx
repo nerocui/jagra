@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
+import { withTracker } from "meteor/react-meteor-data";
+import { Meteor } from "meteor/meteor";
 import {
 	CommandBar,
 	initializeIcons,
@@ -74,7 +76,7 @@ class Navbar extends Component {
 						<Stack.Item align="center">
 							<SearchBox placeholder="Search" />
 						</Stack.Item>
-						<CommandBar items={userCommandBarItems("Temp Username", this.openModal)} />
+						<CommandBar items={userCommandBarItems(this.props.username, this.openModal)} />
 					</Stack>
 				</Stack>
 				<Modal
@@ -95,7 +97,12 @@ class Navbar extends Component {
 		);
 	}
 }
+const NavbarContainer = withTracker(() => {
+	return {
+		username: Meteor.user() && Meteor.user().username,
+	};
+})(Navbar);
 
 export default withRouter(({ history }) => (
-	<Navbar history={history} />
+	<NavbarContainer history={history} />
 ));
