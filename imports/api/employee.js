@@ -10,6 +10,8 @@ import { removeElement, addToList } from "../util/arrayUtil";
 
 if (Meteor.isServer) {
 	Meteor.publish("allEmployees", () => Employees.find());
+	Meteor.publish("teamMembers", () => Employees.find(Meteor.teamId()));
+	Meteor.publish("managers", () => Employees.find(Meteor.managerId()));
 }
 
 export const insertEmployee = (
