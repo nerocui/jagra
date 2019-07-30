@@ -9,22 +9,7 @@ import style from "../../constant/style";
 import Picker from "../input/picker.jsx";
 import { convertToPickerItems } from "../../util/arrayUtil";
 import TASKSAPI from "../../constant/methods/tasksAPI";
-
-const DayPickerStrings = {
-	months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-	shortMonths: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-	days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-	shortDays: ["S", "M", "T", "W", "T", "F", "S"],
-	goToToday: "Go to today",
-	prevMonthAriaLabel: "Go to previous month",
-	nextMonthAriaLabel: "Go to next month",
-	prevYearAriaLabel: "Go to previous year",
-	nextYearAriaLabel: "Go to next year",
-	closeButtonAriaLabel: "Close date picker",
-	isRequiredErrorMessage: "Field is required.",
-	invalidInputErrorMessage: "Invalid date format.",
-	isOutOfBoundsErrorMessage: "Date must be after today.",
-};
+import DatePickerConfig from "../../config/uiConfig/datePickerConfig";
 
 const minDate = new Date(Date.now());
 
@@ -95,7 +80,7 @@ class TaskCreate extends Component {
 							className={style.input}
 							isRequired={false}
 							minDate={minDate}
-							strings={DayPickerStrings}
+							strings={DatePickerConfig.DayPickerStrings}
 							firstDayOfWeek={DayOfWeek.Sunday}
 							placeholder="Please pick a due date"
 							ariaLabel="Please pick a due date"

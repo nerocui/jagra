@@ -119,6 +119,20 @@ export const removeTask = (db, _id, userId) => {
 	});
 };
 
+export const updateTaskTitle = (db, _id, userId, title) => {
+	if (!isAuthenticated()) {
+		throw new Meteor.Error(AuthError.NOT_AUTH);
+	}
+	const task = db.findOne({ _id });
+	if (!task) {
+		throw new Meteor.Error(TaskError.TASK_DOES_NOT_EXIST);
+	}
+	if (!(userId === task.creatorId || userId === task.assigneeId)) {
+		throw new Meteor.Error(AuthError.NO_PRIVILEGE);
+	}
+	return db.update({ _id }, { $set: { title } });
+};
+
 export const updateTaskDescription = (db, _id, userId, description) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
@@ -350,6 +364,9 @@ Meteor.methods({
 	},
 	[TASKSAPI.REMOVE](_id) {
 		return removeTask(Tasks, _id, this.userId);
+	},
+	[TASKSAPI.UPDATE_TITLE](_id, title) {
+		return updateTaskTitle(Tasks, _id, this.userId, title);
 	},
 	[TASKSAPI.UPDATE_DESCRIPTION](_id, description) {
 		return updateTaskDescription(Tasks, _id, this.userId, description);

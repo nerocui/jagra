@@ -2,6 +2,7 @@
 	position: relative;
 	.element--text__text-block {
 		border: .1rem solid transparent;
+		transition: 400ms all;
 		&:hover {
 			border: .1rem solid $grey;
 			box-shadow: $shadow-input;

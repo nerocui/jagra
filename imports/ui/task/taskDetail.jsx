@@ -4,28 +4,50 @@ import { Meteor } from "meteor/meteor";
 import Center from "react-center";
 import { Stack } from "office-ui-fabric-react";
 import EditableTextfield from "../input/editableTextfield.jsx";
+import EditableDatePicker from "../input/editableDatePicker.jsx";
 import TASKSAPI from "../../constant/methods/tasksAPI";
 
 class TaskDetail extends React.Component {
 	constructor(props) {
 		super(props);
 		this.onDescriptionSubmit = this.onDescriptionSubmit.bind(this);
+		this.onDueDateSubmit = this.onDueDateSubmit.bind(this);
+		this.onTitleSubmit = this.onTitleSubmit.bind(this);
 		this.renderDetailPage = this.renderDetailPage.bind(this);
 		this.renderEmptyPage = this.renderEmptyPage.bind(this);
+	}
+
+	onTitleSubmit(title) {
+		Meteor.call(TASKSAPI.UPDATE_TITLE, this.props.detailItem._id, title);
 	}
 
 	onDescriptionSubmit(description) {
 		Meteor.call(TASKSAPI.UPDATE_DESCRIPTION, this.props.detailItem._id, description);
 	}
 
+	onDueDateSubmit(dueDate) {
+		console.log("Called due date submit with duedate: ", dueDate);
+		Meteor.call(TASKSAPI.CHANGE_DUE_DATE, this.props.detailItem._id, dueDate);
+	}
+
 	renderDetailPage() {
 		return (
 			<div>
-				<h2>{this.props.detailItem.title}</h2>
+				<EditableTextfield
+					value={this.props.detailItem.title}
+					onValueSubmit={this.onTitleSubmit}
+				/>
 				<div>
 					<p>Status: {this.props.detailItem.status}</p>
 					<p>Created at: {this.props.detailItem.createdAt}</p>
 					<p>Due: {this.props.detailItem.dueDate.toString()}</p>
+					<EditableDatePicker
+						value={this.props.detailItem.dueDate}
+						onValueSubmit={this.onDueDateSubmit}
+						minDate={new Date(Date.now())}
+						placeholder="Please enter due date"
+						isRequired={false}
+					/>
 					<p>Created by: {this.props.detailItem.creatorId}</p>
 					<p>Assigned to: {this.props.detailItem.assingeeId}</p>
 					<div>
