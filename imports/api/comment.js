@@ -8,7 +8,7 @@ import { addToList, removeElement } from "../util/arrayUtil";
 import { isAuthenticated } from "../util/authUtil";
 
 if (Meteor.isServer) {
-	Meteor.publish("comments", () => Comments.find());
+	Meteor.publish("commentsByTaskId", taskId => Comments.find({ taskId }));
 }
 
 export const addCommentToTask = (db, _id, commentId) => {
@@ -21,7 +21,7 @@ export const addCommentToTask = (db, _id, commentId) => {
 	}
 	const { commentsId } = task,
 		newCommentsId = addToList(commentsId, commentId);
-	return db.update({ _id }, { newCommentsId });
+	return db.update({ _id }, { $set: { commentsId: newCommentsId } });
 };
 
 export const insertComment = (db, userId, taskId, content) => {
@@ -132,14 +132,14 @@ export const replyComment = (db, replyToId, taskId, content) => {
 
 Meteor.methods({
 	[COMMENTSAPI.INSERT](taskId, content) {
-		return insertComment(Comments, Meteor.userId(), taskId, content);
+		return insertComment(Comments, this.userId, taskId, content);
 	},
 	//entry point: tasks.removeComment()
 	[COMMENTSAPI.REMOVE](_id) {
-		return removeComment(Comments, _id, Meteor.userId());
+		return removeComment(Comments, _id, this.userId);
 	},
 	[COMMENTSAPI.EDIT](_id, newContent) {
-		return editComment(Comments, _id, Meteor.userId(), newContent);
+		return editComment(Comments, _id, this.userId, newContent);
 	},
 	[COMMENTSAPI.REPLY](replyToId, taskId, content) {
 		return replyComment(Comments, replyToId, taskId, content);

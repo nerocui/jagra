@@ -6,6 +6,7 @@ import { Stack, DatePicker, DayOfWeek } from "office-ui-fabric-react";
 import EditableTextfield from "../input/editableTextfield.jsx";
 import TASKSAPI from "../../constant/methods/tasksAPI";
 import DatePickerConfig from "../../config/uiConfig/datePickerConfig";
+import CommentContainer from "../comment/commentContainer.jsx";
 
 class TaskDetail extends React.Component {
 	constructor(props) {
@@ -39,12 +40,11 @@ class TaskDetail extends React.Component {
 				/>
 				<div>
 					<p>Status: {this.props.detailItem.status}</p>
-					<p>Created at: {this.props.detailItem.createdAt}</p>
+					<p>Created at: {this.props.detailItem.createdAt.toString()}</p>
 					<p>Due:</p>
 					<DatePicker
 						strings={DatePickerConfig.DayPickerStrings}
 						firstDayOfWeek={DayOfWeek.Sunday}
-						minDate={new Date(Date.now())}
 						allowTextInput={false}
 						placeholder="Please enter due date"
 						ariaLabel="Please enter due date"
@@ -64,7 +64,10 @@ class TaskDetail extends React.Component {
 					value={this.props.detailItem.description}
 					onValueSubmit={this.onDescriptionSubmit}
 				/>
-
+				<CommentContainer
+					subscriptionId="commentsByTaskId"
+					Id={this.props.detailItem._id}
+				/>
 			</div>
 		);
 	}

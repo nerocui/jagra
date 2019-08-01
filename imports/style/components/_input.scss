@@ -6,6 +6,7 @@
 		&:hover {
 			border: .1rem solid $grey;
 			box-shadow: $shadow-input;
+			border-radius: 5px;
 		}
 	}
 	.element--text__textfield {

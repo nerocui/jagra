@@ -1,5 +1,4 @@
 import { Meteor } from "meteor/meteor";
-import moment from "moment";
 import SimpleSchema from "simpl-schema";
 import {
 	Tasks,
@@ -55,7 +54,7 @@ export const insertTask = (db, userId, title, description, assigneeId, dueDate) 
 		status: Status.TO_DO,
 		creatorId: userId,
 		assigneeId: hasAssigneeId ? assigneeId : userId,
-		createdAt: moment.now(),
+		createdAt: new Date(Date.now()),
 		dueDate,
 		commentsId: [],
 		filesId: [],
