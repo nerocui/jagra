@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withTracker } from "meteor/react-meteor-data";
+import { Redirect } from "react-router-dom";
 import { Meteor } from "meteor/meteor";
 import { Stack } from "office-ui-fabric-react";
 import TaskList from "./taskList.jsx";
@@ -11,6 +12,11 @@ import * as actions from "../../actions/index";
 
 class TaskMasterDetailView extends PureComponent {
 	render() {
+		if (this.props.taskId && !this.props.chosenItem) {
+			return (
+				<Redirect to={`taskdetail?taskId=${ this.props.taskId }`} />
+			);
+		}
 		let items = this.props.items || [];
 		const isChosen = item => (this.props.chosenItem ? item._id === this.props.chosenItem._id : false);
 		items = items.map(item => ({ ...item, chosen: isChosen(item) }));

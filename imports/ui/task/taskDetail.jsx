@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { withTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
 import Center from "react-center";
 import { Stack, DatePicker, DayOfWeek } from "office-ui-fabric-react";
@@ -7,6 +8,8 @@ import EditableTextfield from "../input/editableTextfield.jsx";
 import TASKSAPI from "../../constant/methods/tasksAPI";
 import DatePickerConfig from "../../config/uiConfig/datePickerConfig";
 import CommentContainer from "../comment/commentContainer.jsx";
+import { Tasks } from "../../api/db";
+import * as actions from "../../actions/index";
 
 class TaskDetail extends React.Component {
 	constructor(props) {
@@ -96,5 +99,31 @@ function mapStateToProps(state) {
 		detailItem: state.taskDetailView.detailItem,
 	};
 }
+
+function mapDispatchToProps(dispatch) {
+	return {
+		setTaskDetailItem: item => dispatch(actions.setTaskDetailItem(item)),
+	};
+}
+
+class TaskDetailContainer extends React.PureComponent {
+	render() {
+		this.props.setTaskDetailItem(Object.assign({}, this.props.detailItem));
+		return (
+			<TaskDetail {...this.props} />
+		);
+	}
+}
+
+export const TaskDetailContainerWithTracker = withTracker(({ taskId }) => {
+	const taskDetailHandle = Meteor.subscribe("singleTask", taskId);
+	const loading = !taskDetailHandle.ready();
+	const task = Tasks.findOne({ _id: taskId });
+	console.log("Got task from db: ", task, loading);
+	return {
+		loading,
+		detailItem: task,
+	};
+})(connect(null, mapDispatchToProps)(TaskDetailContainer));
 
 export default connect(mapStateToProps)(TaskDetail);
