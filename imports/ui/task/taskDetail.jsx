@@ -27,7 +27,6 @@ class TaskDetail extends React.Component {
 	}
 
 	onDueDateSubmit(dueDate) {
-		console.log("Called due date submit with duedate: ", dueDate);
 		Meteor.call(TASKSAPI.CHANGE_DUE_DATE, this.props.detailItem._id, dueDate);
 	}
 
@@ -66,7 +65,7 @@ class TaskDetail extends React.Component {
 				/>
 				<CommentContainer
 					subscriptionId="commentsByTaskId"
-					Id={this.props.detailItem._id}
+					_id={this.props.detailItem._id}
 				/>
 			</div>
 		);

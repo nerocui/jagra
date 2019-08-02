@@ -1,5 +1,4 @@
 import { Meteor } from "meteor/meteor";
-import moment from "moment";
 import { Comments, Tasks } from "./db";
 import { AuthError, CommentError, TaskError } from "../constant/error";
 import COMMENTSAPI from "../constant/methods/commentsAPI";
@@ -28,6 +27,7 @@ export const insertComment = (db, userId, taskId, content) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
+	const now = new Date(Date.now());
 	return db.insert({
 		creatorId: userId,
 		taskId,
@@ -35,14 +35,14 @@ export const insertComment = (db, userId, taskId, content) => {
 		replyToId: null,
 		repliedById: [],
 		//both of the above are comment ids, not employee id
-		createdAt: moment.now(),
-		updatedAt: moment.now(),
+		createdAt: now,
+		updatedAt: now,
 	}, (err, comment) => {
 		if (err) {
 			throw new Meteor.Error(CommentError.COMMENT_INSERT_FAIL);
 		} else {
 			console.log(CommentMessage.COMMENT_CREATED, comment);
-			addCommentToTask(Tasks, taskId, comment._id);
+			addCommentToTask(Tasks, taskId, comment);
 		}
 	});
 };
@@ -69,7 +69,7 @@ export const removeComment = (db, _id, userId) => {
 		if (replyToId) {
 			const { repliedById } = db.findOne({ _id: replyToId }),
 				newRepliedById = removeElement(repliedById, _id);
-			return db.update({ _id: replyToId }, { repliedById: newRepliedById });
+			return db.update({ _id: replyToId }, { $set: { repliedById: newRepliedById } });
 		}
 	});
 };
@@ -86,7 +86,8 @@ export const editComment = (db, _id, userId, newContent) => {
 	if (creatorId !== userId) {
 		throw new Meteor.Error(AuthError.NO_PRIVILEGE);
 	}
-	return db.update({ _id }, { content: newContent, updatedAt: moment.now() }, err => {
+	const now = new Date(Date.now());
+	return db.update({ _id }, { $set: { content: newContent, updatedAt: now } }, err => {
 		if (err) {
 			throw new Meteor.Error(CommentError.COMMENT_EDIT_FAIL);
 		}
@@ -97,37 +98,35 @@ export const commentRepliedBy = (db, _id, replyerId) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
-	const comment = db.findOne({ _id }).fetch(),
-		replyerComment = db.findOne({ _id: replyerId }).fetch();
+	const comment = db.findOne({ _id }),
+		replyerComment = db.findOne({ _id: replyerId });
 	if (!comment || !replyerComment) {
 		throw new Meteor.Error(CommentError.COMMENT_NOT_EXIST);
 	}
 	const { repliedById } = comment,
 		newRepliedById = addToList(repliedById, replyerId);
-	return db.update({ _id }, { repliedById: newRepliedById }, err => {
+	return db.update({ _id }, { $set: { repliedById: newRepliedById } }, err => {
 		if (err) {
 			throw new Meteor.Error(CommentError.COMMENT_REPLY_FAIL);
 		}
 	});
 };
 
-export const replyComment = (db, replyToId, taskId, content) => {
+export const replyComment = (db, userId, replyToId, taskId, content) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
-	const newComment = insertComment(db, taskId, content),
-		replyToComment = db.findOne({ _id: replyToId }),
-		{ _id } = newComment;
+	const _id = insertComment(db, userId, taskId, content),
+		replyToComment = db.findOne({ _id: replyToId });
 	if (!replyToComment) {
 		throw new Meteor.Error(CommentError.COMMENT_NOT_EXIST);
 	}
-	return db.update({ _id }, { replyToId }, err => {
+	db.update({ _id }, { $set: { replyToId } }, err => {
 		if (err) {
 			throw new Meteor.Error(CommentError.COMMENT_REPLY_FAIL);
-		} else {
-			commentRepliedBy(db, replyToId, _id);
 		}
 	});
+	commentRepliedBy(db, replyToId, _id);
 };
 
 Meteor.methods({
@@ -142,7 +141,7 @@ Meteor.methods({
 		return editComment(Comments, _id, this.userId, newContent);
 	},
 	[COMMENTSAPI.REPLY](replyToId, taskId, content) {
-		return replyComment(Comments, replyToId, taskId, content);
+		return replyComment(Comments, this.userId, replyToId, taskId, content);
 	},
 	[COMMENTSAPI.REPLIED_BY](_id, replyerId) {
 		return commentRepliedBy(Comments, _id, replyerId);

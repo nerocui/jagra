@@ -19,6 +19,14 @@ class CommentListItem extends React.Component {
 		this.setState({ replying: false });
 	}
 
+	renderReply() {
+		if (this.props.replies) {
+			return this.props.replies.map(reply => (
+				<CommentListItem {...reply} key={reply._id} />
+			));
+		}
+	}
+
 	renderContent() {
 		return (
 			<div>
@@ -28,6 +36,9 @@ class CommentListItem extends React.Component {
 						reply
 					</button>
 				</span>
+				<div className="element--comment__reply-box">
+					{this.renderReply()}
+				</div>
 			</div>
 		);
 	}
@@ -35,11 +46,10 @@ class CommentListItem extends React.Component {
 	renderEditor() {
 		if (this.state.replying) {
 			return (
-				<CommentEditor replyeeId={this.props._id} onCancel={this.onCancel} />
+				<CommentEditor replyToId={this.props._id} onCancel={this.onCancel} />
 				//add the ability to config the editor to a reply mode
 			);
 		}
-		return <span />;
 	}
 
 	render() {

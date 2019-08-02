@@ -1,28 +1,41 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Meteor } from "meteor/meteor";
 import { withTracker } from "meteor/react-meteor-data";
 import { Comments } from "../../api/db";
 import CommentFilter from "./commentFilter.jsx";
 import CommentList from "./commentList.jsx";
 import CommentEditor from "./commentEditor.jsx";
+import * as actions from "../../actions/index";
 
-const CommentContainer = ({ Id, items }) => (
-	<div className="component--comment__container">
-		<CommentFilter />
-		<CommentList items={items} />
-		<CommentEditor taskId={Id} />
-	</div>
-);
+class CommentContainer extends React.PureComponent {
+	render() {
+		this.props.setCommentList(this.props.items);
+		return (
+			<div className="component--comment__container">
+				<CommentFilter />
+				<CommentList />
+				<CommentEditor taskId={this.props._id} />
+			</div>
+		);
+	}
+}
 
-const CommentContainerWithTracker = withTracker(({ subscriptionId, Id }) => {
-	const commentHandle = Meteor.subscribe(subscriptionId, Id);
+function mapDispatchToProps(dispatch) {
+	return {
+		setCommentList: items => dispatch(actions.setCommentList(items)),
+	};
+}
+
+const CommentContainerWithTracker = withTracker(({ subscriptionId, _id }) => {
+	const commentHandle = Meteor.subscribe(subscriptionId, _id);
 	const loading = !commentHandle.ready();
 	const items = Comments.find({}).fetch() || [];
 	return {
-		Id,
+		_id,
 		loading,
 		items,
 	};
 })(CommentContainer);
 
-export default CommentContainerWithTracker;
+export default connect(null, mapDispatchToProps)(CommentContainerWithTracker);
