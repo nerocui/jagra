@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { Meteor } from "meteor/meteor";
 import { withTracker } from "meteor/react-meteor-data";
 import { Comments } from "../../api/db";
-import CommentFilter from "./commentFilter.jsx";
 import CommentList from "./commentList.jsx";
 import CommentEditor from "./commentEditor.jsx";
 import * as actions from "../../actions/index";
@@ -13,7 +12,7 @@ class CommentContainer extends React.PureComponent {
 		this.props.setCommentList(this.props.items);
 		return (
 			<div className="component--comment__container">
-				<CommentFilter />
+				<h4>Comments</h4>
 				<CommentList />
 				<CommentEditor taskId={this.props._id} />
 			</div>

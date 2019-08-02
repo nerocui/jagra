@@ -1,5 +1,5 @@
 import { Meteor } from "meteor/meteor";
-import { Comments, Tasks } from "./db";
+import { Comments, Tasks, Employees } from "./db";
 import { AuthError, CommentError, TaskError } from "../constant/error";
 import COMMENTSAPI from "../constant/methods/commentsAPI";
 import { CommentMessage } from "../constant/message";
@@ -23,13 +23,14 @@ export const addCommentToTask = (db, _id, commentId) => {
 	return db.update({ _id }, { $set: { commentsId: newCommentsId } });
 };
 
-export const insertComment = (db, userId, taskId, content) => {
+export const insertComment = (db, userId, creatorName, taskId, content) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
 	const now = new Date(Date.now());
 	return db.insert({
 		creatorId: userId,
+		creatorName,
 		taskId,
 		content,
 		replyToId: null,
@@ -112,11 +113,11 @@ export const commentRepliedBy = (db, _id, replyerId) => {
 	});
 };
 
-export const replyComment = (db, userId, replyToId, taskId, content) => {
+export const replyComment = (db, userId, creatorName, replyToId, taskId, content) => {
 	if (!isAuthenticated()) {
 		throw new Meteor.Error(AuthError.NOT_AUTH);
 	}
-	const _id = insertComment(db, userId, taskId, content),
+	const _id = insertComment(db, userId, creatorName, taskId, content),
 		replyToComment = db.findOne({ _id: replyToId });
 	if (!replyToComment) {
 		throw new Meteor.Error(CommentError.COMMENT_NOT_EXIST);
@@ -129,9 +130,14 @@ export const replyComment = (db, userId, replyToId, taskId, content) => {
 	commentRepliedBy(db, replyToId, _id);
 };
 
+function getCreatorName(_id) {
+	const creator = Employees.findOne({ _id });
+	return `${ creator.firstName } ${ creator.lastName }`;
+}
+
 Meteor.methods({
 	[COMMENTSAPI.INSERT](taskId, content) {
-		return insertComment(Comments, this.userId, taskId, content);
+		return insertComment(Comments, this.userId, getCreatorName(this.userId), taskId, content);
 	},
 	//entry point: tasks.removeComment()
 	[COMMENTSAPI.REMOVE](_id) {
@@ -141,7 +147,7 @@ Meteor.methods({
 		return editComment(Comments, _id, this.userId, newContent);
 	},
 	[COMMENTSAPI.REPLY](replyToId, taskId, content) {
-		return replyComment(Comments, this.userId, replyToId, taskId, content);
+		return replyComment(Comments, this.userId, getCreatorName(this.userId), replyToId, taskId, content);
 	},
 	[COMMENTSAPI.REPLIED_BY](_id, replyerId) {
 		return commentRepliedBy(Comments, _id, replyerId);

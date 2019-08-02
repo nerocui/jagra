@@ -32,7 +32,9 @@
 .component--task__detail-container {
 	font-size: 2rem;
 	width: calc(100vw - #{$pane-width} - 2*#{$space-small});
+	height: calc(100vh - #{$nav-height});
 	padding: $space-small;
+	overflow-y: auto;
 }
 
 .component--task__list-container {

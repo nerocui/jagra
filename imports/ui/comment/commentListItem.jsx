@@ -31,6 +31,7 @@ class CommentListItem extends React.Component {
 		return (
 			<div>
 				<span>
+					<span>{this.props.creatorName}: </span>
 					{ this.props.content }
 					<button type="button" onClick={this.onReplying}>
 						reply

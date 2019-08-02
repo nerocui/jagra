@@ -32,6 +32,7 @@ class CommentEditor extends React.Component {
 		//TODO: check if empty (form validation)
 		Meteor.call(COMMENTSAPI.REPLY, this.props.replyToId, this.props.task._id, this.state.content);
 		this.setState({ content: "" });
+		this.props.onCancel();
 	}
 
 	renderCommentForm() {
@@ -46,7 +47,7 @@ class CommentEditor extends React.Component {
 	renderReplyForm() {
 		return (
 			<form onSubmit={this.onReply}>
-				<input value={this.state.content} onChange={this.onChange} />
+				<input value={this.state.content} onChange={this.onChange} autoFocus />
 				<button type="submit">Reply</button>
 				<button
 					type="button"
