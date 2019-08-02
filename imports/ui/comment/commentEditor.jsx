@@ -29,6 +29,16 @@ class CommentEditor extends React.Component {
 				<form onSubmit={this.onSubmit}>
 					<input value={this.state.content} onChange={this.onChange} />
 					<button type="submit">Comment</button>
+					{this.props.replyeeId
+						? (
+							<button
+								type="button"
+								onClick={this.props.onCancel}
+							>
+								Cancel
+							</button>
+							)
+						: <span />}
 				</form>
 			</div>
 		);

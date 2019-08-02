@@ -2,8 +2,7 @@ import React from "react";
 import CommentListItem from "./commentListItem.jsx";
 
 const CommentList = ({ items }) => (
-	<div>
-		<div>Comment List</div>
+	<div className="component--content__list">
 		{items.map(item => (<CommentListItem {...item} />))}
 	</div>
 );
