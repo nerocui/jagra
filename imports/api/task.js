@@ -28,11 +28,12 @@ import {
 } from "./employee";
 import { removeComment, addCommentToTask } from "./comment";
 import { removeTaskReferenceFromFile } from "./file";
+import { TASKS_SUBSCRIPTION } from "../constant/subscription";
 
 if (Meteor.isServer) {
-	Meteor.publish("tasksCreatedByMe", () => Tasks.find({ creatorId: Meteor.userId() }));
-	Meteor.publish("allTasks", () => Tasks.find({}));
-	Meteor.publish("singleTask", taskId => {
+	Meteor.publish(TASKS_SUBSCRIPTION.TASKS_CREATED_BY_ME, () => Tasks.find({ creatorId: Meteor.userId() }));
+	Meteor.publish(TASKS_SUBSCRIPTION.ALL_TASKS, () => Tasks.find({}));
+	Meteor.publish(TASKS_SUBSCRIPTION.SINGLE_TASK, taskId => {
 		console.log("Publishing single task: ", taskId);
 		return Tasks.find({ _id: taskId });
 	});

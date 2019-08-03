@@ -5,9 +5,10 @@ import COMMENTSAPI from "../constant/methods/commentsAPI";
 import { CommentMessage } from "../constant/message";
 import { addToList, removeElement } from "../util/arrayUtil";
 import { isAuthenticated } from "../util/authUtil";
+import { COMMENTS_SUBSCRIPTION } from "../constant/subscription";
 
 if (Meteor.isServer) {
-	Meteor.publish("commentsByTaskId", taskId => Comments.find({ taskId }));
+	Meteor.publish(COMMENTS_SUBSCRIPTION.COMMENTS_BY_TASK_ID, taskId => Comments.find({ taskId }));
 }
 
 export const addCommentToTask = (db, _id, commentId) => {
