@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import { withTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
 import Center from "react-center";
 import { Stack, DatePicker, DayOfWeek } from "office-ui-fabric-react";
@@ -8,8 +7,6 @@ import EditableTextfield from "../input/editableTextfield.jsx";
 import TASKSAPI from "../../constant/methods/tasksAPI";
 import DatePickerConfig from "../../config/uiConfig/datePickerConfig";
 import CommentContainer from "../comment/commentContainer.jsx";
-import { Tasks } from "../../api/db";
-import * as actions from "../../actions/index";
 
 class TaskDetail extends React.Component {
 	constructor(props) {
@@ -86,8 +83,9 @@ class TaskDetail extends React.Component {
 	}
 
 	render() {
+		const containerClassName = this.props.fullWidth ? "component--task__detail-container-full-width" : "component--task__detail-container";
 		return (
-			<div className="component--task__detail-container">
+			<div className={containerClassName}>
 				{this.props.detailItem && this.props.detailItem._id ? this.renderDetailPage() : this.renderEmptyPage() }
 			</div>
 		);

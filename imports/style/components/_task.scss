@@ -37,6 +37,14 @@
 	overflow-y: auto;
 }
 
+.component--task__detail-container-full-width {
+	font-size: 2rem;
+	width: 100vw;
+	height: calc(100vh - #{$nav-height});
+	padding: $space-small;
+	overflow-y: auto;
+}
+
 .component--task__list-container {
 	padding: $space-small;
 	width: $pane-width + 2*$space-small;

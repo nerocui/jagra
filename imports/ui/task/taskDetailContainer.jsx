@@ -10,7 +10,7 @@ class TaskDetailContainer extends React.PureComponent {
 	render() {
 		this.props.setTaskDetailItem(Object.assign({}, this.props.detailItem));
 		return (
-			<TaskDetail {...this.props} />
+			<TaskDetail {...this.props} fullWidth />
 		);
 	}
 }
