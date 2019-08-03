@@ -100,30 +100,4 @@ function mapStateToProps(state) {
 	};
 }
 
-function mapDispatchToProps(dispatch) {
-	return {
-		setTaskDetailItem: item => dispatch(actions.setTaskDetailItem(item)),
-	};
-}
-
-class TaskDetailContainer extends React.PureComponent {
-	render() {
-		this.props.setTaskDetailItem(Object.assign({}, this.props.detailItem));
-		return (
-			<TaskDetail {...this.props} />
-		);
-	}
-}
-
-export const TaskDetailContainerWithTracker = withTracker(({ taskId }) => {
-	const taskDetailHandle = Meteor.subscribe("singleTask", taskId);
-	const loading = !taskDetailHandle.ready();
-	const task = Tasks.findOne({ _id: taskId });
-	console.log("Got task from db: ", task, loading);
-	return {
-		loading,
-		detailItem: task,
-	};
-})(connect(null, mapDispatchToProps)(TaskDetailContainer));
-
 export default connect(mapStateToProps)(TaskDetail);
