@@ -6,6 +6,7 @@ import { signup } from "../../util/authUtil";
 import { Employees } from "../../api/db";
 import EmployeeList from "../employee/employeeItemList.jsx";
 import style from "../../constant/style";
+import EmployeeImporter from "./employeeImporter.jsx";
 
 
 class AdminDashboard extends Component {
@@ -58,17 +59,18 @@ class AdminDashboard extends Component {
 				Admin Dashboard
 				<h2>Signup</h2>
 				<Signup
-  onSubmit={this.onSubmit}
-  onEmailChange={this.onEmailChange}
-  onFirstnameChange={this.onFirstnameChange}
-  onLastnameChange={this.onLastnameChange}
-  emailValue={this.state.email}
-  firstNameValue={this.state.firstName}
-  lastNameValue={this.state.lastName}
+					onSubmit={this.onSubmit}
+					onEmailChange={this.onEmailChange}
+					onFirstnameChange={this.onFirstnameChange}
+					onLastnameChange={this.onLastnameChange}
+					emailValue={this.state.email}
+					firstNameValue={this.state.firstName}
+					lastNameValue={this.state.lastName}
 				/>
+				<EmployeeImporter />
 				<EmployeeList
-				employees={this.props.employeeList}
-				size={style.scrollablePane.normal}
+					employees={this.props.employeeList}
+					size={style.scrollablePane.normal}
 				/>
 			</div>
 		);

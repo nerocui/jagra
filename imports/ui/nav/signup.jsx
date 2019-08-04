@@ -20,9 +20,6 @@ const Signup = ({
 					<PrimaryButton type="submit">Create</PrimaryButton>
 				</form>
 			</Stack>
-			<div className="center-both">
-				Bulk import employees
-			</div>
 		</Stack>
 		
 	);
