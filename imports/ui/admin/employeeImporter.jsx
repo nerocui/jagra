@@ -5,9 +5,9 @@ const EmployeeImporter = () => {
 	const onDrop = useCallback(acceptedFiles => {
 		console.log(acceptedFiles);
 	}, []);
-	const {getRootProps, getInputProps, isDragActive} = useDropzone({ onDrop });
+	const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 	return (
-		<div className="component--admin__import">
+		<div {...getRootProps({className: "component--admin__import"})}>
 			<input {...getInputProps()} />
 			{
 				isDragActive ?
