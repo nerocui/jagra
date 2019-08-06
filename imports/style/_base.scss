@@ -13,6 +13,11 @@ h1 {
 	margin-bottom: $space;
 }
 
+body {
+	font-family: $body-default-font-family;
+	font-size: $base-font-size;
+}
+
 h2 {
 	font-size: $large-font-size;
 }

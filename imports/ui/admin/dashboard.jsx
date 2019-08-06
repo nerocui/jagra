@@ -6,8 +6,8 @@ import { signup } from "../../util/authUtil";
 import { Employees } from "../../api/db";
 import EmployeeList from "../employee/employeeItemList.jsx";
 import style from "../../constant/style";
-import EmployeeImporter from "./employeeImporter.jsx";
 import Dropzone from "./dropzone.jsx";
+import { handleChange } from "../../util/fileUtil";
 
 
 class AdminDashboard extends Component {
@@ -45,11 +45,11 @@ class AdminDashboard extends Component {
 		this.setState({ lastName: e.target.value.trim() });
 	}
 
-	handleChange(event, results) {
+	onChange(results) {
 		results.forEach(result => {
 			const [e, file] = result;
 			console.log(e.target.result);
-			console.log(`Successfully uploaded ${file.name}!`);
+			console.log(`Successfully uploaded ${ file.name }!`);
 		});
 	}
 
@@ -59,15 +59,6 @@ class AdminDashboard extends Component {
 			firstName: "",
 			lastName: "",
 		});
-	}
-
-	handleFile(file) {
-		console.log(file);
-		const reader = new FileReader();
-		reader.onload = evt => {
-			console.log(evt.target.result);
-		};
-		reader.readAsText(file.path);
 	}
 
 	render() {
@@ -85,9 +76,11 @@ class AdminDashboard extends Component {
 					firstNameValue={this.state.firstName}
 					lastNameValue={this.state.lastName}
 				/>
-				<Dropzone />
-				<EmployeeImporter
-					handleChange={this.handleChange}
+				<Dropzone
+					wrapperStyle="component--admin__import"
+					as="binary"
+					handleChange={handleChange}
+					onChange={this.onChange}
 				/>
 				<EmployeeList
 					employees={this.props.employeeList}
