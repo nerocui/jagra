@@ -14,7 +14,6 @@ class AdminDashboard extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			tab: "dashboard",
 			email: "",
 			firstName: "",
 			lastName: "",
@@ -64,8 +63,6 @@ class AdminDashboard extends Component {
 	render() {
 		return (
 			<div className="component--dashboard">
-				<h1>{this.state.tab}</h1>
-				Admin Dashboard
 				<h2>Signup</h2>
 				<Signup
 					onSubmit={this.onSubmit}
@@ -77,8 +74,10 @@ class AdminDashboard extends Component {
 					lastNameValue={this.state.lastName}
 				/>
 				<Dropzone
-					wrapperStyle="component--admin__import"
 					as="binary"
+					wrapperStyle="component--admin__import"
+					inActiveText="Click or drop file(s) here to start the import..."
+					activeText="Drop here to start the import..."
 					handleChange={handleChange}
 					onChange={this.onChange}
 				/>

@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 
 const MyDropzone = ({
-	handleChange, onChange, as, wrapperStyle,
+	handleChange, onChange, as, wrapperStyle, activeText, inActiveText,
 }) => {
   const onDrop = useCallback(acceptedFiles => {
     handleChange(acceptedFiles, onChange, as);
@@ -11,12 +11,10 @@ const MyDropzone = ({
 
   return (
     <div {...getRootProps({ className: wrapperStyle })}>
-      <input {...getInputProps()} />
-      {
-        isDragActive ?
-          <p>Drop the files here ...</p> :
-          <p>Drag 'n' drop some files here, or click to select files</p>
-      }
+		<input {...getInputProps()} />
+		<p className="element--dropzone__text">
+			{isDragActive ? activeText : inActiveText}
+		</p>
     </div>
   );
 };
