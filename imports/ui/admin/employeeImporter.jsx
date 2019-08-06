@@ -1,21 +1,17 @@
-import React, { useCallback } from "react";
-import { useDropzone } from "react-dropzone";
+import React from "react";
+import FileReaderInput from "react-file-reader-input";
+import { DefaultButton } from "office-ui-fabric-react";
 
-const EmployeeImporter = () => {
-	const onDrop = useCallback(acceptedFiles => {
-		console.log(acceptedFiles);
-	}, []);
-	const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
-	return (
-		<div {...getRootProps({className: "component--admin__import"})}>
-			<input {...getInputProps()} />
-			{
-				isDragActive ?
-				<p>Drop the files here ...</p> :
-				<p>Drag 'n' drop some files here, or click to select files</p>
-			}
-		</div>
-	);
-};
+const EmployeeImporter = ({ handleChange }) => (
+	<FileReaderInput
+		as="binary"
+		id="my-file-input"
+		onChange={handleChange}
+	>
+		<DefaultButton
+			text="Bulk Import"
+		/>
+	</FileReaderInput>
+);
 
 export default EmployeeImporter;

@@ -44,12 +44,29 @@ class AdminDashboard extends Component {
 		this.setState({ lastName: e.target.value.trim() });
 	}
 
+	handleChange = (e, results) => {
+		results.forEach(result => {
+			const [e, file] = result;
+			console.log(e.target.result);
+			console.log(`Successfully uploaded ${file.name}!`);
+		});
+	}
+
 	reset() {
 		this.setState({
 			email: "",
 			firstName: "",
 			lastName: "",
 		});
+	}
+
+	handleFile(file) {
+		console.log(file);
+		const reader = new FileReader();
+		reader.onload = evt => {
+			console.log(evt.target.result);
+		};
+		reader.readAsText(file.path);
 	}
 
 	render() {
@@ -67,7 +84,9 @@ class AdminDashboard extends Component {
 					firstNameValue={this.state.firstName}
 					lastNameValue={this.state.lastName}
 				/>
-				<EmployeeImporter />
+				<EmployeeImporter
+					handleChange={this.handleChange}
+				/>
 				<EmployeeList
 					employees={this.props.employeeList}
 					size={style.scrollablePane.normal}
