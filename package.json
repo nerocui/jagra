@@ -18,6 +18,7 @@
     "dateformat": "^3.0.3",
     "fast-deep-equal": "^2.0.1",
     "history": "^4.9.0",
+    "json-validator": "0.0.34",
     "meteor-node-stubs": "^0.4.1",
     "moment": "^2.24.0",
     "office-ui-fabric-react": "^7.10.0",

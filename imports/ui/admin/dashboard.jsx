@@ -7,7 +7,9 @@ import { Employees } from "../../api/db";
 import EmployeeList from "../employee/employeeItemList.jsx";
 import style from "../../constant/style";
 import Dropzone from "./dropzone.jsx";
-import { handleChange } from "../../util/fileUtil";
+import { handleChange, validateFile } from "../../util/fileUtil";
+import FORMAT from "../../constant/format";
+import { employeeTemplate } from "../../constant/fileTemplates";
 
 
 class AdminDashboard extends Component {
@@ -47,8 +49,10 @@ class AdminDashboard extends Component {
 	onChange(results) {
 		results.forEach(result => {
 			const [e, file] = result;
-			console.log(e.target.result);
-			console.log(`Successfully uploaded ${ file.name }!`);
+			if (validateFile(file, e.target.result, FORMAT.JSON, employeeTemplate)) {
+				console.log(e.target.result);
+				console.log(`Successfully uploaded ${ file.name }!`);
+			}
 		});
 	}
 
