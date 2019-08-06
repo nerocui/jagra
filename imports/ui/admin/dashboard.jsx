@@ -7,6 +7,7 @@ import { Employees } from "../../api/db";
 import EmployeeList from "../employee/employeeItemList.jsx";
 import style from "../../constant/style";
 import EmployeeImporter from "./employeeImporter.jsx";
+import Dropzone from "./dropzone.jsx";
 
 
 class AdminDashboard extends Component {
@@ -44,7 +45,7 @@ class AdminDashboard extends Component {
 		this.setState({ lastName: e.target.value.trim() });
 	}
 
-	handleChange = (e, results) => {
+	handleChange(event, results) {
 		results.forEach(result => {
 			const [e, file] = result;
 			console.log(e.target.result);
@@ -84,6 +85,7 @@ class AdminDashboard extends Component {
 					firstNameValue={this.state.firstName}
 					lastNameValue={this.state.lastName}
 				/>
+				<Dropzone />
 				<EmployeeImporter
 					handleChange={this.handleChange}
 				/>
