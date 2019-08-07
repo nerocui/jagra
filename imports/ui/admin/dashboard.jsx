@@ -51,10 +51,12 @@ class AdminDashboard extends Component {
 			const [e, file] = result;
 			const validator = validateFile(file, e.target.result, FORMAT.JSON, employeeTemplate);
 			if (validator.isValid) {
-				console.log(e.target.result);
+				const res = JSON.parse(e.target.result);
+				console.log("res: ", res);
+				res.data.map(item => signup(item.email, item.firstName, item.lastName));
 				console.log(`Successfully uploaded ${ file.name }!`);
 			} else {
-				console.log(validator.error);
+				console.log("Validator error: ", validator.error);
 			}
 		});
 	}

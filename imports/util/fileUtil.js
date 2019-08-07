@@ -44,25 +44,32 @@ export function handleChange(files, onChange, as) {
 
 export function validateFile(file, content, format, template) {
 	if (!file.name || !file.name.endsWith(format)) {
-		return false;
+		return {
+			isValid: false,
+			error: `File is not in the correct format which is ${ format }.`,
+		};
 	}
 	let error = "";
 	const validate = data => {
 		console.log(data);
+		let hasErr = false;
 		const result = JsonValidator.validate(data, template, (err, message) => {
 			if (err) {
-				console.log(err);
+				hasErr = true;
 				return;
 			}
 			console.log(message);
 		});
-		if (result !== {}) {
+		console.log("Validator's result of each entry: ", result);
+		if (hasErr) {
 			error = result;
+			return false;
 		}
-		return result === {};
+		return true;
 	};
 	const reducer = (x, y) => (x && y);
 	const obj = JSON.parse(content);
+	console.log("Validating file ", obj);
 	return {
 		isValid: obj.data && obj.data.length && obj.data.map(d => validate(d)).reduce(reducer),
 		error,
