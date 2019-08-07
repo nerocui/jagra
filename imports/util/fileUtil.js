@@ -46,12 +46,25 @@ export function validateFile(file, content, format, template) {
 	if (!file.name || !file.name.endsWith(format)) {
 		return false;
 	}
-	const obj = JSON.parse(content);
-	return JsonValidator.validate(obj, template, (err, message) => {
-		if (err) {
-			console.log(err);
-			return;
+	let error = "";
+	const validate = data => {
+		console.log(data);
+		const result = JsonValidator.validate(data, template, (err, message) => {
+			if (err) {
+				console.log(err);
+				return;
+			}
+			console.log(message);
+		});
+		if (result !== {}) {
+			error = result;
 		}
-		console.log(message);
-	});
+		return result === {};
+	};
+	const reducer = (x, y) => (x && y);
+	const obj = JSON.parse(content);
+	return {
+		isValid: obj.data && obj.data.length && obj.data.map(d => validate(d)).reduce(reducer),
+		error,
+	};
 }

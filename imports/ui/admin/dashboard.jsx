@@ -49,9 +49,12 @@ class AdminDashboard extends Component {
 	onChange(results) {
 		results.forEach(result => {
 			const [e, file] = result;
-			if (validateFile(file, e.target.result, FORMAT.JSON, employeeTemplate)) {
+			const validator = validateFile(file, e.target.result, FORMAT.JSON, employeeTemplate);
+			if (validator.isValid) {
 				console.log(e.target.result);
 				console.log(`Successfully uploaded ${ file.name }!`);
+			} else {
+				console.log(validator.error);
 			}
 		});
 	}
