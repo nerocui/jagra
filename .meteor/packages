@@ -25,3 +25,5 @@ accounts-password
 dynamic-import
 underscore
 email
+tracker
+session

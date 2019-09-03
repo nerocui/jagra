@@ -13,6 +13,7 @@ const routes = (
 			<Navbar />
 			<Switch>
 				<Route path="/" exact component={Login} />
+				<Route path="/reset" exact component={ResetPage} />
 				<PrivateRoute path="/admin" exact component={AdminDashboard} />
 				<PrivateRoute path="/dashboard" exact component={EmployeeDashboard} />
 				<Route path="/reset" exact component={ResetPage} />
