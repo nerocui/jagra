@@ -12,6 +12,7 @@ import Navbar from "../nav/navbar.jsx";
 import TaskMasterDetailViewContainer from "../task/taskMasterDetailView.jsx";
 import TaskDetailContainer from "../task/taskDetailContainer.jsx";
 import rootReducer from "../../reducers/index";
+import ResetPage from "../nav/reset.jsx";
 
 const store = createStore(rootReducer);
 
@@ -22,6 +23,7 @@ const routes = (
 				<Navbar />
 				<Switch>
 					<Route path="/" exact component={Login} />
+					<Route path="/reset" exact component={ResetPage} />
 					<PrivateRoute path="/admin" exact component={AdminDashboard} />
 					<PrivateRoute path="/dashboard" exact component={EmployeeDashboard} />
 					<TaskListRoute path="/tasklist" exact component={TaskMasterDetailViewContainer} />

@@ -3,11 +3,10 @@ import React from "react";
 import { Accounts } from "meteor/accounts-base";
 import { Meteor } from "meteor/meteor";
 import { render } from "react-dom";
-// eslint-disable-next-line import/no-unresolved
-import routes from "/imports/ui/routes/index.jsx";
 import { createBrowserHistory } from "history";
 import { Tracker } from "meteor/tracker";
 import { Session } from "meteor/session";
+import routes from "../imports/ui/routes/index.jsx";
 
 const history = createBrowserHistory();
 
