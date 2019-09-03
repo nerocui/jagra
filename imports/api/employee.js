@@ -9,7 +9,7 @@ import { EmployeeMessage } from "../constant/message";
 import { removeElement, addToList } from "../util/arrayUtil";
 
 if (Meteor.isServer) {
-	Meteor.publish("employees", () => Employees.find());
+	Meteor.publish("allEmployees", () => Employees.find());
 }
 
 export const insertEmployee = (

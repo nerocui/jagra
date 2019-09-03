@@ -1,6 +1,7 @@
 export default {
 	INSERT: "tasks.insert",
 	REMOVE: "tasks.remove",
+	UPDATE_TITLE: "tasks.updateTitle",
 	UPDATE_DESCRIPTION: "tasks.updateDescription",
 	UPDATE_STATUS: "tasks.updateStatus",
 	ASSIGN_TO: "tasks.assignTo",

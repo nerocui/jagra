@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
 import { Accounts } from "meteor/accounts-base";
+import { PrimaryButton } from "office-ui-fabric-react";
 
 export default class Login extends Component {
 	constructor(props) {
@@ -52,12 +53,11 @@ export default class Login extends Component {
 					</form>
 					:
 					<form onSubmit={this.logOut}>
-						<button type="submit">
+						<PrimaryButton type="submit">
 							Logout
-						</button>
+						</PrimaryButton>
 					</form>
-					}
-				
+				}		
 			</div>
 		);
 	}
