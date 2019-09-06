@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
-import { Accounts } from "meteor/accounts-base";
 import { PrimaryButton } from "office-ui-fabric-react";
 
 export default class Login extends Component {
@@ -14,7 +13,6 @@ export default class Login extends Component {
 		this.onSubmit = this.onSubmit.bind(this);
 		this.setUsername = this.setUsername.bind(this);
 		this.setPassword = this.setPassword.bind(this);
-		this.logOut = this.logOut.bind(this);
 	}
 
 	onSubmit(e) {
@@ -35,29 +33,18 @@ export default class Login extends Component {
 		this.setState({ password: e.target.value });
 	}
 
-	logOut(e) {
-		e.preventDefault();
-		Accounts.logout();
-	}
-
 	render() {
 		return (
 			<div>
 				{this.state.err}
 				<h1>Login</h1>
-				{!Meteor.userId()?
-					<form onSubmit={this.onSubmit}>	
+				{!!Meteor.userId() || (
+					<form onSubmit={this.onSubmit}>
 						<input value={this.state.username} onChange={this.setUsername} />
 						<input value={this.state.password} onChange={this.setPassword} type="password" />
-						<button type="submit">Login</button>
+						<PrimaryButton type="submit">Login</PrimaryButton>
 					</form>
-					:
-					<form onSubmit={this.logOut}>
-						<PrimaryButton type="submit">
-							Logout
-						</PrimaryButton>
-					</form>
-				}		
+				)}
 			</div>
 		);
 	}

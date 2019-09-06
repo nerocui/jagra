@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { withTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
+import { Accounts } from "meteor/accounts-base";
 import {
 	CommandBar,
 	initializeIcons,
@@ -31,6 +32,7 @@ class Navbar extends Component {
 		this.onEmployeeNav = this.onEmployeeNav.bind(this);
 		this.onHomeNav = this.onHomeNav.bind(this);
 		this.navToTasklist = this.navToTasklist.bind(this);
+		this.handleLogout = this.handleLogout.bind(this);
 	}
 
 	onAdminNav() {
@@ -65,6 +67,10 @@ class Navbar extends Component {
 		this.props.history.push(`/tasklist?subscriptionId=${ route }`);
 	}
 
+	handleLogout() {
+		Accounts.logout();
+	}
+
 	render() {
 		return (
 			<div className="component--nav__navbar-container">
@@ -76,7 +82,7 @@ class Navbar extends Component {
 						<Stack.Item align="center">
 							<SearchBox placeholder="Search" />
 						</Stack.Item>
-						<CommandBar items={userCommandBarItems(this.props.username, this.openModal)} />
+						<CommandBar items={userCommandBarItems(this.props.username, this.openModal, this.handleLogout)} />
 					</Stack>
 				</Stack>
 				<Modal
@@ -97,11 +103,9 @@ class Navbar extends Component {
 		);
 	}
 }
-const NavbarContainer = withTracker(() => {
-	return {
+const NavbarContainer = withTracker(() => ({
 		username: Meteor.user() && Meteor.user().username,
-	};
-})(Navbar);
+}))(Navbar);
 
 export default withRouter(({ history }) => (
 	<NavbarContainer history={history} />

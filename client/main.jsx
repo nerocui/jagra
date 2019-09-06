@@ -1,5 +1,4 @@
 /* eslint-disable meteor/no-session */
-import React from "react";
 import { Accounts } from "meteor/accounts-base";
 import { Meteor } from "meteor/meteor";
 import { render } from "react-dom";

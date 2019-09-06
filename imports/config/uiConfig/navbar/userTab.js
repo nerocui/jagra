@@ -1,4 +1,4 @@
-const userCommandBarItems = (name, settingOnClick) => [
+const userCommandBarItems = (name, settingOnClick, handleLogout) => [
 	{
 		key: "userTab",
 		name,
@@ -31,6 +31,7 @@ const userCommandBarItems = (name, settingOnClick) => [
 					iconProps: {
 						iconName: "Leave",
 					},
+					onClick: handleLogout,
 				},
 			],
 		},
