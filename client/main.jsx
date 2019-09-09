@@ -11,6 +11,11 @@ const history = createBrowserHistory();
 
 Meteor.startup(() => {
 	render(routes, document.getElementById("react-target"));
+	Tracker.autorun(() => {
+		if (!Meteor.userId()) {
+			history.push("/");
+		}
+	});
 });
 
 Accounts.onEnrollmentLink((token, done) => {

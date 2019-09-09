@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
 import PrivateRoute from "./PrivateRoute.jsx";
+import PublicRoute from "./PublicRoute.jsx";
 import TaskListRoute from "./TaskListRoute.jsx";
 import TaskDetailRoute from "./TaskDetailRoute.jsx";
 import Login from "../nav/login.jsx";
@@ -22,7 +23,7 @@ const routes = (
 			<div>
 				<Navbar />
 				<Switch>
-					<Route path="/" exact component={Login} />
+					<PublicRoute path="/" exact component={Login} />
 					<Route path="/reset" exact component={ResetPage} />
 					<PrivateRoute path="/admin" exact component={AdminDashboard} />
 					<PrivateRoute path="/dashboard" exact component={EmployeeDashboard} />
