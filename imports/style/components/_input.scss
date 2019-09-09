@@ -1,0 +1,22 @@
+.component--input__editable-textfield {
+	position: relative;
+	.element--text__text-block {
+		border: .1rem solid transparent;
+		transition: 400ms all;
+		&:hover {
+			border: .1rem solid $grey;
+			box-shadow: $shadow-input;
+			border-radius: 5px;
+		}
+	}
+	.element--text__textfield {
+		input {
+			width: 100%;
+		}
+	}
+	.element--button__form {
+		position: absolute;
+		right: 1rem;
+		top: 3rem;
+	}
+}

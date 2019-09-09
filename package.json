@@ -1,0 +1,56 @@
+{
+  "name": "jagra",
+  "private": true,
+  "scripts": {
+    "start": "meteor run",
+    "lint": "eslint .",
+    "pretest": "npm run lint --silent",
+    "test": "meteor test --driver-package cultofcoders:mocha",
+    "testfullapp": "meteor test --full-app --driver-package cultofcoders:mocha"
+  },
+  "eslintConfig": {
+    "extends": "@meteorjs/eslint-config-meteor"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.5.4",
+    "bcrypt": "^3.0.6",
+    "connected-react-router": "^6.5.2",
+    "dateformat": "^3.0.3",
+    "fast-deep-equal": "^2.0.1",
+    "history": "^4.9.0",
+    "json-validator": "0.0.34",
+    "meteor-node-stubs": "^0.4.1",
+    "moment": "^2.24.0",
+    "office-ui-fabric-react": "^7.10.0",
+    "query-string": "^6.8.1",
+    "react": "^16.8.6",
+    "react-center": "^1.1.1",
+    "react-dom": "^16.8.6",
+    "react-dropzone": "^10.1.7",
+    "react-onclickoutside": "^6.8.0",
+    "react-redux": "^7.1.0",
+    "react-router-dom": "^5.0.1",
+    "redux": "^4.0.4",
+    "redux-thunk": "^2.3.0",
+    "sendgrid": "^5.2.3",
+    "simpl-schema": "^1.5.5"
+  },
+  "meteor": {
+    "mainModule": {
+      "client": "client/main.jsx",
+      "server": "server/main.js"
+    }
+  },
+  "devDependencies": {
+    "@meteorjs/eslint-config-meteor": "^1.0.5",
+    "babel-eslint": "^10.0.2",
+    "chai": "^4.2.0",
+    "eslint": "^5.3.0",
+    "eslint-config-airbnb": "^17.1.1",
+    "eslint-import-resolver-meteor": "^0.4.0",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-meteor": "^5.1.0",
+    "eslint-plugin-react": "^7.14.2"
+  }
+}

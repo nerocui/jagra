@@ -1,0 +1,22 @@
+.center-both {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dotted gray;
+  padding: 1.5em;
+  margin-left: 1.5em;
+}
+
+.component--setting__container {
+  margin: 0;
+  padding: 1.5em;
+  width: 60vw;
+  height: 70vh;
+  align-content: stretch;
+  justify-content: stretch;
+}
+
+.component--setting__content {
+  height: 100% !important;
+}
+@import "../imports/style/main";
