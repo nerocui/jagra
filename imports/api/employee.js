@@ -12,56 +12,34 @@ if (Meteor.isServer) {
 	Meteor.publish("allEmployees", () => Employees.find());
 }
 
-export const insertEmployee = (
-	db,
-	_id,
-	email,
-	firstName,
-	lastName,
-	role,
-) => {
-	if (!isAuthenticated()) {
-		throw new Meteor.Error(AuthError.NOT_AUTH);
-	}
-	if (!isAdmin(Employees, _id)) {
-		throw new Meteor.Error(EmployeeError.ADMIN_NOT_FOUND);
-	}
-	console.log("[TRYING TO INSERT USER: ]", firstName, lastName, email);
-	const username = generateUserName(firstName, lastName);
-	const accountId = Accounts.createUser({ email, username });
-	Accounts.sendEnrollmentEmail(accountId);
-	return db.insert(
-		{
-			_id: accountId,
-			email,
-			firstName,
-			lastName,
-			onBoard: new Date(),
-			// keep it null for now
-			managerId: null,
-			teamId: null,
-			tasksAssienedId: [],
-			tasksCreatedId: [],
-			tasksWatchingId: [],
-			requestsSentId: [],
-			requestReceivedId: [],
-			commentsId: [],
-			filesId: [],
-			employeesId: [],
-			individualsId: [],
-			teamsId: [],
-			role,
-		},
-		err => {
-			if (err) {
-				throw new Meteor.Error(EmployeeError.EMPLOYEE_INSERT_FAIL);
-			} else {
-				console.log(`${ EmployeeMessage.EMPLOYEE_CREATED } ${ accountId }`);
-			}
-		},
-	);
-};
-
+Accounts.onCreateUser((options, user) => {
+	console.log("[backend onCreateUser]", options, user);
+	const newUser = user;
+	const {
+		email,
+		firstName,
+		lastName,
+		role,
+	} = options;
+	newUser.email = email;
+	newUser.firstName = firstName;
+	newUser.lastName = lastName;
+	newUser.role = role;
+	newUser.username = generateUserName(firstName, lastName);
+	newUser.onBoard = new Date();
+	newUser.managerId = null;
+	newUser.teamId = null;
+	newUser.tasksAssignedId = [];
+	newUser.tasksCreatedId = [];
+	newUser.tasksWatchingId = [];
+	newUser.requestsSentId = [];
+	newUser.commentsId = [];
+	newUser.filesId = [];
+	newUser.employeesId = [];
+	newUser.individualsId = [];
+	newUser.teamsId = [];
+	return newUser;
+});
 
 export const removeWatchedTaskFromEmployee = (db, employeeId, taskId) => {
 	if (!isAuthenticated()) {
@@ -288,8 +266,20 @@ export const removeCreatedTaskFromEmployee = (db, employeeId, taskId) => {
 };
 
 Meteor.methods({
-	[EMPLOYEESAPI.INSERT](_id, email, firstName, lastName) {
-		return insertEmployee(Employees, _id, email, firstName, lastName, ROLE.EMPLOYEE);
+	[EMPLOYEESAPI.INSERT](email, firstName, lastName) {
+		if (!isAuthenticated()) {
+			throw new Meteor.Error(AuthError.NOT_AUTH);
+		}
+		if (!isAdmin(this.userId)) {
+			throw new Meteor.Error(EmployeeError.ADMIN_NOT_FOUND);
+		}
+		const accountId = Accounts.createUser({
+			email,
+			firstName,
+			lastName,
+			role: ROLE.EMPLOYEE,
+		});
+		Accounts.sendEnrollmentEmail(accountId);
 	},
 	[EMPLOYEESAPI.REMOVE](employeeId) {
 		return removeEmployee(Employees, this.userId, employeeId);
