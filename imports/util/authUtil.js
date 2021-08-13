@@ -10,8 +10,8 @@ export const isAuthenticated = () => {
 	return !!Meteor.userId() || Meteor.isTest;
 };
 
-export const isAdmin = (employeeDb, _id) => {
-	const user = employeeDb.findOne({ _id });
+export const isAdmin = _id => {
+	const user = Meteor.users.findOne({ _id });
 	console.log("[Chekcing Admin: ]", user);
 	return !!((user && user.role === ROLE.ADMIN) || Meteor.isTest);
 };

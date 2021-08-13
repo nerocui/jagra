@@ -1,4 +1,13 @@
 # Jagra - A task management service for every organization
+
+# V2.0 - ASP.NET Core 3.0, Entity Framework Core, PostgreSQL, React w/ Typescript, Windows 10 UWP Native Client
+Active development is now in this new repo. Choice to refactor at this stage is made based on the complexity of the relations in the DB. With Entity Framework and Typescript on the frontend, development should see fewer bugs and improved development speed.
+
+https://github.com/nerocui/jagraV2
+
+----
+
+
 ## Meteor Framework (dev) ##
 [Official Site](https://www.meteor.com/)
 

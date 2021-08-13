@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
-import { PrimaryButton } from "office-ui-fabric-react";
+import { PrimaryButton, Label, TextField } from "office-ui-fabric-react";
 
 export default class Login extends Component {
 	constructor(props) {
@@ -35,16 +35,18 @@ export default class Login extends Component {
 
 	render() {
 		return (
-			<div>
+			<div className="page">
 				{this.state.err}
-				<h1>Login</h1>
-				{!!Meteor.userId() || (
+				<div className="center-box">
+					<h1>Login</h1>
 					<form onSubmit={this.onSubmit}>
-						<input value={this.state.username} onChange={this.setUsername} />
-						<input value={this.state.password} onChange={this.setPassword} type="password" />
-						<PrimaryButton type="submit">Login</PrimaryButton>
+						<Label>Email</Label>
+						<TextField className="textfield--login" value={this.state.username} onChange={this.setUsername} />
+						<Label>Password</Label>
+						<TextField className="textfield--login" value={this.state.password} onChange={this.setPassword} type="password" />
+						<PrimaryButton type="submit" className="button--login__submit">Login</PrimaryButton>
 					</form>
-				)}
+				</div>
 			</div>
 		);
 	}

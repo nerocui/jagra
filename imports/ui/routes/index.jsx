@@ -2,8 +2,8 @@ import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
-import PrivateRoute from "./PrivateRoute.jsx";
-import PublicRoute from "./PublicRoute.jsx";
+import { withTracker } from "meteor/react-meteor-data";
+import { Meteor } from "meteor/meteor";
 import TaskListRoute from "./TaskListRoute.jsx";
 import TaskDetailRoute from "./TaskDetailRoute.jsx";
 import Login from "../nav/login.jsx";
@@ -17,22 +17,37 @@ import ResetPage from "../nav/reset.jsx";
 
 const store = createStore(rootReducer);
 
-const routes = (
-	<Provider store={store}>
-		<Router>
-			<div>
-				<Navbar />
-				<Switch>
-					<PublicRoute path="/" exact component={Login} />
-					<Route path="/reset" exact component={ResetPage} />
-					<PrivateRoute path="/admin" exact component={AdminDashboard} />
-					<PrivateRoute path="/dashboard" exact component={EmployeeDashboard} />
-					<TaskListRoute path="/tasklist" exact component={TaskMasterDetailViewContainer} />
-					<TaskDetailRoute path="/taskdetail" exact component={TaskDetailContainer} />
-				</Switch>
-			</div>
-		</Router>
-	</Provider>
-);
+const Routes = ({ user }) => {
+	if (user) {
+		return (
+			<Provider store={store}>
+				<Router>
+					<Switch>
+						<div>
+							<Navbar />
+							<Switch>
+								<Route path="/" exact component={EmployeeDashboard} />
+								<Route path="/reset" exact component={ResetPage} />
+								<Route path="/admin" exact component={AdminDashboard} />
+								<TaskListRoute path="/tasklist" exact component={TaskMasterDetailViewContainer} />
+								<TaskDetailRoute path="/taskdetail" exact component={TaskDetailContainer} />
+							</Switch>
+						</div>
+					</Switch>
+					
+				</Router>
+			</Provider>
+		);
+	}
+	return (
+		<Provider store={store}>
+			<Router>
+				<Route path="/" exact component={Login} />
+			</Router>
+		</Provider>
+	);
+};
 
-export default routes;
+export default withTracker(() => ({
+		user: Meteor.user(),
+}))(Routes);
