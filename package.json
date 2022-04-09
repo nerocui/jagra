@@ -20,7 +20,7 @@
     "history": "^4.9.0",
     "json-validator": "0.0.34",
     "meteor-node-stubs": "^0.4.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "office-ui-fabric-react": "^7.10.0",
     "query-string": "^6.8.1",
     "react": "^16.8.6",
